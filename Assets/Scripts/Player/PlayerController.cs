@@ -125,6 +125,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         //multiply Gravity after jump peak
         bool isFalling = currentState == PlayerState.Falling;
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
+        Debug.Log(currentState);
     }
 
     private void LateUpdate()
@@ -138,7 +139,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     void CheckState()
     {
-        if (!isGrounded && rb.velocity.y < 0 && currentState != PlayerState.Drifting)
+        if (!isGrounded && IsFalling() && currentState != PlayerState.Drifting)
             currentState = PlayerState.Falling;
         else if (currentState == PlayerState.Falling && isGrounded)
         {
@@ -179,6 +180,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     bool IsGrounded()
     {
         return Physics.Raycast(transform.position, Vector3.down, _collider.radius + .01f, ground);
+    }
+
+    bool IsFalling()
+    {
+        return rb.velocity.y < -.5f;
     }
     #endregion
 
@@ -282,6 +288,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        Debug.Log(isGrounded);
         if (context.started && isGrounded)
         {
             currentState = PlayerState.Jumping;
@@ -306,7 +313,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         while(currentState == PlayerState.Breaking)
         {
-            if(IsGrounded())
+            if(isGrounded)
                 rb.velocity *= 1 - breakForce;
             yield return 0;
         }
