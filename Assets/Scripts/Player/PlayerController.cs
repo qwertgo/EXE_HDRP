@@ -125,7 +125,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         //multiply Gravity after jump peak
         bool isFalling = currentState == PlayerState.Falling;
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
-        Debug.Log(currentState);
     }
 
     private void LateUpdate()
@@ -179,7 +178,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     bool IsGrounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, _collider.radius + .01f, ground);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, _collider.radius + .01f, ground);
+        return colliders.Length > 0;
     }
 
     bool IsFalling()
