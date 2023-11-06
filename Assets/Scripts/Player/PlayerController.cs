@@ -14,7 +14,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Breaking,
         Drifting,
         Jumping,
-        Falling
+        Falling,
+        JumpDrifting,
     }
     
     [Header("Base Movement Values")] 
@@ -51,6 +52,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     private int fireflyCount;
     private bool isGrounded;
+    private bool isFalling;
+    private bool justStartedJumping;
     private bool isDriftingRight;
     
 
@@ -89,9 +92,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         //update current State 
         isGrounded = IsGrounded();
+        isFalling = IsFalling();
         CheckState();
         
-        if (currentState == PlayerState.Drifting)
+        if (currentState == PlayerState.Drifting || currentState == PlayerState.JumpDrifting)
         {
             Drift();
         }
@@ -123,13 +127,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity += new Vector3(0, gravity, 0);
         
         //multiply Gravity after jump peak
-        bool isFalling = currentState == PlayerState.Falling;
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
     }
 
     private void LateUpdate()
     {
-        if (currentState == PlayerState.Drifting)
+        if (IsDrifting())
         {
             lineRenderer.SetPosition(0, tonguePoint.position);
             lineRenderer.SetPosition(1, currentDriftPoint.position);
@@ -138,25 +141,30 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     void CheckState()
     {
-        if (!isGrounded && IsFalling() && currentState != PlayerState.Drifting)
+        if (!isGrounded && isFalling && !IsDrifting())
             currentState = PlayerState.Falling;
         else if (currentState == PlayerState.Falling && isGrounded)
         {
             currentState = PlayerState.Running;
             // rb.constraints = RigidbodyConstraints.FreezePositionY;
         }
+        else if (currentState == PlayerState.JumpDrifting && isGrounded && !justStartedJumping)
+            currentState = PlayerState.Drifting;
+
+        justStartedJumping = false;
 
     }
 
     void Drift()
     {
+        //calculate how much the player should face the wanted drift Rotation 
         float distanceToDriftPoint = Vector3.Distance(currentDriftPoint.position, transform.position);
         float t = Mathf.Max(0,  distanceToDriftPoint - innerDriftRadius);
         t /= outerDriftRadius - innerDriftRadius;
-        // Debug.Log($"inner radius: {innerDriftRadius}, outer Radius: {innerDriftRadius + driftRadiusAddition}, distance: {distanceToDriftPoint}, t: {t}");
 
         Vector3 vecToPoint = currentDriftPoint.position - transform.position;
         
+        //calculate the angle the player should face at the most outer distance from driftpoint
         float wantedAngle = Vector2.SignedAngle(Vector2.up, new Vector2(vecToPoint.x, vecToPoint.z));
         wantedAngle = -wantedAngle;
         wantedAngle += isDriftingRight ? -90 + driftOversteer : 90 - driftOversteer;
@@ -164,18 +172,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         float currentAngle = playerVisuals.transform.eulerAngles.y;
         wantedAngle = Mathf.Lerp(currentAngle, wantedAngle, t);
 
+        //get current rotation realtive to distance to drift point
         Vector3 wantedEulerAngles = new Vector3(playerVisuals.eulerAngles.x, wantedAngle, playerVisuals.eulerAngles.z);
         playerVisuals.rotation = Quaternion.RotateTowards(playerVisuals.rotation, Quaternion.Euler(wantedEulerAngles), driftTurnSpeed * Time.fixedDeltaTime);
     }
     #endregion
 
     #region Bools
-    // float GetUpwardsVelocity()
-    // {
-    //     Vector3 v = Vector3.down * Vector3.Dot(rb.velocity, Vector3.down);
-    //     return v.y;
-    // }
-
     bool IsGrounded()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, _collider.radius + .01f, ground);
@@ -186,90 +189,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         return rb.velocity.y < -.5f;
     }
+
+    bool IsDrifting()
+    {
+        return currentState == PlayerState.Drifting || currentState == PlayerState.JumpDrifting;
+    }
     #endregion
 
     
     #region various Methods
-    void CreateHingeJoint()
-    {
-        HingeJoint hingeJoint = gameObject.AddComponent<HingeJoint>();
-            
-        Vector3 anchorPos = currentDriftPoint.position;
-        anchorPos = new Vector3(anchorPos.x, transform.position.y, anchorPos.z);
-        hingeJoint.anchor = transform.InverseTransformPoint(anchorPos);
-            
-        hingeJoint.axis = transform.InverseTransformDirection(new Vector3(0, 1, 0));
-        
-        
-        //spring
-        JointSpring spring = hingeJoint.spring;
-        spring.spring = 8f;
-        spring.damper = .2f;
-        hingeJoint.spring = spring;
-        hingeJoint.useSpring = true;
-    }
 
-    void CreateSpringJoint()
-    {
-        SpringJoint springJoint = gameObject.AddComponent<SpringJoint>();
-        springJoint.autoConfigureConnectedAnchor = false;
-        springJoint.spring = 5;
-        
-        //set connected Anchor (point player rotates around)
-        Vector3 anchorPos = currentDriftPoint.position;
-        anchorPos = new Vector3(anchorPos.x, transform.position.y, anchorPos.z);
-        springJoint.connectedAnchor = anchorPos;
-
-        //set own Anchor
-        springJoint.anchor = transform.InverseTransformPoint(tonguePoint.position);
-        
-        //set min/max Distance
-        float distance = Vector3.Distance(currentDriftPoint.position, transform.position);
-        
-        float minDistance = Mathf.Max(5, distance - 5);
-        springJoint.minDistance = minDistance;
-
-        float maxDistance = distance + 5;
-        springJoint.maxDistance = maxDistance;
-    }
-
-    void CreateConfigurableJoint()
-    {
-        ConfigurableJoint configurableJoint = gameObject.AddComponent<ConfigurableJoint>();
-        configurableJoint.autoConfigureConnectedAnchor = false;
-        
-        //set connected Anchor (point player rotates around)
-        Vector3 anchorPos = currentDriftPoint.position;
-        anchorPos = new Vector3(anchorPos.x, transform.position.y, anchorPos.z);
-        configurableJoint.connectedAnchor = anchorPos;
-        
-        //set own Anchor
-        configurableJoint.anchor = new Vector3(0, 0, 0);
-
-        //Limit joint so it doesnt move on the y axis
-        configurableJoint.xMotion = ConfigurableJointMotion.Limited;
-        configurableJoint.yMotion = ConfigurableJointMotion.Locked;
-        configurableJoint.zMotion = ConfigurableJointMotion.Limited;
-        
-        //Set Spring Parameters
-        SoftJointLimitSpring springParameters = configurableJoint.linearLimitSpring;
-        springParameters.spring = 1f;
-        springParameters.damper = .2f;
-        configurableJoint.linearLimitSpring = springParameters;
-
-        SoftJointLimit softJointLimit = configurableJoint.linearLimit;
-        softJointLimit.limit = 1;
-        configurableJoint.linearLimit = softJointLimit;
-
-
-    }
-
-    void DestroyJoint()
-    {
-        Joint joint = GetComponent<Joint>();
-        Destroy(joint);
-    }
-    
     public void CollectFirefly()
     {
         fireflyCount++;
@@ -288,11 +217,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        Debug.Log(isGrounded);
         if (context.started && isGrounded)
         {
-            currentState = PlayerState.Jumping;
+            currentState = currentState == PlayerState.Drifting ? PlayerState.JumpDrifting : PlayerState.Jumping;
             rb.AddForce(playerVisuals.up * jumpForce, ForceMode.Impulse);
+            justStartedJumping = true;
         }
     }
 
@@ -351,7 +280,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     void StartDrifting()
     {
-        currentState = PlayerState.Drifting;
+        currentState = isGrounded ? PlayerState.Drifting : PlayerState.JumpDrifting;
         lineRenderer.positionCount = 2;
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
@@ -363,10 +292,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     void StopDrifting()
     {
         lineRenderer.positionCount = 0;
-        currentState = PlayerState.Running;
+        currentState = currentState == PlayerState.JumpDrifting ? PlayerState.Jumping : PlayerState.Running;
         currentTraction = traction;
-        
-        DestroyJoint();
     }
     #endregion
 
