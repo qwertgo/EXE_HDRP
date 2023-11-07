@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private DriftPointContainer leftDriftPointContainer;
     private Rigidbody rb;
     private SphereCollider _collider;
-    private PlayerInput _controls;
+    private PlayerInput controls;
     private LineRenderer lineRenderer;
 
     void Start()
@@ -77,11 +77,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         currentTraction = traction;
 
-        if (_controls == null)
+        if (controls == null)
         {
-            _controls = new PlayerInput();
-            _controls.Enable();
-            _controls.P_Controls.SetCallbacks(this);
+            controls = new PlayerInput();
+            controls.Enable();
+            controls.P_Controls.SetCallbacks(this);
         }
         
         rightDriftPointContainer.SetRightContainer();
@@ -125,6 +125,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Vector3 velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.fixedDeltaTime) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
+
+        playerVisuals.up = 
         
         //multiply Gravity after jump peak
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
