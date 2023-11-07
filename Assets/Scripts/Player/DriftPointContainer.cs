@@ -41,14 +41,12 @@ public class DriftPointContainer : MonoBehaviour
 
         if (driftPoints.Count < 1 || driftPoints.First().isShown)
             return;
-        
-        if(visibleDriftPoint != null)
+
+        if (visibleDriftPoint != null)
             visibleDriftPoint.HideMe();
 
         visibleDriftPoint = driftPoints.First();
         visibleDriftPoint.ShowMe(isRight);
-
-
     }
 
     void BubbleSortSingleIteration()

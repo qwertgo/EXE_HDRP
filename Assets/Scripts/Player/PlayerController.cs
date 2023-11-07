@@ -95,15 +95,30 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         isFalling = IsFalling();
         CheckState();
         
-        if (currentState == PlayerState.Drifting || currentState == PlayerState.JumpDrifting)
+        //copy ground rotation
+        Vector3 lerpTo;
+        if (isGrounded)
         {
-            Drift();
+            RaycastHit groundHit;
+            Physics.Raycast(transform.position, -playerVisuals.up,out groundHit, _collider.radius + 2, ground);
+            lerpTo = groundHit.normal;
         }
+        else
+            lerpTo = Vector3.up;
+
+        float eulerAnglesY = playerVisuals.eulerAngles.y;
+        playerVisuals.up = Vector3.Lerp(playerVisuals.up, lerpTo, Time.fixedDeltaTime * 8f);
+        playerVisuals.Rotate(0, eulerAnglesY, 0);
+
+        //steer or drift
+        if (IsDrifting())
+            Drift();
         else
         {
             //steer
             playerVisuals.eulerAngles += new Vector3(0, horizontal * Time.deltaTime * steerAmount, 0);
             
+
             //update container to get closest drift point
             leftDriftPointContainer.GetDriftPoints();
             rightDriftPointContainer.GetDriftPoints();
@@ -126,7 +141,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.fixedDeltaTime) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
 
-        playerVisuals.up = 
+        
         
         //multiply Gravity after jump peak
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
