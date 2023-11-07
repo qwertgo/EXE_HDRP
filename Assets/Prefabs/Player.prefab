@@ -296,9 +296,12 @@ MonoBehaviour:
   driftTurnSpeed: 80
   driftRadiusMultiplier: 0.06
   tractionWhileDrifting: 10
-  driftOversteer: 25
-  lookAtDistance: 1.2
-  lookAtSpeed: 2
+  driftOversteer: 15
+  lookAtMoveAmount: 3
+  horizontalLerpSpeed: 0.75
+  cameraYawDamping: 1.75
+  cameraDriftYawDamping: 0.75
+  maxDutchTilt: 5
   playerVisuals: {fileID: 1609444752658654278}
   tonguePoint: {fileID: 2633907542019158644}
   lookAt: {fileID: 9105339177700952640}
@@ -464,7 +467,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5364930809967892335}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
