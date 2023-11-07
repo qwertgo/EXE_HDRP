@@ -440,13 +440,13 @@ MonoBehaviour:
     m_Value: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 5
+    m_Value: 7
   maximumVelocity:
     m_OverrideState: 1
-    m_Value: 516
+    m_Value: 994
   minimumVelocity:
     m_OverrideState: 1
-    m_Value: 5.2
+    m_Value: 23.6
   cameraMotionBlur:
     m_OverrideState: 0
     m_Value: 1
