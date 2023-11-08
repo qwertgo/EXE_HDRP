@@ -107,7 +107,7 @@ MonoBehaviour:
       hasProbeVolumes: 0
     - sceneGUID: 95eff858a6a1d3e4782f8b42a6c6d3a2
       hasProbeVolumes: 0
-    - sceneGUID: a807d9078cd9a4f4ca91c92e191a31ff
+    - sceneGUID: 51543f69b752fae499030bab23c5b965
       hasProbeVolumes: 0
     serializedProfiles:
     - sceneGUID: 8124e5870f4fd4c779e7a5f994e84ad1
@@ -118,7 +118,7 @@ MonoBehaviour:
       profile: {fileID: 11400000, guid: f72d98df35bc8cf44b11fef81bb7529c, type: 2}
     - sceneGUID: 95eff858a6a1d3e4782f8b42a6c6d3a2
       profile: {fileID: 11400000, guid: f72d98df35bc8cf44b11fef81bb7529c, type: 2}
-    - sceneGUID: a807d9078cd9a4f4ca91c92e191a31ff
+    - sceneGUID: 51543f69b752fae499030bab23c5b965
       profile: {fileID: 11400000, guid: f72d98df35bc8cf44b11fef81bb7529c, type: 2}
     serializedBakeSettings:
     - sceneGUID: 8124e5870f4fd4c779e7a5f994e84ad1
@@ -193,7 +193,7 @@ MonoBehaviour:
           collisionMask:
             serializedVersion: 2
             m_Bits: 4294967291
-    - sceneGUID: a807d9078cd9a4f4ca91c92e191a31ff
+    - sceneGUID: 51543f69b752fae499030bab23c5b965
       settings:
         m_Version: 1
         dilationSettings:
@@ -218,7 +218,7 @@ MonoBehaviour:
       - 756814055d24ae943ad6d1cb2819cf89
       - f5b32fd2d5d849747b11fd69bfb2d7a9
       - 95eff858a6a1d3e4782f8b42a6c6d3a2
-      - a807d9078cd9a4f4ca91c92e191a31ff
+      - 51543f69b752fae499030bab23c5b965
       settings:
         m_Version: 1
         dilationSettings:
