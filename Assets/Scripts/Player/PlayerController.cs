@@ -17,26 +17,26 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Falling,
         JumpDrifting,
     }
-    
-    [Header("Base Movement Values")] 
+
+    [Header("Base Movement Values")]
     [SerializeField] private float acceleration;
     [SerializeField] private float steerAmount;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float traction;
     [SerializeField] private LayerMask ground;
-    
+
     [Header("Jumping/ In Air")]
     [SerializeField] private float jumpForce;
     [SerializeField] private float breakForce;
     [SerializeField] private float gravitationMultiplier;
-    
+
     [Header("Drifting")]
     [SerializeField] private float driftTurnSpeed;
     [SerializeField] private float driftRadiusMultiplier;
     [SerializeField] private float tractionWhileDrifting;
     [SerializeField] private float driftOversteer;
 
-    [Header("Camera")] 
+    [Header("Camera")]
     [SerializeField] private float lookAtDistance;
     [SerializeField] private float lookAtSpeed;
 
@@ -49,13 +49,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private float innerDriftRadius;
     private float outerDriftRadius;
     private float currentTraction;
-    
+
     private int fireflyCount;
     private bool isGrounded;
     private bool isFalling;
     private bool justStartedJumping;
     private bool isDriftingRight;
-    
+
 
     [Header("References")]
     [SerializeField] private Transform playerVisuals;
@@ -67,6 +67,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private SphereCollider _collider;
     private PlayerInput controls;
     private LineRenderer lineRenderer;
+
+    //Coroutine slowDown;
+    //Coroutine speedUp;
 
     void Start()
     {
@@ -83,7 +86,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             controls.Enable();
             controls.P_Controls.SetCallbacks(this);
         }
-        
+
         rightDriftPointContainer.SetRightContainer();
     }
 
@@ -94,13 +97,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         isGrounded = IsGrounded();
         isFalling = IsFalling();
         CheckState();
-        
+
         //copy ground rotation
         Vector3 lerpTo;
         if (isGrounded)
         {
             RaycastHit groundHit;
-            Physics.Raycast(transform.position, -playerVisuals.up,out groundHit, _collider.radius + 2, ground);
+            Physics.Raycast(transform.position, -playerVisuals.up, out groundHit, _collider.radius + 2, ground);
             lerpTo = groundHit.normal;
         }
         else
@@ -117,32 +120,32 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             //steer
             playerVisuals.eulerAngles += new Vector3(0, horizontal * Time.deltaTime * steerAmount, 0);
-            
+
 
             //update container to get closest drift point
             leftDriftPointContainer.GetDriftPoints();
             rightDriftPointContainer.GetDriftPoints();
         }
-        
+
         //move LookAt Object
         lookAtLerpTo = Mathf.Lerp(lookAtLerpTo, horizontal * lookAtDistance, Time.deltaTime * lookAtSpeed);
         lookAt.position = playerVisuals.position + playerVisuals.right * lookAtLerpTo;
 
         //acceleration
-        if(rb.velocity.magnitude < maxSpeed && currentState != PlayerState.Breaking)
+        if (rb.velocity.magnitude < maxSpeed && currentState != PlayerState.Breaking)
             rb.AddForce(playerVisuals.forward * acceleration, ForceMode.Acceleration);
 
         //traction
         Debug.DrawRay(transform.position, playerVisuals.forward * 4);
         Debug.DrawRay(transform.position, rb.velocity.normalized * 4, Color.cyan);
-        
+
         float gravity = rb.velocity.y;
         Vector3 velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.fixedDeltaTime) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
 
-        
-        
+
+
         //multiply Gravity after jump peak
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
     }
@@ -176,11 +179,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         //calculate how much the player should face the wanted drift Rotation 
         float distanceToDriftPoint = Vector3.Distance(currentDriftPoint.position, transform.position);
-        float t = Mathf.Max(0,  distanceToDriftPoint - innerDriftRadius);
+        float t = Mathf.Max(0, distanceToDriftPoint - innerDriftRadius);
         t /= outerDriftRadius - innerDriftRadius;
 
         Vector3 vecToPoint = currentDriftPoint.position - transform.position;
-        
+
         //calculate the angle the player should face at the most outer distance from driftpoint
         float wantedAngle = Vector2.SignedAngle(Vector2.up, new Vector2(vecToPoint.x, vecToPoint.z));
         wantedAngle = -wantedAngle;
@@ -213,7 +216,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
     #endregion
 
-    
+
     #region various Methods
 
     public void CollectFirefly()
@@ -244,7 +247,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnBreak(InputAction.CallbackContext context)
     {
-        if(context.started)
+        if (context.started)
         {
             currentState = PlayerState.Breaking;
             StartCoroutine(Break());
@@ -257,14 +260,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     IEnumerator Break()
     {
-        while(currentState == PlayerState.Breaking)
+        while (currentState == PlayerState.Breaking)
         {
-            if(isGrounded)
+            if (isGrounded)
                 rb.velocity *= 1 - breakForce;
             yield return 0;
         }
     }
-    
+
     public void OnLeftDrift(InputAction.CallbackContext context)
     {
         if (context.started && leftDriftPointContainer.driftPoints.Count > 0)
@@ -301,7 +304,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         lineRenderer.positionCount = 2;
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
-        innerDriftRadius =  outerDriftRadius* driftRadiusMultiplier;
+        innerDriftRadius = outerDriftRadius * driftRadiusMultiplier;
 
         currentTraction = tractionWhileDrifting;
     }
@@ -315,7 +318,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #endregion
 
     #region Math helper
-    
+
     Vector3 RotateRight(Vector3 v)
     {
         return new Vector3(v.y, -v.x);
@@ -324,6 +327,40 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     Vector3 RotateLeft(Vector3 v)
     {
         return new Vector3(-v.y, v.x);
+    }
+    #endregion
+
+    #region slowBox
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "SlowBox")
+        {
+            StartCoroutine("slowDown");
+        }
+    }
+    void OnTriggerExit(Collider collider)
+    {
+        if (collider.gameObject.tag == "SlowBox")
+        {
+            StopCoroutine("slowDown");
+            maxSpeed = 30;
+        }
+    }
+    IEnumerator slowDown()
+    {
+        float t = 0;
+        float from = maxSpeed;
+        float To = maxSpeed - 17;
+
+        while(t < 0.5)
+        {
+            maxSpeed = Mathf.Lerp(from, To, t);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        maxSpeed = To;
+
     }
     #endregion
 }

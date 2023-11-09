@@ -89,7 +89,7 @@ MonoBehaviour:
       maxDecalsOnScreen: 512
       maxLightsPerClusterCell: 16
       maxLocalVolumetricFogSize: 32
-      maxLocalVolumetricFogOnScreen: 64
+      maxLocalVolumetricFogOnScreen: 1
     hdShadowInitParams:
       maxShadowRequests: 128
       directionalShadowsDepthBits: 16
@@ -293,6 +293,8 @@ MonoBehaviour:
   diffusionProfileSettings: {fileID: 0}
   virtualTexturingSettings:
     streamingCpuCacheSizeInMegaBytes: 256
+    streamingMipPreloadTexturesPerFrame: 0
+    streamingPreloadMipCount: 1
     streamingGpuCacheSettings:
     - format: 0
       sizeInMegaBytes: 128
