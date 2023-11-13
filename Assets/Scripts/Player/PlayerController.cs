@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float steerAmount;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float traction;
+    [SerializeField] private float slowFieldSlow;
     [SerializeField] private LayerMask ground;
 
     [Header("Jumping/ In Air")]
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private float innerDriftRadius;
     private float outerDriftRadius;
     private float currentTraction;
+    private float maxSpeedOriginal;
 
     private int fireflyCount;
     private bool isGrounded;
@@ -77,6 +79,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         _collider = GetComponent<SphereCollider>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 0;
+
+        maxSpeedOriginal = maxSpeed;
 
         currentTraction = traction;
 
@@ -343,19 +347,22 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (collider.gameObject.tag == "SlowBox")
         {
             StopCoroutine("slowDown");
-            maxSpeed = 30;
+            Debug.Log(maxSpeedOriginal);
+            maxSpeed = maxSpeedOriginal;
         }
     }
     IEnumerator slowDown()
     {
+        
         float t = 0;
-        float from = maxSpeed;
-        float To = maxSpeed - 17;
+        float from = maxSpeedOriginal;
+        float To = maxSpeedOriginal - slowFieldSlow;
 
-        while(t < 0.5)
+        while (t < 1)
         {
             maxSpeed = Mathf.Lerp(from, To, t);
-            t += Time.deltaTime;
+            t += Time.deltaTime * 2;
+            Debug.Log(t);
             yield return null;
         }
 
