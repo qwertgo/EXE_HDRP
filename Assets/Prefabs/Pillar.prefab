@@ -121,6 +121,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DriftPoint
       objectReference: {fileID: 0}
+    - target: {fileID: 5078965518158746011, guid: 91476b97f2ebc7b499b069f0678a96fd,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6982485032827952427, guid: 91476b97f2ebc7b499b069f0678a96fd,
         type: 3}
       propertyPath: m_RootOrder

@@ -47,8 +47,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     private float horizontalLerpTo;
 
-    private PlayerState currentState = PlayerState.Running;
     private Transform currentDriftPoint;
+    private PlayerState currentState = PlayerState.Running;
+    private Vector3 driftStartForward;
 
     private float horizontal;
     private float innerDriftRadius;
@@ -61,6 +62,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool isDrifting;
     private bool justStartedJumping;
     private bool isDriftingRight;
+    private bool arrivedAtDriftPeak;
     
 
     [Header("References")]
@@ -103,9 +105,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     void FixedUpdate()
     {
         //update current State 
-        isGrounded = IsGrounded();
-        isFalling = IsFalling();
-        CheckState();
+        UpdateState();
         
         //copy ground rotation
         Vector3 lerpTo;
@@ -117,14 +117,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
         else
             lerpTo = Vector3.up;
-
+        
         float eulerAnglesY = playerVisuals.eulerAngles.y;
         playerVisuals.up = Vector3.Lerp(playerVisuals.up, lerpTo, Time.fixedDeltaTime * 8f);
-        playerVisuals.Rotate(0, eulerAnglesY, 0);
+        // playerVisuals.eulerAngles = new Vector3(playerVisuals.eulerAngles.x, eulerAnglesY, playerVisuals.eulerAngles.z);
 
         //steer or drift
-        if (IsDrifting())
-            Drift();
+        if (isDrifting)
+            NewDrift();
         else
         {
             //steer
@@ -163,66 +163,116 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.fixedDeltaTime) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
 
-        
-        
         //multiply Gravity after jump peak
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
     }
 
     private void LateUpdate()
     {
-        if (IsDrifting())
+        if (isDrifting)
         {
             lineRenderer.SetPosition(0, tonguePoint.position);
             lineRenderer.SetPosition(1, currentDriftPoint.position);
         }
     }
 
-    void CheckState()
+    void UpdateState()
     {
-        if (!isGrounded && isFalling && !IsDrifting())
+        isGrounded = IsGrounded();
+        isFalling = IsFalling();
+        
+        if (!isGrounded && isFalling && !isDrifting)
             currentState = PlayerState.Falling;
         else if (currentState == PlayerState.Falling && isGrounded)
-        {
             currentState = PlayerState.Running;
-            // rb.constraints = RigidbodyConstraints.FreezePositionY;
-        }
         else if (currentState == PlayerState.JumpDrifting && isGrounded && !justStartedJumping)
             currentState = PlayerState.Drifting;
 
         justStartedJumping = false;
-
     }
 
-    void Drift()
-    {
-        //calculate how much the player should face the wanted drift Rotation 
-        float distanceToDriftPoint = Vector3.Distance(currentDriftPoint.position, transform.position);
-        float t = Mathf.Max(0,  distanceToDriftPoint - innerDriftRadius);
-        t /= outerDriftRadius - innerDriftRadius;
+    // void Drift()
+    // {
+    //     //calculate how much the player should face the wanted drift Rotation 
+    //     float distanceToDriftPoint = Vector3.Distance(currentDriftPoint.position, transform.position);
+    //     float t = Mathf.Max(0,  distanceToDriftPoint - innerDriftRadius);
+    //     t /= outerDriftRadius - innerDriftRadius;
+    //
+    //     Vector3 vecToPoint = currentDriftPoint.position - transform.position;
+    //     
+    //     //calculate the angle the player should face at the most outer distance from driftpoint
+    //     float wantedAngle = Vector2.SignedAngle(Vector2.up, new Vector2(vecToPoint.x, vecToPoint.z));
+    //     wantedAngle = -wantedAngle;
+    //     wantedAngle += isDriftingRight ? -90 + driftOversteer : 90 - driftOversteer;
+    //
+    //     float currentAngle = playerVisuals.transform.eulerAngles.y;
+    //     wantedAngle = Mathf.Lerp(currentAngle, wantedAngle, t);
+    //
+    //     //apply rotation
+    //     Vector3 wantedEulerAngles = new Vector3(playerVisuals.eulerAngles.x, wantedAngle, playerVisuals.eulerAngles.z);
+    //     playerVisuals.rotation = Quaternion.RotateTowards(playerVisuals.rotation, Quaternion.Euler(wantedEulerAngles), driftTurnSpeed * Time.fixedDeltaTime);
+    // }
 
-        Vector3 vecToPoint = currentDriftPoint.position - transform.position;
+    void NewDrift()
+    {
+        Vector3 vecToDriftPoint = currentDriftPoint.position - transform.position;
+        Vector2 vecToDriftPoint2D = new Vector2(vecToDriftPoint.x, vecToDriftPoint.z);
         
-        //calculate the angle the player should face at the most outer distance from driftpoint
-        float wantedAngle = Vector2.SignedAngle(Vector2.up, new Vector2(vecToPoint.x, vecToPoint.z));
-        wantedAngle = -wantedAngle;
-        wantedAngle += isDriftingRight ? -90 + driftOversteer : 90 - driftOversteer;
+        float tongueStretchFactor = arrivedAtDriftPeak ? 1 : GetTongeStretchFactor(vecToDriftPoint2D) ;
 
-        float currentAngle = playerVisuals.transform.eulerAngles.y;
-        wantedAngle = Mathf.Lerp(currentAngle, wantedAngle, t);
+        // //calculate the angle the player should face at the most outer distance from driftpoint
+        // float wantedYRotation = Vector2.SignedAngle(Vector2.up, vecToDriftPoint2D);
+        // wantedYRotation = -wantedYRotation;
+        // wantedYRotation += isDriftingRight ? -90  : 90;
+        //
+        // wantedYRotation = Mathf.Lerp(startAngle, wantedYRotation, tongueStretchFactor);
+        //
+        // //apply Angle
+        // Vector3 wantedEulerAngles = new Vector3(playerVisuals.eulerAngles.x, wantedYRotation, playerVisuals.eulerAngles.z);
+        // // playerVisuals.rotation = Quaternion.RotateTowards(playerVisuals.rotation, Quaternion.Euler(wantedEulerAngles), driftTurnSpeed * Time.fixedDeltaTime);
+        // playerVisuals.rotation = Quaternion.Euler(wantedEulerAngles);
+        Vector3 dirToDriftPoint = new Vector3(vecToDriftPoint.x, 0, vecToDriftPoint.z);
+        dirToDriftPoint.Normalize();
+        Vector3 wantedFroward = isDriftingRight ? RotateLeft(dirToDriftPoint) : RotateRight(dirToDriftPoint);
 
-        //get current rotation realtive to distance to drift point
-        Vector3 wantedEulerAngles = new Vector3(playerVisuals.eulerAngles.x, wantedAngle, playerVisuals.eulerAngles.z);
-        playerVisuals.rotation = Quaternion.RotateTowards(playerVisuals.rotation, Quaternion.Euler(wantedEulerAngles), driftTurnSpeed * Time.fixedDeltaTime);
+        Vector3 currentForward = Vector3.Lerp(driftStartForward, wantedFroward, tongueStretchFactor);
+
+        playerVisuals.forward = currentForward;
+        
+        
+        //change velocity
+        float yVelocity = rb.velocity.y;
+        Vector3 velocity2D = new Vector2(rb.velocity.x, rb.velocity.z);
+
+        rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
     }
+    
+    
 
-    IEnumerator DriftCoroutine()
+    float GetTongeStretchFactor( Vector2 vecToDriftPoint2D)
     {
-        float distanceToDriftPoint = Vector3.Distance(transform.position, currentDriftPoint.position);
-        while (distanceToDriftPoint > innerDriftRadius && IsDrifting())
-        {
-            yield return null;
-        }
+        //get distance to drift point
+        float distanceToDriftPoint = Vector3.Distance(currentDriftPoint.position, transform.position);
+
+        //get rotation between playerForward and vector that goes to drift point (clamped a 90 degrees)
+        Vector2 forward2D = new Vector2(playerVisuals.forward.x, playerVisuals.forward.z);
+
+        float angleToDriftPoint = Vector2.SignedAngle(forward2D, vecToDriftPoint2D);
+        angleToDriftPoint = Mathf.Min(Mathf.Abs(angleToDriftPoint), 80);
+        // Debug.Log("angle: " + angleToDriftPoint);
+
+        //get tongueStretchFactor out of distance to drift point and angle 
+        float distanceFactor =  Mathf.Clamp01(distanceToDriftPoint / outerDriftRadius - .5f ) * 2;
+        float angleFactor = Mathf.Clamp01(angleToDriftPoint / 80 - .5f ) * 2;
+        float tongueStretchFactor = distanceFactor * angleFactor;
+        tongueStretchFactor = Mathf.Clamp01(tongueStretchFactor);
+        
+        // Debug.Log($"tongueStretch: {tongueStretchFactor}, distance: {distanceFactor}, angle: {angleFactor}");
+
+        if (tongueStretchFactor > .99f)
+            arrivedAtDriftPeak = true;
+
+        return tongueStretchFactor;
     }
     #endregion
 
@@ -243,7 +293,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         return currentState == PlayerState.Drifting || currentState == PlayerState.JumpDrifting;
     }
     #endregion
-
     
     #region various Methods
 
@@ -257,7 +306,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region handle Input
     public void OnSteer(InputAction.CallbackContext context)
     {
-        if (IsDrifting())
+        if (isDrifting)
            return;
         
         horizontal = context.ReadValue<Vector2>().x;
@@ -328,8 +377,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     void StartDrifting()
     {
+        isDrifting = true;
         currentState = isGrounded ? PlayerState.Drifting : PlayerState.JumpDrifting;
         lineRenderer.positionCount = 2; //start renderering the tongue line
+
+        driftStartForward = playerVisuals.transform.forward;
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
         innerDriftRadius =  outerDriftRadius* driftRadiusMultiplier;
@@ -341,13 +393,15 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         //change how fast the camera copies the rotation of the player
         cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
 
-        float distanceToDriftPoint = Vector3.Distance(transform.position, currentDriftPoint.position) * 2;
-        GameObject distanceIndicatorObj = Instantiate(distanceIndicator, currentDriftPoint.position, Quaternion.identity);
-        distanceIndicatorObj.transform.localScale = new Vector3(distanceToDriftPoint, 10, distanceToDriftPoint);
+        // float distanceToDriftPoint = Vector3.Distance(transform.position, currentDriftPoint.position) * 2;
+        // GameObject distanceIndicatorObj = Instantiate(distanceIndicator, currentDriftPoint.position, Quaternion.identity);
+        // distanceIndicatorObj.transform.localScale = new Vector3(distanceToDriftPoint, 10, distanceToDriftPoint);
     }
 
     void StopDrifting()
     {
+        isDrifting = false;
+        arrivedAtDriftPeak = false;
         lineRenderer.positionCount = 0; //stop rendering the tongue line
         currentState = currentState == PlayerState.JumpDrifting ? PlayerState.Jumping : PlayerState.Running;
         currentTraction = traction;
@@ -363,12 +417,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     Vector3 RotateRight(Vector3 v)
     {
-        return new Vector3(v.y, -v.x);
+        return new Vector3(v.z,0, -v.x);
     }
 
     Vector3 RotateLeft(Vector3 v)
     {
-        return new Vector3(-v.y, v.x);
+        return new Vector3(-v.z,0, v.x);
     }
     #endregion
 }

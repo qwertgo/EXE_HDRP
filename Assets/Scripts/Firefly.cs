@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Firefly : MonoBehaviour
 {
+
+    [SerializeField] private float speed;
     private Rigidbody _rb;
     private Collider _collider;
 
@@ -31,7 +33,7 @@ public class Firefly : MonoBehaviour
         
         while (t < 1)
         {
-            t += Time.deltaTime;
+            t += Time.deltaTime * speed;
             transform.position = Vector3.Lerp(startPos, player.position, t * t);
             yield return null;
         }
