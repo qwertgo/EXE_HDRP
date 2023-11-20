@@ -103,6 +103,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         rightDriftPointContainer.SetRightContainer();
+
+        GameVariables.instance.player = this;
     }
 
     #region physics
@@ -404,25 +406,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #endregion
 
     #region slowBox
-    void OnTriggerEnter(Collider collider)
+    public void SlowDown()
     {
-        if (collider.gameObject.tag == "SlowBox")
-        {
-            StartCoroutine("slowDown");
-        }
+        StartCoroutine(SlowDownCoroutine());
     }
-    void OnTriggerExit(Collider collider)
+    IEnumerator SlowDownCoroutine()
     {
-        if (collider.gameObject.tag == "SlowBox")
-        {
-            StopCoroutine("slowDown");
-            Debug.Log(maxSpeedOriginal);
-            maxSpeed = maxSpeedOriginal;
-        }
-    }
-    IEnumerator slowDown()
-    {
-        
         float t = 0;
         float from = maxSpeedOriginal;
         float To = maxSpeedOriginal - slowFieldSlow;
@@ -431,12 +420,17 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             maxSpeed = Mathf.Lerp(from, To, t);
             t += Time.deltaTime * 2;
-            Debug.Log(t);
+            // Debug.Log(t);
             yield return null;
         }
 
         maxSpeed = To;
-
     }
+
+    public void ReturnToDefaultSpeed()
+    {
+        maxSpeed = maxSpeedOriginal;
+    }
+
     #endregion
 }

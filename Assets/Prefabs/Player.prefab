@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 443424417985546458}
   m_Layer: 6
   m_Name: Physics
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -287,6 +287,7 @@ MonoBehaviour:
   steerAmount: 55
   maxSpeed: 30
   traction: 0.9
+  slowFieldSlow: 0
   ground:
     serializedVersion: 2
     m_Bits: 8
