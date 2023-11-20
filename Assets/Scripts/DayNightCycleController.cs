@@ -10,7 +10,8 @@ public class DayNightCycleController : MonoBehaviour
     public Light moon;
     private bool isNight;
 
-    public Light sun;
+    public Light sun1;
+    public Light sun2;
     private void Update()
     {
         timeOfDay += Time.deltaTime * orbitSpeed;
@@ -25,10 +26,12 @@ public class DayNightCycleController : MonoBehaviour
     private void UpdateTime()
     {
         float alpha = timeOfDay / 24.0f;
-        float sunRotation = Mathf.Lerp(-90, 270, alpha);
-        float moonRotation = sunRotation - 180;
-        sun.transform.rotation = Quaternion.Euler(sunRotation, -150.0f, 0);
-        moon.transform.rotation = Quaternion.Euler(sunRotation, +150.0f, 0);
+        float sun1Rotation = Mathf.Lerp(-90, 270, alpha);
+        float moonRotation = sun1Rotation - 160;
+        float sun2Rotation = sun1Rotation + 30;
+        sun2.transform.rotation = Quaternion.Euler(sun1Rotation, -150.0f, 0);
+        sun2.transform.rotation = Quaternion.Euler(sun2Rotation, -150.0f, 0);
+        moon.transform.rotation = Quaternion.Euler(moonRotation, +150.0f, 0);
 
         CheckNightDayTransition();
     }
@@ -43,7 +46,7 @@ public class DayNightCycleController : MonoBehaviour
         }
         else
         {
-            if (sun.transform.rotation.eulerAngles.x > 180)
+            if (sun1.transform.rotation.eulerAngles.x > 180)
             {
                 StartNight();
             }
@@ -52,13 +55,13 @@ public class DayNightCycleController : MonoBehaviour
     private void StartDay ()
     {
         isNight = false;
-        sun.shadows = LightShadows.Soft;
+        sun1.shadows = LightShadows.Soft;
         moon.shadows = LightShadows.None;
     }
     private void StartNight ()
     {
         isNight = true;
         moon.shadows = LightShadows.Soft;
-        sun.shadows = LightShadows.None;
+        sun1.shadows = LightShadows.None;
     }
 }
