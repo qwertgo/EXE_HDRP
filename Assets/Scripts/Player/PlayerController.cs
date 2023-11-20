@@ -17,20 +17,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Falling,
         JumpDrifting,
     }
-    
-    [Header("Base Movement Values")] 
+
+    [Header("Base Movement Values")]
     [SerializeField] private float acceleration;
     [SerializeField] private float steerAmount;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float traction;
-    
+    [SerializeField] private float slowFieldSlow;
     [SerializeField] private LayerMask ground;
-    
+
     [Header("Jumping/ In Air")]
     [SerializeField] private float jumpForce;
     [SerializeField] private float breakForce;
     [SerializeField] private float gravitationMultiplier;
-    
+
     [Header("Drifting")]
     [SerializeField] private float driftTurnSpeed;
     [SerializeField] private float driftRadiusMultiplier;
@@ -53,7 +53,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private float horizontal;
     private float outerDriftRadius;
     private float currentTraction;
-    
+    private float maxSpeedOriginal;
+
     private int fireflyCount;
     private bool isGrounded;
     private bool isFalling;
@@ -77,6 +78,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private PlayerInput controls;
     private LineRenderer lineRenderer;
 
+    //Coroutine slowDown;
+    //Coroutine speedUp;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -87,6 +91,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
 
         cinemachineTransposer.m_YawDamping = 5;
+        maxSpeedOriginal = maxSpeed;
+
         currentTraction = traction;
 
         if (controls == null)
@@ -95,7 +101,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             controls.Enable();
             controls.P_Controls.SetCallbacks(this);
         }
-        
+
         rightDriftPointContainer.SetRightContainer();
     }
 
@@ -165,7 +171,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             leftDriftPointContainer.GetDriftPoints();
             rightDriftPointContainer.GetDriftPoints();
         }
-        
+
         //move LookAt Object
         horizontalLerpTo = Mathf.Lerp(horizontalLerpTo, horizontal, Time.deltaTime * horizontalLerpSpeed);
         lookAt.position = playerVisuals.position + playerVisuals.right * (horizontalLerpTo * lookAtMoveAmount);
@@ -296,7 +302,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnBreak(InputAction.CallbackContext context)
     {
-        if(context.started)
+        if (context.started)
         {
             currentState = PlayerState.Breaking;
             StartCoroutine(Break());
@@ -309,14 +315,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     IEnumerator Break()
     {
-        while(currentState == PlayerState.Breaking)
+        while (currentState == PlayerState.Breaking)
         {
-            if(isGrounded)
+            if (isGrounded)
                 rb.velocity *= 1 - breakForce;
             yield return 0;
         }
     }
-    
+
     public void OnLeftDrift(InputAction.CallbackContext context)
     {
         if (context.started && leftDriftPointContainer.driftPoints.Count > 0)
@@ -384,5 +390,53 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
     #endregion
 
-    
+    #region Math helper
+
+    Vector3 RotateRight(Vector3 v)
+    {
+        return new Vector3(v.y, -v.x);
+    }
+
+    Vector3 RotateLeft(Vector3 v)
+    {
+        return new Vector3(-v.y, v.x);
+    }
+    #endregion
+
+    #region slowBox
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "SlowBox")
+        {
+            StartCoroutine("slowDown");
+        }
+    }
+    void OnTriggerExit(Collider collider)
+    {
+        if (collider.gameObject.tag == "SlowBox")
+        {
+            StopCoroutine("slowDown");
+            Debug.Log(maxSpeedOriginal);
+            maxSpeed = maxSpeedOriginal;
+        }
+    }
+    IEnumerator slowDown()
+    {
+        
+        float t = 0;
+        float from = maxSpeedOriginal;
+        float To = maxSpeedOriginal - slowFieldSlow;
+
+        while (t < 1)
+        {
+            maxSpeed = Mathf.Lerp(from, To, t);
+            t += Time.deltaTime * 2;
+            Debug.Log(t);
+            yield return null;
+        }
+
+        maxSpeed = To;
+
+    }
+    #endregion
 }
