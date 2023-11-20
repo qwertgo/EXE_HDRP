@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8af08a3d6b96d459ad8801637983a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 40
+  acceleration: 30
   steerAmount: 55
   maxSpeed: 30
   traction: 0.9
@@ -293,10 +293,10 @@ MonoBehaviour:
   jumpForce: 15
   breakForce: 0.01
   gravitationMultiplier: 2
-  driftTurnSpeed: 80
+  driftTurnSpeed: 150
   driftRadiusMultiplier: 0.06
   tractionWhileDrifting: 10
-  driftOversteer: 15
+  driftOversteer: 10
   lookAtMoveAmount: 3
   horizontalLerpSpeed: 0.75
   cameraYawDamping: 1.75
@@ -307,6 +307,8 @@ MonoBehaviour:
   lookAt: {fileID: 9105339177700952640}
   rightDriftPointContainer: {fileID: 1582747289892162416}
   leftDriftPointContainer: {fileID: 7041608628081519611}
+  distanceIndicator: {fileID: 1875544462167600292, guid: bdb5a17c25906e3449ee09a30364e94a,
+    type: 3}
 --- !u!1 &2007743758044179804
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,6 @@ using System.Linq;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 {
@@ -209,7 +208,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         //get the direction the player should face at the max tonguestretchfactor
         Vector3 dirToDriftPoint = new Vector3(vecToDriftPoint.x, 0, vecToDriftPoint.z);
         dirToDriftPoint.Normalize();
-        Vector3 wantedFroward = isDriftingRight ? dirToDriftPoint.RotateLeft() : dirToDriftPoint.RotateRight();
+        Vector3 wantedFroward = isDriftingRight ?  dirToDriftPoint.RotateLeft90Deg() : dirToDriftPoint.RotateRight90Deg();
 
         playerVisuals.forward = Vector3.Lerp(driftStartForward, wantedFroward, tongueStretchFactor);
 
