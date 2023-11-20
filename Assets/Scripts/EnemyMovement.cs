@@ -6,12 +6,22 @@ using UnityEngine.AI;
 
 public class EnemyMovement : MonoBehaviour
 {
+    enum enemyState { idle, followPlayer, searchPlayer}
+
+    [SerializeField] enemyState currentState;
+
     private NavMeshAgent navMeshAgent;
     [SerializeField] private Transform playerTransform;
-    //[SerializeField] private Transform cubeTransform;
+
     [SerializeField] private Transform enemyTransform;
+    [SerializeField] private SphereCollider playerRadius;
+
+    [SerializeField] private SphereCollider deathCollider;
+    [SerializeField] private SphereCollider followCollider;
+
     private bool destinationReached;
     private Transform movementTarget;
+    private int collidedWithCounter;
 
     [SerializeField]
     public List<Transform> transformList = new List<Transform>(); // Liste für Transforms
@@ -22,23 +32,73 @@ public class EnemyMovement : MonoBehaviour
 
     private void Start()
     {
-        SetMovementTarget();
+        movementTarget = GetRandomTransform();
+        SetMovementTarget(movementTarget);
     }
     private void Update()
     {
-        
-        if (Vector3.Distance(movementTarget.position , enemyTransform.position) <= 0.5f)
+        if (currentState == enemyState.idle)
         {
-            destinationReached = true;
-            SetMovementTarget();
+            if (Vector3.Distance(movementTarget.position, enemyTransform.position) <= 0.5f)
+            {
+                destinationReached = true;
+                movementTarget = GetRandomTransform();
+                SetMovementTarget(movementTarget);
+                //Debug.Log("Ich bin imn der if-Anweisung");
+            }
+        }
+        else if (currentState == enemyState.followPlayer)
+        {
+            Debug.Log("State ist Follow Player");
+            SetMovementTarget(GameVariables.instance.player.transform);
+        }
+        else
+        {
+
+        }
+
+        if ((int)currentState > 0) //ist in State 1 oder 2, d.h. alles außer idle
+        {
+
+        }
+
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Collided with Player");
+        if(other.tag.Equals("FireflyCollector"))
+        {
+            collidedWithCounter++;
+            if(collidedWithCounter > 1)
+            {
+                //player will die
+            }
+            else
+            {
+                currentState = enemyState.followPlayer;
+            }
+            Debug.Log(collidedWithCounter);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.Equals("Player"))
+        {
+            collidedWithCounter--;
+            if (collidedWithCounter == 0)
+            {
+                currentState = enemyState.searchPlayer;
+            }
         }
     }
 
-    internal void SetMovementTarget()
+    internal void SetMovementTarget(Transform movementTarget)
     {
-        movementTarget = GetRandomTransform();
+        //movementTarget = GetRandomTransform();
         navMeshAgent.SetDestination(movementTarget.position);
-        Debug.Log("Set New Movement Target");
+
     }
     public Transform GetRandomTransform()
     {
@@ -49,7 +109,6 @@ public class EnemyMovement : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Die Transform-Liste ist leer!");
             return null;
         }
     }
