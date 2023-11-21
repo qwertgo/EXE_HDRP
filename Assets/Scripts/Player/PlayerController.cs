@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float traction;
     [SerializeField] private float slowFieldSlow;
     [SerializeField] private LayerMask ground;
+    [SerializeField] private LayerMask obstacle;
 
     [Header("Jumping/ In Air")]
     [SerializeField] private float jumpForce;
@@ -112,8 +113,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         //update current State 
         UpdateState();
-        AdjustToGroundSlope();
         Steer();
+        AdjustToGroundSlope();
         Accelerate();
 
         //multiply Gravity after jump peak
@@ -146,17 +147,18 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     void AdjustToGroundSlope()
     {
-        Vector3 lerpTo;
+        Vector3 lerpToForward;
         if (isGrounded)
         {
-            RaycastHit groundHit;
-            Physics.Raycast(transform.position, -playerVisuals.up,out groundHit, _collider.radius + 2, ground);
-            lerpTo = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
+            Physics.Raycast(transform.position, -playerVisuals.up,out RaycastHit groundHit, _collider.radius + 2, ground);
+            lerpToForward = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
         }
         else
-            lerpTo = Vector3.ProjectOnPlane(playerVisuals.forward, Vector3.up);
+        {
+            lerpToForward = Vector3.ProjectOnPlane(playerVisuals.forward, Vector3.up);
+        }
         
-        playerVisuals.forward = Vector3.Lerp(playerVisuals.forward, lerpTo, Time.fixedDeltaTime * 8f);
+        playerVisuals.forward = Vector3.Lerp(playerVisuals.forward, lerpToForward, Time.fixedDeltaTime * 8f);
     }
 
     void Steer()
@@ -226,8 +228,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
     }
-    
-    
 
     float GetTongeStretchFactor( Vector2 vecToDriftPoint2D)
     {
@@ -254,6 +254,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         return tongueStretchFactor;
     }
+    #endregion
+
+    #region Collider
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.layer == 9)
+        {
+            rb.velocity = Vector3.zero;
+            
+            rb.AddForce(-playerVisuals.forward * 50, ForceMode.Impulse);
+        }
+    }
+
     #endregion
 
     #region Bools
@@ -391,19 +405,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
     }
     #endregion
-
-    #region Math helper
-
-    Vector3 RotateRight(Vector3 v)
-    {
-        return new Vector3(v.y, -v.x);
-    }
-
-    Vector3 RotateLeft(Vector3 v)
-    {
-        return new Vector3(-v.y, v.x);
-    }
-    #endregion
+    
 
     #region slowBox
     public void SlowDown()
