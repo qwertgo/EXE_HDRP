@@ -902,6 +902,7 @@ MonoBehaviour:
   speed: 10
   visuals: {fileID: 672368394706826093}
   spline: {fileID: 2583434942015365302}
+  timeToRespawn: 5
   collectSpeed: 10
 --- !u!135 &71005126979795600
 SphereCollider:

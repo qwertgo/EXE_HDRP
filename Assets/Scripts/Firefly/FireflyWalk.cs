@@ -13,6 +13,8 @@ public class FireflyWalk : MonoBehaviour
     [SerializeField] Transform visuals;
     [SerializeField] SplineAnimate spline;
 
+    [SerializeField] float timeToRespawn;
+
     [SerializeField] private float collectSpeed;
 
     private Collider _collider;
@@ -78,6 +80,24 @@ public class FireflyWalk : MonoBehaviour
         }
 
         player.parent.GetComponent<PlayerController>().CollectFirefly();
-        Destroy(gameObject);
+
+        visuals.gameObject.SetActive(false);
+
+        StartCoroutine(WaitTillRespawn());
+    }
+
+    IEnumerator WaitTillRespawn()
+    {
+        float TimeElapsed = 0;
+
+        while (TimeElapsed < timeToRespawn)
+        {
+            TimeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        _collider.enabled = true;
+        spline.enabled = true;
+        visuals.gameObject.SetActive(true);
     }
 }
