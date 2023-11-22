@@ -52,17 +52,23 @@ public class EnemyMovement : MonoBehaviour
             Debug.Log("State ist Follow Player");
             SetMovementTarget(GameVariables.instance.player.transform);
         }
-        else
+        else //Seach Player
         {
 
         }
 
-        if ((int)currentState > 0) //ist in State 1 oder 2, d.h. alles auﬂer idle
-        {
+        //if ((int)currentState > 0) //ist in State 1 oder 2, d.h. alles auﬂer idle
+        //{
 
-        }
+        //}
 
 
+    }
+    private void SearchPlayer()
+    {
+        //Vector3 movementTargetVector3;
+        //movementTargetVector3 = transform.position + new Vector3(Random.Range(0f, 10f), 0f, Random.Range(0f, 10f));
+        //movementTarget = movementTargetVector3 + transform.position;
     }
 
     private void OnTriggerEnter(Collider other)
