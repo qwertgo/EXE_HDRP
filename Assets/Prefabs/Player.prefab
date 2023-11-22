@@ -5175,9 +5175,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   acceleration: 30
   steerAmount: 55
-  maxSpeed: 30
+  maxSpeed: 26
   traction: 0.9
-  slowFieldSlow: 0
+  slowFieldSlow: 20
   ground:
     serializedVersion: 2
     m_Bits: 8
