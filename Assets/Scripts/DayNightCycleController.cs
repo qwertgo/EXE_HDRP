@@ -28,9 +28,9 @@ public class DayNightCycleController : MonoBehaviour
         float alpha = timeOfDay / 24.0f;
         float sun1Rotation = Mathf.Lerp(-90, 270, alpha);
         float moonRotation = sun1Rotation - 160;
-        float sun2Rotation = sun1Rotation + 30;
-        sun2.transform.rotation = Quaternion.Euler(sun1Rotation, -150.0f, 0);
-        sun2.transform.rotation = Quaternion.Euler(sun2Rotation, -150.0f, 0);
+        //float sun2Rotation = sun1Rotation + 30;
+        sun1.transform.rotation = Quaternion.Euler(sun1Rotation, -150.0f, 0);
+        //sun2.transform.rotation = Quaternion.Euler(sun2Rotation, -150.0f, 0);
         moon.transform.rotation = Quaternion.Euler(moonRotation, +150.0f, 0);
 
         CheckNightDayTransition();
