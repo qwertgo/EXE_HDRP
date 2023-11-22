@@ -14,9 +14,7 @@ public class DriftPoint : MonoBehaviour
     public bool isShown { get; private set; } = false;
     private void OnTriggerEnter(Collider other)
     {
-        // indicator.transform.localScale *= 2;
-        Debug.Log(other.name);
-        Debug.Log(gameObject.name);
+
         other.GetComponent<DriftPointContainer>().AddDriftPoint(this);
     }
 

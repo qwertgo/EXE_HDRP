@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private Transform tonguePoint;
     [SerializeField] private Transform lookAt;
     [SerializeField] private Transform groundSlopeRef;
+    [SerializeField] private GameObject groundParticles;
     [SerializeField] private DriftPointContainer rightDriftPointContainer;
     [SerializeField] private DriftPointContainer leftDriftPointContainer;
     [SerializeField] private GameObject distanceIndicator;
@@ -139,7 +140,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (!isGrounded && isFalling && !isDrifting)
             currentState = PlayerState.Falling;
         else if (currentState == PlayerState.Falling && isGrounded)
+        {
             currentState = PlayerState.Running;
+            groundParticles.SetActive(true);
+        }
         else if (currentState == PlayerState.JumpDrifting && isGrounded && !justStartedJumping)
             currentState = PlayerState.Drifting;
 
@@ -273,6 +277,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             rb.velocity = Vector3.zero;
             
             rb.AddForce(-playerVisuals.forward * 50, ForceMode.Impulse);
+
+            if (isDrifting)
+            {
+                StopDrifting();
+            }
         }
     }
 
@@ -321,6 +330,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             currentState = currentState == PlayerState.Drifting ? PlayerState.JumpDrifting : PlayerState.Jumping;
             rb.AddForce(playerVisuals.up * jumpForce, ForceMode.Impulse);
             justStartedJumping = true;
+            groundParticles.SetActive(false);
         }
     }
 
