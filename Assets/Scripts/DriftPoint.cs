@@ -15,6 +15,8 @@ public class DriftPoint : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // indicator.transform.localScale *= 2;
+        Debug.Log(other.name);
+        Debug.Log(gameObject.name);
         other.GetComponent<DriftPointContainer>().AddDriftPoint(this);
     }
 

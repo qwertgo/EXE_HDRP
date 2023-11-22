@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1639800812675102273}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Baum_MIttel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 8908593429055661780}
   - component: {fileID: 7624129189518087122}
   - component: {fileID: 6425144910162908136}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 2319556677574782349}
   - component: {fileID: 6629343468422719631}
   - component: {fileID: 1097568095243143805}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
