@@ -69,6 +69,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private Transform playerVisuals;
     [SerializeField] private Transform tonguePoint;
     [SerializeField] private Transform lookAt;
+    [SerializeField] private Transform groundSlopeRef;
     [SerializeField] private DriftPointContainer rightDriftPointContainer;
     [SerializeField] private DriftPointContainer leftDriftPointContainer;
     [SerializeField] private GameObject distanceIndicator;
@@ -147,18 +148,24 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     void AdjustToGroundSlope()
     {
-        Vector3 lerpToForward;
+        groundSlopeRef.rotation = playerVisuals.rotation;
+        float rotation;
+        
         if (isGrounded)
         {
             Physics.Raycast(transform.position, -playerVisuals.up,out RaycastHit groundHit, _collider.radius + 2, ground);
-            lerpToForward = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
+            
+            groundSlopeRef.forward = Vector3.ProjectOnPlane(groundSlopeRef.forward, groundHit.normal);
+            rotation = Vector3.SignedAngle(groundSlopeRef.up, groundHit.normal, groundSlopeRef.forward);
         }
         else
         {
-            lerpToForward = Vector3.ProjectOnPlane(playerVisuals.forward, Vector3.up);
+            groundSlopeRef.forward = Vector3.ProjectOnPlane(groundSlopeRef.forward, Vector3.up);
+            rotation = 0;
         }
         
-        playerVisuals.forward = Vector3.Lerp(playerVisuals.forward, lerpToForward, Time.fixedDeltaTime * 8f);
+        groundSlopeRef.Rotate(groundSlopeRef.forward, rotation, Space.World);
+        playerVisuals.rotation = Quaternion.Lerp(playerVisuals.rotation, groundSlopeRef.rotation, Time.fixedDeltaTime * 8f);
     }
 
     void Steer()
@@ -169,7 +176,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         else
         {
             //steer
-            playerVisuals.eulerAngles += new Vector3(0, horizontal * Time.deltaTime * steerAmount, 0);
+            // playerVisuals.eulerAngles += new Vector3(0, horizontal * Time.deltaTime * steerAmount, 0);
+            playerVisuals.Rotate(playerVisuals.up, horizontal * Time.fixedDeltaTime * steerAmount);
 
             //update container to get closest drift point
             leftDriftPointContainer.GetDriftPoints();
