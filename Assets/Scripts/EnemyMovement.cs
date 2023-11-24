@@ -19,9 +19,12 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private SphereCollider deathCollider;
     [SerializeField] private SphereCollider followCollider;
 
-    private bool destinationReached;
+    //private bool destinationReached;
+    private bool isSearchCoroutineRunning;
     private Transform movementTarget;
     private int collidedWithCounter;
+
+    [SerializeField] private float searchTime = 9f;
 
     [SerializeField]
     public List<Transform> transformList = new List<Transform>(); // Liste für Transforms
@@ -39,63 +42,88 @@ public class EnemyMovement : MonoBehaviour
     {
         if (currentState == enemyState.idle)
         {
-            if (Vector3.Distance(movementTarget.position, enemyTransform.position) <= 0.5f)
+            if (Vector3.Distance(movementTarget.position, enemyTransform.position) <= 0.5f) //ist es schon da?
             {
-                destinationReached = true;
+                //destinationReached = true;
                 movementTarget = GetRandomTransform();
                 SetMovementTarget(movementTarget);
-                //Debug.Log("Ich bin imn der if-Anweisung");
             }
         }
         else if (currentState == enemyState.followPlayer)
         {
-            Debug.Log("State ist Follow Player");
             SetMovementTarget(GameVariables.instance.player.transform);
         }
         else //Seach Player
         {
-
+            if (!isSearchCoroutineRunning)
+            {
+                StartCoroutine(Search());
+            }
         }
-
         //if ((int)currentState > 0) //ist in State 1 oder 2, d.h. alles außer idle
-        //{
-
-        //}
-
-
     }
-    private void SearchPlayer()
+    IEnumerator Search()
     {
-        //Vector3 movementTargetVector3;
-        //movementTargetVector3 = transform.position + new Vector3(Random.Range(0f, 10f), 0f, Random.Range(0f, 10f));
-        //movementTarget = movementTargetVector3 + transform.position;
+        isSearchCoroutineRunning = true;
+        float startTime = Time.realtimeSinceStartup;
+        SearchPlayer();
+
+        while (Time.realtimeSinceStartup - startTime < searchTime)
+        {
+            if (Vector3.Distance(movementTarget.position, enemyTransform.position) <= 1f)
+            {
+                //destinationReached = true;
+                SearchPlayer();
+                SetMovementTarget(movementTarget);       
+            }
+            yield return null;
+        }
+        currentState = enemyState.idle;
+        movementTarget = GetRandomTransform();
+        SetMovementTarget(movementTarget);
+        isSearchCoroutineRunning = false;
+        Debug.Log("Coroutine finished!");
     }
+
+    private void SearchPlayer()
+        {
+            Vector3 randomPosition = enemyTransform.position + new Vector3(Random.Range(-20f, 20f), 0f, Random.Range(-20f, 20f));
+            movementTarget.position = randomPosition;
+            //navMeshAgent.SetDestination(randomPosition); Das wäre die Lösung für das Versetzungs- Problem, aber dann wird das ganze genau einmal ausgeführt, und der Enemy steht danach dumm rum
+            navMeshAgent.SetDestination(movementTarget.position);
+            //SetMovementTarget(movementTarget);
+            Debug.Log("Enemy Pos: " + enemyTransform.position);
+            Debug.Log("Movement Target: " + movementTarget.position);
+        }
+    
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collided with Player");
+        
         if(other.tag.Equals("FireflyCollector"))
         {
             collidedWithCounter++;
             if(collidedWithCounter > 1)
             {
-                //player will die
+                Debug.Log("ded");
             }
             else
             {
                 currentState = enemyState.followPlayer;
+                Debug.Log("Current State: Follow Player");
             }
             Debug.Log(collidedWithCounter);
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag.Equals("Player"))
+        if (other.tag.Equals("FireflyCollector"))
         {
             collidedWithCounter--;
             if (collidedWithCounter == 0)
             {
                 currentState = enemyState.searchPlayer;
+                Debug.Log("Current State: Search Player");
             }
         }
     }
@@ -119,3 +147,8 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 }
+
+//Jetziges Problem: Da einer der Cubes in der Liste das movement Target ist, und dieses immer versetzt wird, wird bei jedem SeachPlayer State
+//einer der fixed Punkte auf der Map versetzt. Das wäre auch an sich gar nicht schlimm, aber es besteht die Möglichkeit, dass dieser Punkt
+//außerhalb der NavMesh Fläche oder in einem nicht begehbaren Objekt gesetzt wird, was beim nächsten Idle State dazu führen könnte,
+//dass der Enemy irgendwo nicht hinkommt, und dann "feststeckt", was ein Game Breaking Bug wäre.

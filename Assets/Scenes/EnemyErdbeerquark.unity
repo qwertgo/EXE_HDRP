@@ -191,6 +191,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bogen_Mittel (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -352,6 +357,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Stein_Mittel (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7646716038653242346, guid: acea2e5df7fb34948b5fccce8563f288,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -709,6 +719,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bogen_Mittel (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -750,7 +765,7 @@ PrefabInstance:
     - target: {fileID: 2989950961953665079, guid: 92c0891ebcf32e84e8ad492eaf8f54fd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.16
+      value: 18.3
       objectReference: {fileID: 0}
     - target: {fileID: 2989950961953665079, guid: 92c0891ebcf32e84e8ad492eaf8f54fd,
         type: 3}
@@ -884,6 +899,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bogen_Mittel (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1308,6 +1328,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bogen_Mittel (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1380,6 +1405,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bogen_Mittel (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1499,6 +1529,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bogen_Mittel (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1571,6 +1606,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bogen_Mittel (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1908,6 +1948,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stein_Mittel
       objectReference: {fileID: 0}
+    - target: {fileID: 7646716038653242346, guid: acea2e5df7fb34948b5fccce8563f288,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1986,6 +2031,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bogen_Mittel (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2202,7 +2252,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 7b03b6f7f8513f4429382cc46b5c8757,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 3800
+      value: 20000
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7b03b6f7f8513f4429382cc46b5c8757,
         type: 3}
@@ -2212,7 +2262,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 7b03b6f7f8513f4429382cc46b5c8757,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 3800
+      value: 20000
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7b03b6f7f8513f4429382cc46b5c8757,
         type: 3}
@@ -2227,7 +2277,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 7b03b6f7f8513f4429382cc46b5c8757,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.366544
+      value: -1.3667
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7b03b6f7f8513f4429382cc46b5c8757,
         type: 3}
@@ -2268,6 +2318,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GroundCollider
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7b03b6f7f8513f4429382cc46b5c8757,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2609,6 +2664,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bogen_Mittel (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2681,6 +2741,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bogen_Mittel (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2769,6 +2834,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Baum_H_Mittel
+      objectReference: {fileID: 0}
+    - target: {fileID: 5382322380344711356, guid: e08e10f0c61c1264a975122455d277b4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2883,6 +2953,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Baumstamm_Mittel
       objectReference: {fileID: 0}
+    - target: {fileID: 1255432072889538959, guid: 557add15c63e4e2438985d8ceafdbebe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5592164701327234977, guid: 557add15c63e4e2438985d8ceafdbebe,
         type: 3}
       propertyPath: m_RootOrder
@@ -2969,7 +3044,7 @@ PrefabInstance:
     - target: {fileID: 5364930809967892335, guid: 341602172f457674f9e2a1a08127af17,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.16
+      value: 23.3
       objectReference: {fileID: 0}
     - target: {fileID: 5364930809967892335, guid: 341602172f457674f9e2a1a08127af17,
         type: 3}
@@ -3244,6 +3319,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bogen_Mittel
       objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3383,7 +3463,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807497380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -27.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3432,6 +3512,7 @@ MonoBehaviour:
   playerRadius: {fileID: 498146983}
   deathCollider: {fileID: 0}
   followCollider: {fileID: 0}
+  searchTime: 15
   transformList:
   - {fileID: 1813856694}
   - {fileID: 332236068}
@@ -3506,7 +3587,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 2.23
   m_Center: {x: 0, y: 0, z: 0}
@@ -3666,6 +3747,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Baumstamm_Mittel (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1255432072889538959, guid: 557add15c63e4e2438985d8ceafdbebe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5592164701327234977, guid: 557add15c63e4e2438985d8ceafdbebe,
         type: 3}
@@ -3996,6 +4082,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bogen_Mittel (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4972310572418513103, guid: a8e782e54b0c4774fbf0d7635f17beb5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
