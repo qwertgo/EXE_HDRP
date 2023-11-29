@@ -66,16 +66,17 @@ public class EnemyMovement : MonoBehaviour
     {
         isSearchCoroutineRunning = true;
         float startTime = Time.realtimeSinceStartup;
-        SearchPlayer();
+        Vector3 randomPosition;
+        SearchPlayer(out randomPosition);
 
         while (Time.realtimeSinceStartup - startTime < searchTime)
         {
-            if (Vector3.Distance(movementTarget.position, enemyTransform.position) <= 1f)
+            if (Vector3.Distance(randomPosition, enemyTransform.position) <= 1f)
             {
                 //destinationReached = true;
-                SearchPlayer();
-                SetMovementTarget(movementTarget);       
+                SearchPlayer(out randomPosition);       
             }
+            Debug.Log(Vector3.Distance(randomPosition, enemyTransform.position));
             yield return null;
         }
         currentState = enemyState.idle;
@@ -85,16 +86,14 @@ public class EnemyMovement : MonoBehaviour
         Debug.Log("Coroutine finished!");
     }
 
-    private void SearchPlayer()
-        {
-            Vector3 randomPosition = enemyTransform.position + new Vector3(Random.Range(-20f, 20f), 0f, Random.Range(-20f, 20f));
-            movementTarget.position = randomPosition;
-            //navMeshAgent.SetDestination(randomPosition); Das wäre die Lösung für das Versetzungs- Problem, aber dann wird das ganze genau einmal ausgeführt, und der Enemy steht danach dumm rum
-            navMeshAgent.SetDestination(movementTarget.position);
-            //SetMovementTarget(movementTarget);
-            Debug.Log("Enemy Pos: " + enemyTransform.position);
-            Debug.Log("Movement Target: " + movementTarget.position);
-        }
+    private void SearchPlayer(out Vector3 randomPosition)
+    {
+        randomPosition = enemyTransform.position + new Vector3(Random.Range(-20f, 20f), 0f, Random.Range(-20f, 20f));
+        //navMeshAgent.SetDestination(randomPosition); Das wäre die Lösung für das Versetzungs- Problem, aber dann wird das ganze genau einmal ausgeführt, und der Enemy steht danach dumm rum
+        navMeshAgent.SetDestination(randomPosition);
+        //Debug.Log("Enemy Pos: " + enemyTransform.position);
+        //Debug.Log("Movement Target: " + movementTarget.position);
+    }
     
 
     private void OnTriggerEnter(Collider other)
@@ -136,15 +135,8 @@ public class EnemyMovement : MonoBehaviour
     }
     public Transform GetRandomTransform()
     {
-        if (transformList.Count > 0)
-        {
-            int randomIndex = Random.Range(0, transformList.Count); // Zufälliger Index
-            return transformList[randomIndex]; // Gib den zufälligen Transform zurück
-        }
-        else
-        {
-            return null;
-        }
+        int randomIndex = Random.Range(0, transformList.Count); // Zufälliger Index
+        return transformList[randomIndex]; // Gib den zufälligen Transform zurück
     }
 }
 
