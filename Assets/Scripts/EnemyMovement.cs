@@ -1,33 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.AI.Navigation;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class EnemyMovement : MonoBehaviour
 {
-    enum enemyState { idle, followPlayer, searchPlayer}
+    enum enemyState {Idle, Attack, FollowPlayer, SearchPlayer}
 
+    [Header("Variables")]
     [SerializeField] enemyState currentState;
-
-    private NavMeshAgent navMeshAgent;
-    [SerializeField] private Transform playerTransform;
-
-    [SerializeField] private Transform enemyTransform;
-    [SerializeField] private SphereCollider playerRadius;
-
-    [SerializeField] private SphereCollider deathCollider;
-    [SerializeField] private SphereCollider followCollider;
-
-    //private bool destinationReached;
-    private bool isSearchCoroutineRunning;
-    private Transform movementTarget;
-    private int collidedWithCounter;
-
     [SerializeField] private float searchTime = 9f;
+    [SerializeField] private float followPlayerRadius = 20f;
 
-    [SerializeField]
-    public List<Transform> transformList = new List<Transform>(); // Liste f¸r Transforms
+    
+    [Header("References")]
+    [SerializeField] public List<Transform> transformList = new List<Transform>(); // Liste f√ºr Transforms
+    [SerializeField] private Transform visuals;
+    [SerializeField] private Animator animator;
+    
+    private NavMeshAgent navMeshAgent;
+    private Transform movementTarget;
+    private bool aboveSurface;
+    
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -40,91 +38,146 @@ public class EnemyMovement : MonoBehaviour
     }
     private void Update()
     {
-        if (currentState == enemyState.idle)
+        if (currentState == enemyState.Idle)
         {
-            if (Vector3.Distance(movementTarget.position, enemyTransform.position) <= 0.5f) //ist es schon da?
+            if (Vector3.Distance(movementTarget.position, transform.position) <= 0.5f) //ist es schon da?
             {
                 //destinationReached = true;
                 movementTarget = GetRandomTransform();
                 SetMovementTarget(movementTarget);
             }
         }
-        else if (currentState == enemyState.followPlayer)
-        {
-            SetMovementTarget(GameVariables.instance.player.transform);
-        }
-        else //Seach Player
-        {
-            if (!isSearchCoroutineRunning)
-            {
-                StartCoroutine(Search());
-            }
-        }
-        //if ((int)currentState > 0) //ist in State 1 oder 2, d.h. alles auﬂer idle
     }
-    IEnumerator Search()
-    {
-        isSearchCoroutineRunning = true;
-        float startTime = Time.realtimeSinceStartup;
-        Vector3 randomPosition;
-        SearchPlayer(out randomPosition);
 
-        while (Time.realtimeSinceStartup - startTime < searchTime)
+    IEnumerator Attack()
+    {
+        Debug.Log("Attack");
+        currentState = enemyState.Attack;
+
+        if (!aboveSurface)
         {
-            if (Vector3.Distance(randomPosition, enemyTransform.position) <= 1f)
-            {
-                //destinationReached = true;
-                SearchPlayer(out randomPosition);       
-            }
-            Debug.Log(Vector3.Distance(randomPosition, enemyTransform.position));
+            transform.LookAt(GameVariables.instance.player.transform.position, Vector3.up);
+            animator.CrossFade("Attack",0);
+            aboveSurface = true;
+        }
+        
+        navMeshAgent.SetDestination(transform.position);
+        yield return new WaitForSeconds(1);
+        StartCoroutine(FollowPlayer());
+    }
+
+    IEnumerator FollowPlayer()
+    {
+        Debug.Log("Follow");
+        currentState = enemyState.FollowPlayer;
+        Transform playerTransform = GameVariables.instance.player.transform;
+        
+        while (Vector3.Distance(playerTransform.position, transform.position) < followPlayerRadius)
+        {
+            SetMovementTarget(playerTransform);
             yield return null;
         }
-        currentState = enemyState.idle;
-        movementTarget = GetRandomTransform();
-        SetMovementTarget(movementTarget);
-        isSearchCoroutineRunning = false;
-        Debug.Log("Coroutine finished!");
+        
+        StartCoroutine(SearchPlayer());
+    }
+    
+    IEnumerator SearchPlayer()
+    {
+        Debug.Log("Search");
+        currentState = enemyState.SearchPlayer;
+        float startTime = Time.realtimeSinceStartup;
+        bool foundPlayer = false;
+        Transform playerTransform = GameVariables.instance.player.transform;
+        
+        SetNewSearchDestination(out Vector3 randomPosition);
+
+        while (Time.realtimeSinceStartup - startTime < searchTime && !foundPlayer)
+        {
+            if (Vector3.Distance(randomPosition, transform.position) <= 1f)
+            {
+                //destinationReached = true;
+                SetNewSearchDestination(out randomPosition);       
+            }
+            else if (Vector3.Distance(playerTransform.position, transform.position) < followPlayerRadius)
+            {
+                foundPlayer = true;
+                StartCoroutine(FollowPlayer());
+            }
+            yield return null;
+        }
+
+        if (!foundPlayer)
+        {
+            animator.CrossFade("Idle", 0);
+            aboveSurface = false;
+            
+            currentState = enemyState.Idle;
+            movementTarget = GetRandomTransform();
+            SetMovementTarget(movementTarget);
+        }
     }
 
-    private void SearchPlayer(out Vector3 randomPosition)
+    private void SetNewSearchDestination(out Vector3 randomPosition)
     {
-        randomPosition = enemyTransform.position + new Vector3(Random.Range(-20f, 20f), 0f, Random.Range(-20f, 20f));
-        //navMeshAgent.SetDestination(randomPosition); Das w‰re die Lˆsung f¸r das Versetzungs- Problem, aber dann wird das ganze genau einmal ausgef¸hrt, und der Enemy steht danach dumm rum
+        randomPosition = transform.position + new Vector3(Random.Range(-20f, 20f), 0f, Random.Range(-20f, 20f));
         navMeshAgent.SetDestination(randomPosition);
         //Debug.Log("Enemy Pos: " + enemyTransform.position);
         //Debug.Log("Movement Target: " + movementTarget.position);
     }
     
-
     private void OnTriggerEnter(Collider other)
     {
-        
-        if(other.tag.Equals("FireflyCollector"))
+        if (other.tag.Equals("Player"))
         {
-            collidedWithCounter++;
-            if(collidedWithCounter > 1)
-            {
-                Debug.Log("ded");
-            }
-            else
-            {
-                currentState = enemyState.followPlayer;
-                Debug.Log("Current State: Follow Player");
-            }
-            Debug.Log(collidedWithCounter);
+            StopCoroutine(nameof(FollowPlayer));
+            // StopCoroutine(nameof(SearchPlayer));
+            StartCoroutine(Attack());
         }
+        // if(other.tag.Equals("PlayerGlowArea"))
+        // {
+        //     collidedWithGlowAreaCounter++;
+        //     
+        //     if(collidedWithGlowAreaCounter == 1)
+        //         currentState = enemyState.FollowPlayer;
+        //     // if(collidedWithCounter > 1)
+        //     // {
+        //     //     Debug.Log("ded");
+        //     // }
+        //     // else
+        //     // {
+        //     //     
+        //     //     Debug.Log("Current State: Follow Player");
+        //     // }
+        //     // Debug.Log(collidedWithCounter);
+        // }
+        // else if (other.tag.Equals("Player"))
+        // {
+        //     collidedWithPlayerCounter++;
+        //     if(collidedWithPlayerCounter > 1)
+        //         Debug.Log("You Died");
+        // }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag.Equals("FireflyCollector"))
-        {
-            collidedWithCounter--;
-            if (collidedWithCounter == 0)
-            {
-                currentState = enemyState.searchPlayer;
-                Debug.Log("Current State: Search Player");
-            }
-        }
+        // if (other.tag.Equals("PlayerGlowArea"))
+        // {
+        //     collidedWithGlowAreaCounter--;
+        //     if (collidedWithGlowAreaCounter == 0)
+        //     {
+        //         currentState = enemyState.SearchPlayer;
+        //         Debug.Log("Current State: Search Player");
+        //     }
+        // }
+        // else if (other.tag.Equals("Player"))
+        // {
+        //     // collidedWithPlayerCounter--;
+        // }
+        //
+        // if (other.tag.Equals("PlayerGlowArea"))
+        // {
+        //     currentState = enemyState.SearchPlayer;
+        //     StopCoroutine(nameof(FollowAndAttackPlayer));
+        // }
     }
 
     internal void SetMovementTarget(Transform movementTarget)
@@ -135,12 +188,18 @@ public class EnemyMovement : MonoBehaviour
     }
     public Transform GetRandomTransform()
     {
-        int randomIndex = Random.Range(0, transformList.Count); // Zuf‰lliger Index
-        return transformList[randomIndex]; // Gib den zuf‰lligen Transform zur¸ck
+        int randomIndex = Random.Range(0, transformList.Count); // Zuf√§lliger Index
+        return transformList[randomIndex]; // Gib den zuf√§lligen Transform zur√ºck
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, followPlayerRadius);
     }
 }
 
 //Jetziges Problem: Da einer der Cubes in der Liste das movement Target ist, und dieses immer versetzt wird, wird bei jedem SeachPlayer State
-//einer der fixed Punkte auf der Map versetzt. Das w‰re auch an sich gar nicht schlimm, aber es besteht die Mˆglichkeit, dass dieser Punkt
-//auﬂerhalb der NavMesh Fl‰che oder in einem nicht begehbaren Objekt gesetzt wird, was beim n‰chsten Idle State dazu f¸hren kˆnnte,
-//dass der Enemy irgendwo nicht hinkommt, und dann "feststeckt", was ein Game Breaking Bug w‰re.
+//einer der fixed Punkte auf der Map versetzt. Das w√§re auch an sich gar nicht schlimm, aber es besteht die M√∂glichkeit, dass dieser Punkt
+//au√üerhalb der NavMesh Fl√§che oder in einem nicht begehbaren Objekt gesetzt wird, was beim n√§chsten Idle State dazu f√ºhren k√∂nnte,
+//dass der Enemy irgendwo nicht hinkommt, und dann "feststeckt", was ein Game Breaking Bug w√§re.
