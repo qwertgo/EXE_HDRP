@@ -5187,10 +5187,70 @@ MonoBehaviour:
   jumpForce: 15
   breakForce: 0.01
   gravitationMultiplier: 2
-  driftTurnSpeed: 150
-  driftRadiusMultiplier: 0.06
   tractionWhileDrifting: 10
-  driftOversteer: 10
+  timeToGetBoost: 0
+  boostForce: 0
+  boostTime: 0
+  defaultParticleColor:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  boostParticleColor:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
   lookAtMoveAmount: 3
   horizontalLerpSpeed: 0.75
   cameraYawDamping: 1.75
@@ -5203,8 +5263,6 @@ MonoBehaviour:
   groundParticles: {fileID: 8530446689156277822}
   rightDriftPointContainer: {fileID: 1582747289892162416}
   leftDriftPointContainer: {fileID: 7041608628081519611}
-  distanceIndicator: {fileID: 1875544462167600292, guid: bdb5a17c25906e3449ee09a30364e94a,
-    type: 3}
 --- !u!1 &2007743758044179804
 GameObject:
   m_ObjectHideFlags: 0
@@ -5288,7 +5346,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 7
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7263580989883142355
 Rigidbody:
