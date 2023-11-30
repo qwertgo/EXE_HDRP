@@ -33,7 +33,7 @@ public class FireflySpawner : MonoBehaviour
 
             Vector3 fireflyStartPosition = Vector3.right * centerDistance;
             float randomRotation = Random.Range(0f, 360f);
-            int fireflyAmountInRing = (int)Mathf.Pow(2, i + 2);
+            int fireflyAmountInRing = (int)Mathf.Pow(2, i + 1);
             float rotationPerFirefly = 360f / fireflyAmountInRing;
 
             //for each firefly inside the ring
@@ -44,7 +44,7 @@ public class FireflySpawner : MonoBehaviour
                 FireflyWalk currentFirefly = Instantiate(fireflyPrefab, fireflyPosition, Quaternion.identity);
 
                 bool moveRight = i % 2 == 0;
-                currentFirefly.SetFireflyValues(halfRingWidth / 2, moveRight);
+                currentFirefly.SetFireflyValues(halfRingWidth * .3f, moveRight);
 
                 currentFirefly.transform.parent = transform;
             }
