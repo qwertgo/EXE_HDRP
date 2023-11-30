@@ -146,11 +146,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         isGrounded = IsGrounded();
         isFalling = IsFalling();
 
+        bool stateEqualsFalling = currentState == PlayerState.Falling || (currentState == PlayerState.JumpDrifting && !justStartedJumping);
+
         if (!isGrounded && isFalling && !isDrifting)
             currentState = PlayerState.Falling;
-        else if (currentState == PlayerState.Falling && isGrounded)
+        else if (stateEqualsFalling && isGrounded)
         {
-            currentState = PlayerState.Running;
+            currentState = currentState == PlayerState.JumpDrifting ? PlayerState.Drifting : PlayerState.Running;
             groundParticlesObject.SetActive(true);
         }
         else if (currentState == PlayerState.JumpDrifting && isGrounded && !justStartedJumping)
@@ -300,7 +302,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     IEnumerator Boost()
     {
         ReturnToDefaultSpeed();
-        Debug.Log("Boost");
         maxSpeed += boostForce;
         rb.velocity += playerVisuals.forward * boostForce;
         yield return new WaitForSeconds(boostTime);
