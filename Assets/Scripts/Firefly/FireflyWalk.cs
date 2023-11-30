@@ -40,8 +40,6 @@ public class FireflyWalk : MonoBehaviour
         navMeshAgent.nextPosition = destinationPoint.position;
         navMeshAgent.speed = speed;
         navMeshAgent.acceleration = speed;
-
-        
     }
 
     

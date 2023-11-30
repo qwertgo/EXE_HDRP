@@ -253,7 +253,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
         
         //drift visuals
-        if(tongueStretchFactor < .9f)
+        if(tongueStretchFactor < .5f)
             return;
         
         driftTimeCounter += Time.fixedDeltaTime;
@@ -300,6 +300,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     IEnumerator Boost()
     {
         ReturnToDefaultSpeed();
+        Debug.Log("Boost");
         maxSpeed += boostForce;
         rb.velocity += playerVisuals.forward * boostForce;
         yield return new WaitForSeconds(boostTime);
@@ -406,7 +407,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
             StartDrifting();
         }
-        else if (context.canceled)
+        else if (context.canceled && isDrifting)
         {
             StopDrifting();
         }
@@ -421,7 +422,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
             StartDrifting();
         }
-        else if (context.canceled)
+        else if (context.canceled && isDrifting)
         {
             StopDrifting();
         }
