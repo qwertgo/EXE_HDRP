@@ -5261,6 +5261,7 @@ MonoBehaviour:
   lookAt: {fileID: 9105339177700952640}
   groundSlopeRef: {fileID: 2145405288765843991}
   groundParticles: {fileID: 8530446689156277822}
+  material: {fileID: 0}
   rightDriftPointContainer: {fileID: 1582747289892162416}
   leftDriftPointContainer: {fileID: 7041608628081519611}
 --- !u!1 &2007743758044179804

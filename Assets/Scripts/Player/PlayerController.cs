@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private float currentTraction;
     private float maxSpeedOriginal;
 
-    private int fireflyCount;
+    public int fireflyCount { get; private set; }
     
     private bool isGrounded;
     private bool isFalling;
@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private Transform lookAt;
     [SerializeField] private Transform groundSlopeRef;
     [SerializeField] private ParticleSystem groundParticles;
+    [SerializeField] private Material material;
     private GameObject groundParticlesObject;
     [SerializeField] private DriftPointContainer rightDriftPointContainer;
     [SerializeField] private DriftPointContainer leftDriftPointContainer;
@@ -117,6 +118,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rightDriftPointContainer.SetRightContainer();
 
         GameVariables.instance.player = this;
+    }
+
+    private void OnDestroy()
+    {
+        material.SetFloat("_fireflyCount", 0);
     }
 
     #region physics
@@ -352,6 +358,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     public void CollectFirefly()
     {
         fireflyCount++;
+        material.SetFloat("_fireflyCount", fireflyCount);
         //later there will be UI and Player Changes
     }
     #endregion
