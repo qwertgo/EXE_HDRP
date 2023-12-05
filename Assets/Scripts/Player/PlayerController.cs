@@ -133,11 +133,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Steer();
         AdjustToGroundSlope();
         Accelerate();
-
+    
         //multiply Gravity after jump peak
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
     }
-
+    
     private void LateUpdate()
     {
         if (isDrifting)
@@ -282,7 +282,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         float angleToDriftPoint = Vector2.SignedAngle(forward2D, vecToDriftPoint2D);
         angleToDriftPoint = Mathf.Min(Mathf.Abs(angleToDriftPoint), 80);
-        // Debug.Log("angle: " + angleToDriftPoint);
 
         //get tongueStretchFactor out of distance to drift point and angle 
         float distanceFactor =  Mathf.Clamp01(distanceToDriftPoint / outerDriftRadius - .5f ) * 2;
@@ -313,6 +312,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         yield return new WaitForSeconds(boostTime);
 
         maxSpeed = maxSpeedOriginal;
+    }
+
+    public void Die()
+    {
+        Debug.Log("Player Died");
+        rb.isKinematic = true;
+        // rb.velocity = Vector3.zero;
+        enabled = false;
     }
     #endregion
 
