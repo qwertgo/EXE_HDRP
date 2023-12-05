@@ -21,6 +21,7 @@ public class EnemyMovement : MonoBehaviour
     [Header("References")]
     [SerializeField] public List<Transform> idleDestinationPoints = new (); // Liste für Transforms
     [SerializeField] private Animator animator;
+    [SerializeField] private Light spotLight;
 
     [SerializeField] private Collider mouthCollider;
     [SerializeField] private Collider attackPlayerCollider;
@@ -43,6 +44,7 @@ public class EnemyMovement : MonoBehaviour
 
     IEnumerator Idle()
     {
+        currentState = enemyState.Idle;
         movementTarget = GetRandomTransform();
         navMeshAgent.SetDestination(movementTarget.position);
         
@@ -74,8 +76,6 @@ public class EnemyMovement : MonoBehaviour
             yield return null;
         }
 
-        navMeshAgent.angularSpeed = 180;
-        
         StartCoroutine(FollowPlayer());
         finishedAttack = false;
     }
@@ -84,20 +84,22 @@ public class EnemyMovement : MonoBehaviour
     {
         // Debug.Log("Follow");
         currentState = enemyState.FollowPlayer;
-        
+        spotLight.enabled = true;
+        spotLight.range = followPlayerRadius;
         
         while (Vector3.Distance(playerTransform.position, transform.position) < followPlayerRadius)
         {
             SetMovementTarget(playerTransform);
             LookAtPlayer();
+            spotLight.transform.LookAt(playerTransform);
             yield return null;
         }
 
         animator.CrossFade("Idle", 0);
         mouthCollider.enabled = false;
         attackPlayerCollider.enabled = false;
+        spotLight.enabled = false;
         
-        currentState = enemyState.Idle;
         StartCoroutine(Idle());
     }
 
@@ -155,18 +157,18 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!other.tag.Equals("Player"))
             return;
-        
-        
+
         if(currentState == enemyState.Idle)
             StartCoroutine(Attack());
         else if(currentState > 0)
-            GameVariables.instance.player.Die();;
+            GameVariables.instance.player.Die();
     }
 
     internal void SetMovementTarget(Transform movementTarget)
     {
         navMeshAgent.SetDestination(movementTarget.position);
     }
+    
     public Transform GetRandomTransform()
     {
         int randomIndex = Random.Range(0, idleDestinationPoints.Count); // Zufälliger Index

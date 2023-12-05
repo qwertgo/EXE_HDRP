@@ -1138,7 +1138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6f8a2eecbbbd7140a519e2546eabefb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 972078617}
 --- !u!4 &661496486
 Transform:
   m_ObjectHideFlags: 0
@@ -1478,6 +1478,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8e782e54b0c4774fbf0d7635f17beb5, type: 3}
+--- !u!114 &972078617 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 443424417985546458, guid: 341602172f457674f9e2a1a08127af17,
+    type: 3}
+  m_PrefabInstance: {fileID: 1541014696}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc8af08a3d6b96d459ad8801637983a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &992381582 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 494976955709628771, guid: e08e10f0c61c1264a975122455d277b4,
@@ -1734,7 +1746,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 100000
+  m_Intensity: 36119.406
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1775,7 +1787,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 1
@@ -1811,7 +1823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Intensity: 100000
+  m_Intensity: 36119.406
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
@@ -2583,12 +2595,6 @@ Transform:
   m_Father: {fileID: 545239375}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &1731094552 stripped
-SphereCollider:
-  m_CorrespondingSourceObject: {fileID: 1765703706759856921, guid: a2b54be69bf311a4cb88b3bf95751e3f,
-    type: 3}
-  m_PrefabInstance: {fileID: 8451909514268340815}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1736575971
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3327,11 +3333,6 @@ PrefabInstance:
       propertyPath: visuals
       value: 
       objectReference: {fileID: 1989754474}
-    - target: {fileID: 9188452968715423062, guid: a2b54be69bf311a4cb88b3bf95751e3f,
-        type: 3}
-      propertyPath: mouthCollider
-      value: 
-      objectReference: {fileID: 1731094552}
     - target: {fileID: 9188452968715423062, guid: a2b54be69bf311a4cb88b3bf95751e3f,
         type: 3}
       propertyPath: transformList.Array.data[0]
