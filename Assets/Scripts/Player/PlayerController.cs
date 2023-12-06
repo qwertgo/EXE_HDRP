@@ -42,8 +42,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private Gradient boostParticleColor;
     private float outerDriftRadius;
     private float driftTimeCounter;
-    // [SerializeField] private float driftOversteer;
-    
+
     [Header("Camera")] 
     [SerializeField] private float lookAtMoveAmount;
     [SerializeField] private float horizontalLerpSpeed;
@@ -51,14 +50,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float cameraDriftYawDamping;
     [SerializeField] private float maxDutchTilt;
 
-    private float horizontalLerpTo;
-
     private Transform currentDriftPoint;
     private PlayerState currentState = PlayerState.Running;
     private Vector3 forwardVecAtDriftStart;
 
     private float horizontal;
-    
+    private float horizontalLerpTo;
     private float currentTraction;
     private float maxSpeedOriginal;
 
@@ -70,6 +67,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool justStartedJumping;
     private bool isDriftingRight;
     private bool arrivedAtDriftPeak;
+    private bool startedDriftBoost;
     
 
     [Header("References")]
@@ -79,19 +77,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private Transform groundSlopeRef;
     [SerializeField] private ParticleSystem groundParticles;
     [SerializeField] private Material material;
-    private GameObject groundParticlesObject;
     [SerializeField] private DriftPointContainer rightDriftPointContainer;
     [SerializeField] private DriftPointContainer leftDriftPointContainer;
-    // [SerializeField] private GameObject distanceIndicator;
+    
+    private GameObject groundParticlesObject;
     private CinemachineVirtualCamera virtualCamera;
     private CinemachineTransposer cinemachineTransposer;
     private Rigidbody rb;
     private SphereCollider sphereCollider;
     private PlayerInput controls;
     private LineRenderer lineRenderer;
-
-    //Coroutine slowDown;
-    //Coroutine speedUp;
 
     void Start()
     {
@@ -125,12 +120,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         material.SetFloat("_fireflyCount", 0);
     }
 
-    #region physics
+    #region Physics
     void FixedUpdate()
     {
         //update current State 
         UpdateState();
-        Steer();
         AdjustToGroundSlope();
         Accelerate();
     
@@ -147,6 +141,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
     }
 
+    private void Update()
+    {
+        Steer();
+    }
+
+    #endregion
+
+    #region States
     void UpdateState()
     {
         isGrounded = IsGrounded();
@@ -198,7 +200,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             //steer
             // playerVisuals.eulerAngles += new Vector3(0, horizontal * Time.deltaTime * steerAmount, 0);
-            playerVisuals.Rotate(playerVisuals.up, horizontal * Time.fixedDeltaTime * steerAmount);
+            playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * steerAmount);
 
             //update container to get closest drift point
             leftDriftPointContainer.GetDriftPoints();
@@ -212,11 +214,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         virtualCamera.m_Lens.Dutch = horizontalLerpTo * maxDutchTilt;
         
         //traction
-        // Debug.DrawRay(transform.position, playerVisuals.forward * 4);
-        // Debug.DrawRay(transform.position, rb.velocity.normalized * 4, Color.cyan);
         float gravity = rb.velocity.y;
         Vector3 velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.fixedDeltaTime) * velocity.magnitude;
+        rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.deltaTime) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
     }
 
@@ -235,11 +235,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
     }
 
-    private bool startedDriftBoost;
-
     void Drift()
     {
-
         //variables needed
         Vector3 vecToDriftPoint = currentDriftPoint.position - transform.position;
         Vector2 vecToDriftPoint2D = new Vector2(vecToDriftPoint.x, vecToDriftPoint.z);
@@ -264,7 +261,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if(tongueStretchFactor < .5f)
             return;
         
-        driftTimeCounter += Time.fixedDeltaTime;
+        driftTimeCounter += Time.deltaTime;
         if (driftTimeCounter > timeToGetBoost && !startedDriftBoost)
         {
             ChangeParticleColor(boostParticleColor);
@@ -302,8 +299,15 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         ParticleSystem.ColorOverLifetimeModule colOverLifeTime = groundParticles.colorOverLifetime;
         colOverLifeTime.color = color;
     }
-
-
+    public void Die()
+    {
+        Debug.Log("Player Died");
+        rb.isKinematic = true;
+        // rb.velocity = Vector3.zero;
+        enabled = false;
+        GameManager.instance.TooglePause();
+    }
+    
     IEnumerator Boost()
     {
         ReturnToDefaultSpeed();
@@ -313,15 +317,58 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         maxSpeed = maxSpeedOriginal;
     }
-
-    public void Die()
+    
+    public void SlowDown()
     {
-        Debug.Log("Player Died");
-        rb.isKinematic = true;
-        // rb.velocity = Vector3.zero;
-        enabled = false;
-        GameManager.instance.TooglePause();
+        StartCoroutine(SlowDownCoroutine());
     }
+    IEnumerator SlowDownCoroutine()
+    {
+        float t = 0;
+        float from = maxSpeedOriginal;
+        float To = maxSpeedOriginal - slowFieldSlow;
+
+        while (t < 1)
+        {
+            maxSpeed = Mathf.Lerp(from, To, t);
+            t += Time.deltaTime * 2;
+            // Debug.Log(t);
+            yield return null;
+        }
+
+        maxSpeed = To;
+    }
+
+    public void ReturnToDefaultSpeed()
+    {
+        if(maxSpeed >= maxSpeedOriginal)
+            return;
+        
+        StopCoroutine(nameof(SlowDownCoroutine));
+        maxSpeed = maxSpeedOriginal;
+    }
+
+    public void StartSlowMoTurn()
+    {
+        StartCoroutine(SlowMoTurn());
+    }
+    IEnumerator SlowMoTurn()
+    {
+        Time.timeScale = .1f;
+        steerAmount *= 10;
+        cinemachineTransposer.m_YawDamping = 0;
+        rb.velocity = Vector3.zero;
+        
+        yield return new WaitForSecondsRealtime(2);
+        
+        Time.timeScale = 1;
+        steerAmount /= 10;
+        cinemachineTransposer.m_YawDamping = cameraYawDamping;
+        
+        rb.velocity = playerVisuals.forward * maxSpeed;
+        StartCoroutine(Boost());
+    }
+    
     #endregion
 
     #region Collider
@@ -353,11 +400,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     bool IsFalling()
     {
         return rb.velocity.y < -.5f;
-    }
-
-    bool IsDrifting()
-    {
-        return currentState == PlayerState.Drifting || currentState == PlayerState.JumpDrifting;
     }
     #endregion
     
@@ -412,6 +454,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
                 rb.velocity *= 1 - breakForce;
             yield return 0;
         }
+    }
+
+    public void OnSlowMoBoost(InputAction.CallbackContext context)
+    {
+        if(context.started)
+            StartSlowMoTurn();
     }
 
     public void OnLeftDrift(InputAction.CallbackContext context)
@@ -484,39 +532,5 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         //change how fast the camera copies the rotation of the player
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
     }
-    #endregion
-    
-
-    #region slowBox
-    public void SlowDown()
-    {
-        StartCoroutine(SlowDownCoroutine());
-    }
-    IEnumerator SlowDownCoroutine()
-    {
-        float t = 0;
-        float from = maxSpeedOriginal;
-        float To = maxSpeedOriginal - slowFieldSlow;
-
-        while (t < 1)
-        {
-            maxSpeed = Mathf.Lerp(from, To, t);
-            t += Time.deltaTime * 2;
-            // Debug.Log(t);
-            yield return null;
-        }
-
-        maxSpeed = To;
-    }
-
-    public void ReturnToDefaultSpeed()
-    {
-        if(maxSpeed >= maxSpeedOriginal)
-            return;
-        
-        StopCoroutine(nameof(SlowDownCoroutine));
-        maxSpeed = maxSpeedOriginal;
-    }
-
     #endregion
 }

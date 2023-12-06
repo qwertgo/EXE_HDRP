@@ -71,6 +71,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SlowMoBoost"",
+                    ""type"": ""Button"",
+                    ""id"": ""c926d4d2-cfe6-487b-8dcf-e844fb630083"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -227,6 +236,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""RightDrift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b95c719-345f-43cd-bcc3-bd53177e4480"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SlowMoBoost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -240,6 +260,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_P_Controls_Break = m_P_Controls.FindAction("Break", throwIfNotFound: true);
         m_P_Controls_LeftDrift = m_P_Controls.FindAction("LeftDrift", throwIfNotFound: true);
         m_P_Controls_RightDrift = m_P_Controls.FindAction("RightDrift", throwIfNotFound: true);
+        m_P_Controls_SlowMoBoost = m_P_Controls.FindAction("SlowMoBoost", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -306,6 +327,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_P_Controls_Break;
     private readonly InputAction m_P_Controls_LeftDrift;
     private readonly InputAction m_P_Controls_RightDrift;
+    private readonly InputAction m_P_Controls_SlowMoBoost;
     public struct P_ControlsActions
     {
         private @PlayerInput m_Wrapper;
@@ -315,6 +337,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Break => m_Wrapper.m_P_Controls_Break;
         public InputAction @LeftDrift => m_Wrapper.m_P_Controls_LeftDrift;
         public InputAction @RightDrift => m_Wrapper.m_P_Controls_RightDrift;
+        public InputAction @SlowMoBoost => m_Wrapper.m_P_Controls_SlowMoBoost;
         public InputActionMap Get() { return m_Wrapper.m_P_Controls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -339,6 +362,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @RightDrift.started += instance.OnRightDrift;
             @RightDrift.performed += instance.OnRightDrift;
             @RightDrift.canceled += instance.OnRightDrift;
+            @SlowMoBoost.started += instance.OnSlowMoBoost;
+            @SlowMoBoost.performed += instance.OnSlowMoBoost;
+            @SlowMoBoost.canceled += instance.OnSlowMoBoost;
         }
 
         private void UnregisterCallbacks(IP_ControlsActions instance)
@@ -358,6 +384,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @RightDrift.started -= instance.OnRightDrift;
             @RightDrift.performed -= instance.OnRightDrift;
             @RightDrift.canceled -= instance.OnRightDrift;
+            @SlowMoBoost.started -= instance.OnSlowMoBoost;
+            @SlowMoBoost.performed -= instance.OnSlowMoBoost;
+            @SlowMoBoost.canceled -= instance.OnSlowMoBoost;
         }
 
         public void RemoveCallbacks(IP_ControlsActions instance)
@@ -382,5 +411,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnBreak(InputAction.CallbackContext context);
         void OnLeftDrift(InputAction.CallbackContext context);
         void OnRightDrift(InputAction.CallbackContext context);
+        void OnSlowMoBoost(InputAction.CallbackContext context);
     }
 }

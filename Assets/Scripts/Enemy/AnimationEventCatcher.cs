@@ -10,4 +10,9 @@ public class AnimationEventCatcher : MonoBehaviour
     {
         enemyMovement.finishedAttack = true;
     }
+
+    public void StartSlowMoBoost()
+    {
+        GameVariables.instance.player.StartSlowMoTurn();
+    }
 }
