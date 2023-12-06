@@ -42,7 +42,7 @@ public class EnemyMovement : MonoBehaviour
         playerTransform = GameVariables.instance.player.transform;
     }
 
-    IEnumerator Idle()
+    protected IEnumerator Idle()
     {
         currentState = enemyState.Idle;
         movementTarget = GetRandomTransform();
@@ -85,7 +85,7 @@ public class EnemyMovement : MonoBehaviour
         // Debug.Log("Follow");
         currentState = enemyState.FollowPlayer;
         spotLight.enabled = true;
-        spotLight.range = followPlayerRadius;
+        spotLight.range = followPlayerRadius + 3;
         
         while (Vector3.Distance(playerTransform.position, transform.position) < followPlayerRadius)
         {
@@ -97,7 +97,7 @@ public class EnemyMovement : MonoBehaviour
 
         animator.CrossFade("Idle", 0);
         mouthCollider.enabled = false;
-        attackPlayerCollider.enabled = false;
+        attackPlayerCollider.enabled = true;
         spotLight.enabled = false;
         
         StartCoroutine(Idle());
@@ -164,12 +164,12 @@ public class EnemyMovement : MonoBehaviour
             GameVariables.instance.player.Die();
     }
 
-    internal void SetMovementTarget(Transform movementTarget)
+    private void SetMovementTarget(Transform movementTarget)
     {
         navMeshAgent.SetDestination(movementTarget.position);
     }
     
-    public Transform GetRandomTransform()
+    private Transform GetRandomTransform()
     {
         int randomIndex = Random.Range(0, idleDestinationPoints.Count); // Zufälliger Index
         return idleDestinationPoints[randomIndex]; // Gib den zufälligen Transform zurück

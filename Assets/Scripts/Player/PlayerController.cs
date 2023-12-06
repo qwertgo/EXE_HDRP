@@ -320,6 +320,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.isKinematic = true;
         // rb.velocity = Vector3.zero;
         enabled = false;
+        GameManager.instance.TooglePause();
     }
     #endregion
 
