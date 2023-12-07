@@ -792,7 +792,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 18
-  timeToRespawn: 5
+  timeToRespawn: 30
   collectSpeed: 10
   destinationPoint: {fileID: 2275953857179831993}
   visuals: {fileID: 672368394706826093}

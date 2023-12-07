@@ -58,7 +58,7 @@ public class FireflyWalk : MonoBehaviour
         rotateAroundPosition = transform.position;
         destinationPoint.position = rotateAroundPosition + Vector3.right * this.walkCircleRadius;
 
-        destinationPointSpeed = speed / walkCircleRadius * 40;
+        destinationPointSpeed = speed / walkCircleRadius * 41;
     }
 
     private void OnTriggerEnter(Collider other)

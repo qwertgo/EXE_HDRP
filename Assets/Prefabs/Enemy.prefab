@@ -642,6 +642,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   followPlayerRadius: 80
+  idleSpeed: 14
+  followPlayerSpeed: 18
   finishedAttack: 0
   idleDestinationPoints: []
   animator: {fileID: 2180120577816411660}

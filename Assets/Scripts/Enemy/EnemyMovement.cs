@@ -13,8 +13,9 @@ public class EnemyMovement : MonoBehaviour
 
     [Header("Variables")]
     [SerializeField] enemyState currentState;
-    // [SerializeField] private float searchTime = 9f;
     [SerializeField] private float followPlayerRadius = 20f;
+    [SerializeField] private float idleSpeed;
+    [SerializeField] private float followPlayerSpeed;
     [HideInInspector] public bool finishedAttack;
 
     
@@ -40,6 +41,8 @@ public class EnemyMovement : MonoBehaviour
         StartCoroutine(Idle());
 
         playerTransform = GameVariables.instance.player.transform;
+        navMeshAgent.speed = idleSpeed;
+        navMeshAgent.acceleration = idleSpeed;
     }
 
     protected IEnumerator Idle()
@@ -47,6 +50,9 @@ public class EnemyMovement : MonoBehaviour
         currentState = enemyState.Idle;
         movementTarget = GetRandomTransform();
         navMeshAgent.SetDestination(movementTarget.position);
+        
+        navMeshAgent.speed = idleSpeed;
+        navMeshAgent.acceleration = idleSpeed;
         
         while (currentState == enemyState.Idle)
         {
@@ -86,6 +92,9 @@ public class EnemyMovement : MonoBehaviour
         currentState = enemyState.FollowPlayer;
         spotLight.enabled = true;
         spotLight.range = followPlayerRadius + 3;
+        
+        navMeshAgent.speed = followPlayerSpeed;
+        navMeshAgent.acceleration = followPlayerSpeed;
         
         while (Vector3.Distance(playerTransform.position, transform.position) < followPlayerRadius)
         {
