@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6914681025507124183}
   - component: {fileID: 5017976651651163325}
+  - component: {fileID: 5699628151437772717}
   m_Layer: 1
   m_Name: CamCollider Generator
   m_TagString: Untagged
@@ -84,6 +85,33 @@ MonoBehaviour:
   sphere: {fileID: 9036981826052917451, guid: 3618b1434d5444045840d3cecda844ee, type: 3}
   nearMat: {fileID: 2100000, guid: 124c1638c55536f47863ac3cfbfd665f, type: 2}
   farMat: {fileID: 2100000, guid: bcead8638c581f244bebbdc66a90dbbd, type: 2}
+--- !u!54 &5699628151437772717
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 426879389078604672}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!1 &1150277799428963807
 GameObject:
   m_ObjectHideFlags: 0
@@ -5220,7 +5248,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2726939431158740661
 Transform:
   m_ObjectHideFlags: 0
