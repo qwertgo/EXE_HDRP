@@ -874,7 +874,10 @@ PrefabInstance:
       value: Wurzeln_V.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8866460667025110287, guid: d9b5c3e7f12649248a8ce4bd8e1f7722, type: 3}
+    - {fileID: 3376159707114228855, guid: d9b5c3e7f12649248a8ce4bd8e1f7722, type: 3}
+    - {fileID: 9026613200604085399, guid: d9b5c3e7f12649248a8ce4bd8e1f7722, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9b5c3e7f12649248a8ce4bd8e1f7722, type: 3}
