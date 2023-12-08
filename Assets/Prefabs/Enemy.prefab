@@ -25,14 +25,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 49482357540237839}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.038897943, y: -0, z: -0, w: 0.9992432}
   m_LocalPosition: {x: 0, y: 0.2609999, z: -0.01599994}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6120203281414659691}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 4.458, y: 0, z: 0}
 --- !u!108 &1616911089126072602
 Light:
   m_ObjectHideFlags: 0
@@ -45,10 +45,10 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 134217730
-  m_Range: 80
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_Intensity: 131072
+  m_Range: 85
+  m_SpotAngle: 21.795933
+  m_InnerSpotAngle: 4.1864305
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -107,14 +107,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Intensity: 30
+  m_Intensity: 14852.37
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
   m_SpotIESCutoffPercent: 100
   m_LightDimmer: 1
   m_VolumetricDimmer: 1
-  m_LightUnit: 4
+  m_LightUnit: 0
   m_FadeDistance: 10000
   m_VolumetricFadeDistance: 10000
   m_AffectDiffuse: 1
@@ -605,6 +605,7 @@ GameObject:
   - component: {fileID: 2803009006950078493}
   - component: {fileID: 8997286524052233564}
   - component: {fileID: 224554960124924074}
+  - component: {fileID: 430753858021893133}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -626,7 +627,7 @@ Transform:
   m_Children:
   - {fileID: 6120203281414659691}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9188452968715423062
 MonoBehaviour:
@@ -643,9 +644,15 @@ MonoBehaviour:
   currentState: 0
   followPlayerRadius: 80
   idleSpeed: 14
-  followPlayerSpeed: 18
+  followPlayerSpeed: 25
+  lightIntensityCloseToPlayer: 14852.37
+  lightIntensityFarFromPlayer: 15208830
   finishedAttack: 0
-  idleDestinationPoints: []
+  idleDestinationPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   animator: {fileID: 2180120577816411660}
   spotLight: {fileID: 1616911089126072602}
   mouthCollider: {fileID: 1765703706759856921}
@@ -691,7 +698,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 17
+  m_Radius: 25
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &224554960124924074
 Rigidbody:
@@ -720,6 +727,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &430753858021893133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9175560092848308192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1001 &2647303791079877388
 PrefabInstance:
   m_ObjectHideFlags: 0

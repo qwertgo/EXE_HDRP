@@ -289,7 +289,7 @@ MonoBehaviour:
   active: 1
   indirectDiffuseLightingMultiplier:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 5
   indirectDiffuseLightingLayers:
     m_OverrideState: 1
     m_Value: 255
@@ -372,7 +372,7 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 4.2710767
+    m_Value: 4.14165
   compensation:
     m_OverrideState: 1
     m_Value: 0
@@ -538,18 +538,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf384b154398e341b6b29969c078198, type: 3}
   m_Name: MotionBlur
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   quality:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   intensity:
     m_OverrideState: 1
     m_Value: 4
   maximumVelocity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 994
   minimumVelocity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 23.6
   cameraMotionBlur:
     m_OverrideState: 0
@@ -570,7 +570,7 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   m_SampleCount:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 8
 --- !u!114 &8323916412002190431
 MonoBehaviour:

@@ -16,6 +16,8 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float followPlayerRadius = 20f;
     [SerializeField] private float idleSpeed;
     [SerializeField] private float followPlayerSpeed;
+    [SerializeField] private float lightIntensityCloseToPlayer = 14852.37f;
+    [SerializeField] private float lightIntensityFarFromPlayer = 1.520883e+07f;
     [HideInInspector] public bool finishedAttack;
 
     
@@ -92,16 +94,23 @@ public class EnemyMovement : MonoBehaviour
         currentState = enemyState.FollowPlayer;
         spotLight.enabled = true;
         spotLight.range = followPlayerRadius + 3;
+        spotLight.intensity = 
         
         navMeshAgent.speed = followPlayerSpeed;
         navMeshAgent.acceleration = followPlayerSpeed;
+
+        float distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
         
-        while (Vector3.Distance(playerTransform.position, transform.position) < followPlayerRadius)
+        while (distanceToPlayer < followPlayerRadius)
         {
             SetMovementTarget(playerTransform);
             LookAtPlayer();
             spotLight.transform.LookAt(playerTransform);
+            spotLight.intensity = Mathf.Lerp(lightIntensityCloseToPlayer, lightIntensityFarFromPlayer, distanceToPlayer / followPlayerRadius);
+            
             yield return null;
+
+            distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
         }
 
         animator.CrossFade("Idle", 0);

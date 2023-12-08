@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float maxSpeed;
     [SerializeField] private float traction;
     [SerializeField] private float slowFieldSlow;
+    [SerializeField] private float adjustToGroundSlopeSpeed = 3;
     [SerializeField] private LayerMask ground;
     [SerializeField] private LayerMask obstacle;
 
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     private Transform currentDriftPoint;
     private PlayerState currentState = PlayerState.Running;
-    private Vector3 forwardVecAtDriftStart;
+    private Quaternion rotationAtDriftStart;
 
     private float horizontal;
     private float horizontalLerpTo;
@@ -123,13 +124,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region Physics
     void FixedUpdate()
     {
-        //update current State 
         UpdateState();
-        AdjustToGroundSlope();
         Accelerate();
     
         //multiply Gravity after jump peak
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
+        // Debug.Log(rb.velocity.magnitude);
     }
     
     private void LateUpdate()
@@ -169,28 +169,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         justStartedJumping = false;
     }
 
-    void AdjustToGroundSlope()
-    {
-        groundSlopeRef.rotation = playerVisuals.rotation;
-        float rotation;
-        
-        if (isGrounded)
-        {
-            Physics.Raycast(transform.position, -playerVisuals.up,out RaycastHit groundHit, sphereCollider.radius + 2, ground);
-            
-            groundSlopeRef.forward = Vector3.ProjectOnPlane(groundSlopeRef.forward, groundHit.normal);
-            rotation = Vector3.SignedAngle(groundSlopeRef.up, groundHit.normal, groundSlopeRef.forward);
-        }
-        else
-        {
-            groundSlopeRef.forward = Vector3.ProjectOnPlane(groundSlopeRef.forward, Vector3.up);
-            rotation = 0;
-        }
-        
-        groundSlopeRef.Rotate(groundSlopeRef.forward, rotation, Space.World);
-        playerVisuals.rotation = Quaternion.Lerp(playerVisuals.rotation, groundSlopeRef.rotation, Time.fixedDeltaTime * 8f);
-    }
-
     void Steer()
     {
         //steer or drift
@@ -199,8 +177,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         else
         {
             //steer
-            // playerVisuals.eulerAngles += new Vector3(0, horizontal * Time.deltaTime * steerAmount, 0);
             playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * steerAmount);
+            
+            groundSlopeRef.rotation = playerVisuals.rotation;
+            playerVisuals.rotation = AdjustToGroundSlope();
 
             //update container to get closest drift point
             leftDriftPointContainer.GetDriftPoints();
@@ -219,22 +199,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.deltaTime) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
     }
-
-    void Accelerate()
-    {
-        //acceleration
-        if(currentState != PlayerState.Breaking)
-            rb.AddForce(playerVisuals.forward * acceleration, ForceMode.Acceleration);
-
-        //limit max speed
-        Vector3 xzVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        if (xzVelocity.magnitude > maxSpeed)
-        {
-            xzVelocity = xzVelocity.normalized * maxSpeed;
-            rb.velocity = xzVelocity + new Vector3(0, rb.velocity.y, 0);
-        }
-    }
-
     void Drift()
     {
         //variables needed
@@ -247,15 +211,24 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         //get the direction the player should face at the max tonguestretchfactor
         Vector3 dirToDriftPoint = new Vector3(vecToDriftPoint.x, 0, vecToDriftPoint.z);
         dirToDriftPoint.Normalize();
-        Vector3 wantedFroward = isDriftingRight ?  dirToDriftPoint.RotateLeft90Deg() : dirToDriftPoint.RotateRight90Deg();
+        
+        groundSlopeRef.forward = isDriftingRight ?  dirToDriftPoint.RotateLeft90Deg() : dirToDriftPoint.RotateRight90Deg();
+        Quaternion wantedRotation = AdjustToGroundSlope();
 
-        playerVisuals.forward = Vector3.Lerp(forwardVecAtDriftStart, wantedFroward, tongueStretchFactor);
+        playerVisuals.rotation = Quaternion.Lerp(rotationAtDriftStart, wantedRotation, tongueStretchFactor);
 
-        //make the velocity face the same direction as the player
-        float yVelocity = rb.velocity.y;
-        Vector3 velocity2D = new Vector2(rb.velocity.x, rb.velocity.z);
+        // //make the velocity face the same direction as the player
+        if (isGrounded)
+        {
+            rb.velocity = playerVisuals.forward * rb.velocity.magnitude;
+        }
+        else
+        {
+            float yVelocity = rb.velocity.y;
+            Vector3 velocity2D = new Vector2(rb.velocity.x, rb.velocity.z);
+            rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
+        }
 
-        rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
         
         //drift visuals
         if(tongueStretchFactor < .5f)
@@ -268,7 +241,39 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             startedDriftBoost = true;
         }
     }
+    
+    Quaternion AdjustToGroundSlope()
+    {
+        if (isGrounded)
+        {
+            Physics.Raycast(transform.position, -playerVisuals.up, out RaycastHit groundHit, sphereCollider.radius + .5f, ground);
+            groundSlopeRef.forward = Vector3.ProjectOnPlane(groundSlopeRef.forward, groundHit.normal);
+            
+            float rotation = Vector3.SignedAngle(groundSlopeRef.up, groundHit.normal, groundSlopeRef.forward);
+            groundSlopeRef.Rotate(groundSlopeRef.forward, rotation, Space.World);
+        }
+        else
+        {
+            groundSlopeRef.forward = Vector3.ProjectOnPlane(groundSlopeRef.forward, Vector3.up);
+        }
+        
+        
+        return Quaternion.Lerp(playerVisuals.rotation, groundSlopeRef.rotation, Time.deltaTime * adjustToGroundSlopeSpeed);
+    }
 
+    void Accelerate()
+    {
+        //acceleration
+        if (currentState != PlayerState.Breaking)
+            rb.velocity += acceleration * Time.fixedDeltaTime * playerVisuals.forward;
+
+        //limit max speed
+        if (rb.velocity.magnitude > maxSpeed)
+        {
+            rb.velocity = rb.velocity.normalized * maxSpeed;
+        }
+    }
+    
     float GetTongeStretchFactor( Vector2 vecToDriftPoint2D)
     {
         //get distance to drift point
@@ -348,11 +353,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         maxSpeed = maxSpeedOriginal;
     }
 
-    public void StartSlowMoTurn()
+    public void StartSlowMoBoost()
     {
-        StartCoroutine(SlowMoTurn());
+        StartCoroutine(SlowMoBoost());
     }
-    IEnumerator SlowMoTurn()
+    IEnumerator SlowMoBoost()
     {
         Time.timeScale = .1f;
         steerAmount *= 10;
@@ -459,7 +464,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     public void OnSlowMoBoost(InputAction.CallbackContext context)
     {
         if(context.started)
-            StartSlowMoTurn();
+            StartSlowMoBoost();
     }
 
     public void OnLeftDrift(InputAction.CallbackContext context)
@@ -498,7 +503,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         currentState = isGrounded ? PlayerState.Drifting : PlayerState.JumpDrifting;
         lineRenderer.positionCount = 2; //start renderering the tongue line
 
-        forwardVecAtDriftStart = playerVisuals.transform.forward;
+        rotationAtDriftStart = playerVisuals.rotation;
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
 
