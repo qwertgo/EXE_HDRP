@@ -9,14 +9,15 @@ using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 {
-    private enum PlayerState
+    protected enum PlayerState
     {
         Running,
         Breaking,
         Drifting,
         Jumping,
         Falling,
-        JumpDrifting,
+        DriftJumping,
+        DriftFalling
     }
 
     [Header("Base Movement Values")]
@@ -30,9 +31,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private LayerMask obstacle;
 
     [Header("Jumping/ In Air")]
-    [SerializeField] private float jumpForce;
-    [SerializeField] private float breakForce;
-    [SerializeField] private float gravitationMultiplier;
+    [SerializeField] protected float jumpForce;
+    [SerializeField] protected float breakForce;
+    [SerializeField] protected float gravitationMultiplier;
 
     [Header("Drifting")]
     [SerializeField] private float tractionWhileDrifting;
@@ -52,43 +53,46 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float cameraDriftYawDamping;
     [SerializeField] private float maxDutchTilt;
 
-    private Transform currentDriftPoint;
-    private PlayerState currentState = PlayerState.Running;
-    private Quaternion rotationAtDriftStart;
+    
 
-    private float horizontal;
+    protected float horizontal;
     private float horizontalLerpTo;
     private float currentTraction;
     private float maxSpeedOriginal;
 
     public int fireflyCount { get; private set; }
     
-    private bool isGrounded;
+    protected bool isGrounded;
     private bool isFalling;
-    private bool isDrifting;
-    private bool justStartedJumping;
-    private bool isDriftingRight;
-    private bool arrivedAtDriftPeak;
-    private bool startedDriftBoost;
+    protected bool isDrifting;
+    protected bool justStartedJumping;
+    protected bool isDriftingRight;
+    protected bool arrivedAtDriftPeak;
+    protected bool startedDriftBoost;
 
 
     [Header("References")]
-    [SerializeField] private Transform playerVisuals;
+    [SerializeField] protected Transform playerVisuals;
     [SerializeField] private Transform tonguePoint;
     [SerializeField] private Transform lookAt;
     [SerializeField] private Transform groundSlopeRef;
     [SerializeField] private ParticleSystem groundParticles;
     [SerializeField] private Material material;
-    [SerializeField] private DriftPointContainer rightDriftPointContainer;
-    [SerializeField] private DriftPointContainer leftDriftPointContainer;
+    [SerializeField] protected DriftPointContainer rightDriftPointContainer;
+    [SerializeField] protected DriftPointContainer leftDriftPointContainer;
     [SerializeField] private GameObject refCylinder;
     
-    private GameObject groundParticlesObject;
+    protected Rigidbody rb;
+    protected GameObject groundParticlesObject;
+    protected Transform currentDriftPoint;
+    protected PlayerState currentState = PlayerState.Running;
+    
+    private PlayerInput controls;
     private CinemachineVirtualCamera virtualCamera;
     private CinemachineTransposer cinemachineTransposer;
-    private Rigidbody rb;
     private SphereCollider sphereCollider;
-    private PlayerInput controls;
+    private Quaternion rotationAtDriftStart;
+    
     private LineRenderer lineRenderer;
     private GameVariables gameVariables;
 
@@ -101,18 +105,18 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         virtualCamera = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         groundParticlesObject = groundParticles.gameObject;
-
-        cinemachineTransposer.m_YawDamping = 5;
-        maxSpeedOriginal = maxSpeed;
-
-        currentTraction = traction;
-
+        
         if (controls == null)
         {
             controls = new PlayerInput();
             controls.Enable();
             controls.P_Controls.SetCallbacks(this);
         }
+
+        cinemachineTransposer.m_YawDamping = 5;
+        maxSpeedOriginal = maxSpeed;
+
+        currentTraction = traction;
 
         rightDriftPointContainer.SetRightContainer();
 
@@ -134,10 +138,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         
         UpdateState();
         Accelerate();
-    
-        //multiply Gravity after jump peak
+
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
-        // Debug.Log(rb.velocity.magnitude);
     }
     
     private void LateUpdate()
@@ -165,17 +167,15 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         isGrounded = IsGrounded();
         isFalling = IsFalling();
 
-        bool stateEqualsFalling = currentState == PlayerState.Falling || (currentState == PlayerState.JumpDrifting && !justStartedJumping);
+        bool stateEqualsFalling = currentState == PlayerState.Falling || (currentState == PlayerState.DriftFalling && !justStartedJumping);
 
-        if (!isGrounded && isFalling && !isDrifting)
-            currentState = PlayerState.Falling;
+        if (!isGrounded && isFalling )
+            currentState = isDrifting? PlayerState.DriftFalling : PlayerState.Falling;
         else if (stateEqualsFalling && isGrounded)
         {
-            currentState = currentState == PlayerState.JumpDrifting ? PlayerState.Drifting : PlayerState.Running;
+            currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             groundParticlesObject.SetActive(true);
         }
-        else if (currentState == PlayerState.JumpDrifting && isGrounded && !justStartedJumping)
-            currentState = PlayerState.Drifting;
 
         justStartedJumping = false;
     }
@@ -183,9 +183,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     void Steer()
     {
         //steer or drift
-        if (isDrifting)
-            Drift();
-        else
+        if(!isDrifting)
         {
             //steer
             playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * steerAmount);
@@ -210,45 +208,53 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.deltaTime) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
     }
-    void Drift()
+    IEnumerator Drift()
     {
-        //variables needed
-        Vector3 vecToDriftPoint = currentDriftPoint.position - transform.position;
-        Vector2 vecToDriftPoint2D = new Vector2(vecToDriftPoint.x, vecToDriftPoint.z);
-        
-        //tonguestretchfactor indicates how much the player should go into the drift
-        float tongueStretchFactor = arrivedAtDriftPeak ? 1 : GetTongeStretchFactor(vecToDriftPoint2D) ;
-        
-        //get the direction the player should face at the max tonguestretchfactor
-        Vector3 dirToDriftPoint = new Vector3(vecToDriftPoint.x, 0, vecToDriftPoint.z);
-        dirToDriftPoint.Normalize();
-
-        float wantedRotationFloat = isDriftingRight ? -90 + overSteer : 90 - overSteer;
-        Vector3 wantedForward = Quaternion.AngleAxis(wantedRotationFloat, Vector3.up) * dirToDriftPoint;
-        Quaternion wantedRotation = Quaternion.LookRotation(wantedForward, playerVisuals.up);
-
-        playerVisuals.rotation = Quaternion.Lerp(rotationAtDriftStart, wantedRotation, tongueStretchFactor);
-        AdjustToGroundSlope();
-
-        // //make the velocity face the same direction as the player
-        if (isGrounded)
-            rb.velocity = playerVisuals.forward * rb.velocity.magnitude;
-        else
+        while (isDrifting)
         {
-            float yVelocity = rb.velocity.y;
-            Vector3 velocity2D = new Vector2(rb.velocity.x, rb.velocity.z);
-            rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
-        }
+            // yield return new WaitForFixedUpdate();
+            //variables needed
+            Vector3 vecToDriftPoint = currentDriftPoint.position - transform.position;
+            Vector2 vecToDriftPoint2D = new Vector2(vecToDriftPoint.x, vecToDriftPoint.z);
+            
+            //tonguestretchfactor indicates how much the player should go into the drift
+            float tongueStretchFactor = arrivedAtDriftPeak ? 1 : GetTongeStretchFactor(vecToDriftPoint2D) ;
+            
+            //get the direction the player should face at the max tonguestretchfactor
+            Vector3 dirToDriftPoint = new Vector3(vecToDriftPoint.x, 0, vecToDriftPoint.z);
+            dirToDriftPoint.Normalize();
 
-        //drift visuals
-        if(tongueStretchFactor < .5f)
-            return;
-        
-        driftTimeCounter += Time.deltaTime;
-        if (driftTimeCounter > timeToGetBoost && !startedDriftBoost)
-        {
-            ChangeParticleColor(boostParticleColor);
-            startedDriftBoost = true;
+            Quaternion wantedRotation = GetWantedDriftRotation(dirToDriftPoint);
+
+            playerVisuals.rotation = Quaternion.Lerp(rotationAtDriftStart, wantedRotation, tongueStretchFactor);
+            AdjustToGroundSlope();
+
+            //make the velocity face the same direction as the player
+            if (isGrounded && !(rb.velocity.y > .5f))
+            {
+                rb.velocity = playerVisuals.forward * rb.velocity.magnitude;
+                // Debug.Log("ground Drifting");
+            }
+            else
+            {
+                float yVelocity = rb.velocity.y;
+                Vector3 velocity2D = new Vector2(rb.velocity.x, rb.velocity.z);
+                rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
+                // Debug.Log("jump Drifting");
+            }
+
+            //drift visuals
+            if (tongueStretchFactor > .5f && !startedDriftBoost)
+            {
+                driftTimeCounter += Time.deltaTime;
+                if (driftTimeCounter > timeToGetBoost)
+                {
+                    ChangeParticleColor(boostParticleColor);
+                    startedDriftBoost = true;
+                }
+                
+            }
+            yield return null;
         }
     }
     
@@ -271,6 +277,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         playerVisuals.rotation = Quaternion.Lerp(playerVisuals.rotation, wantedRotation, Time.deltaTime * adjustToGroundSlopeSpeed);
+    }
+
+    Quaternion GetWantedDriftRotation(Vector3 dirToDriftPoint)
+    {
+        float wantedRotationFloat = isDriftingRight ? -90 + overSteer : 90 - overSteer;
+        Vector3 wantedForward = Quaternion.AngleAxis(wantedRotationFloat, Vector3.up) * dirToDriftPoint;
+        return Quaternion.LookRotation(wantedForward, playerVisuals.up);
     }
 
     void Accelerate()
@@ -349,7 +362,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             maxSpeed = Mathf.Lerp(from, To, t);
             t += Time.deltaTime * 2;
-            // Debug.Log(t);
             yield return null;
         }
 
@@ -426,16 +438,80 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         fireflyCount++;
         material.SetFloat("_fireflyCount", fireflyCount);
-        //later there will be UI and Player Changes
     }
     #endregion
 
-    #region handle Input
+    
+
+    protected void StartDrifting()
+    {
+        isDrifting = true;
+        currentState = isGrounded ? PlayerState.Drifting : PlayerState.DriftJumping;
+        lineRenderer.positionCount = 2; //start renderering the tongue line
+
+        rotationAtDriftStart = playerVisuals.rotation;
+
+        outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
+
+        currentTraction = tractionWhileDrifting;
+
+        horizontal = isDriftingRight ? 1f : -1f;
+
+        driftTimeCounter = 0;
+        
+        //change how fast the camera copies the rotation of the player
+        cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
+
+        StartCoroutine(Drift());
+        // refCylinder.transform.position = currentDriftPoint.position;
+        // refCylinder.transform.localScale = new Vector3(outerDriftRadius * 2, 2, outerDriftRadius * 2);
+    }
+
+    protected void StopDrifting()
+    {
+        isDrifting = false;
+        arrivedAtDriftPeak = false;
+        lineRenderer.positionCount = 0; //stop rendering the tongue line
+        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
+        currentTraction = traction;
+
+        horizontal = 0;
+
+        if (driftTimeCounter > timeToGetBoost)
+        {
+            StartCoroutine(Boost());
+            startedDriftBoost = false;
+            ChangeParticleColor(defaultParticleColor);
+        }
+        
+        //change how fast the camera copies the rotation of the player
+        cinemachineTransposer.m_YawDamping = cameraYawDamping;
+    }
+
+    void PauseMe()
+    {
+        StartCoroutine(WhilePaused());
+    }
+
+    IEnumerator WhilePaused()
+    {
+        Vector3 velocity = rb.velocity;
+        rb.velocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        yield return new WaitWhile(() => gameVariables.isPaused);
+
+        rb.isKinematic = false;
+        rb.velocity = velocity;
+    }
+
+    #region Input
+
     public void OnSteer(InputAction.CallbackContext context)
     {
         if (isDrifting)
            return;
-        
+
         horizontal = context.ReadValue<Vector2>().x;
     }
 
@@ -443,8 +519,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         if (context.started && isGrounded)
         {
-            currentState = currentState == PlayerState.Drifting ? PlayerState.JumpDrifting : PlayerState.Jumping;
-            rb.AddForce(playerVisuals.up * jumpForce, ForceMode.Impulse);
+            currentState = currentState == PlayerState.Drifting ? PlayerState.DriftJumping : PlayerState.Jumping;
+            // rb.AddForce(playerVisuals.up * jumpForce, ForceMode.Impulse);
+            rb.velocity += playerVisuals.up * jumpForce;
             justStartedJumping = true;
             groundParticlesObject.SetActive(false);
         }
@@ -509,66 +586,5 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
     }
 
-    void StartDrifting()
-    {
-        isDrifting = true;
-        currentState = isGrounded ? PlayerState.Drifting : PlayerState.JumpDrifting;
-        lineRenderer.positionCount = 2; //start renderering the tongue line
-
-        rotationAtDriftStart = playerVisuals.rotation;
-
-        outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
-
-        currentTraction = tractionWhileDrifting;
-
-        horizontal = isDriftingRight ? 1f : -1f;
-
-        driftTimeCounter = 0;
-        
-        //change how fast the camera copies the rotation of the player
-        cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
-
-
-        // refCylinder.transform.position = currentDriftPoint.position;
-        // refCylinder.transform.localScale = new Vector3(outerDriftRadius * 2, 2, outerDriftRadius * 2);
-    }
-
-    void StopDrifting()
-    {
-        isDrifting = false;
-        arrivedAtDriftPeak = false;
-        lineRenderer.positionCount = 0; //stop rendering the tongue line
-        currentState = currentState == PlayerState.JumpDrifting ? PlayerState.Jumping : PlayerState.Running;
-        currentTraction = traction;
-
-        horizontal = 0;
-
-        if (driftTimeCounter > timeToGetBoost)
-        {
-            StartCoroutine(Boost());
-            startedDriftBoost = false;
-            ChangeParticleColor(defaultParticleColor);
-        }
-        
-        //change how fast the camera copies the rotation of the player
-        cinemachineTransposer.m_YawDamping = cameraYawDamping;
-    }
     #endregion
-
-    void PauseMe()
-    {
-        StartCoroutine(WhilePaused());
-    }
-
-    IEnumerator WhilePaused()
-    {
-        Vector3 velocity = rb.velocity;
-        rb.velocity = Vector3.zero;
-        rb.isKinematic = true;
-
-        yield return new WaitWhile(() => gameVariables.isPaused);
-
-        rb.isKinematic = false;
-        rb.velocity = velocity;
-    }
 }
