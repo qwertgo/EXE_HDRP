@@ -71,6 +71,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SlowMoBoost"",
+                    ""type"": ""Button"",
+                    ""id"": ""c926d4d2-cfe6-487b-8dcf-e844fb630083"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -227,6 +236,56 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""RightDrift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b95c719-345f-43cd-bcc3-bd53177e4480"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SlowMoBoost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""GameManager"",
+            ""id"": ""20f524ed-da63-4f64-b2c5-7607871007ef"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause Game"",
+                    ""type"": ""Button"",
+                    ""id"": ""000339c8-8da2-498e-83ac-f309ca317f0f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3bf19ab9-77a6-4eae-bf13-28f87c8d6d27"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause Game"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6f58a04-e9f7-460c-a0fb-3ea834b40b19"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause Game"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -240,6 +299,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_P_Controls_Break = m_P_Controls.FindAction("Break", throwIfNotFound: true);
         m_P_Controls_LeftDrift = m_P_Controls.FindAction("LeftDrift", throwIfNotFound: true);
         m_P_Controls_RightDrift = m_P_Controls.FindAction("RightDrift", throwIfNotFound: true);
+        m_P_Controls_SlowMoBoost = m_P_Controls.FindAction("SlowMoBoost", throwIfNotFound: true);
+        // GameManager
+        m_GameManager = asset.FindActionMap("GameManager", throwIfNotFound: true);
+        m_GameManager_PauseGame = m_GameManager.FindAction("Pause Game", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -306,6 +369,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_P_Controls_Break;
     private readonly InputAction m_P_Controls_LeftDrift;
     private readonly InputAction m_P_Controls_RightDrift;
+    private readonly InputAction m_P_Controls_SlowMoBoost;
     public struct P_ControlsActions
     {
         private @PlayerInput m_Wrapper;
@@ -315,6 +379,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Break => m_Wrapper.m_P_Controls_Break;
         public InputAction @LeftDrift => m_Wrapper.m_P_Controls_LeftDrift;
         public InputAction @RightDrift => m_Wrapper.m_P_Controls_RightDrift;
+        public InputAction @SlowMoBoost => m_Wrapper.m_P_Controls_SlowMoBoost;
         public InputActionMap Get() { return m_Wrapper.m_P_Controls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -339,6 +404,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @RightDrift.started += instance.OnRightDrift;
             @RightDrift.performed += instance.OnRightDrift;
             @RightDrift.canceled += instance.OnRightDrift;
+            @SlowMoBoost.started += instance.OnSlowMoBoost;
+            @SlowMoBoost.performed += instance.OnSlowMoBoost;
+            @SlowMoBoost.canceled += instance.OnSlowMoBoost;
         }
 
         private void UnregisterCallbacks(IP_ControlsActions instance)
@@ -358,6 +426,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @RightDrift.started -= instance.OnRightDrift;
             @RightDrift.performed -= instance.OnRightDrift;
             @RightDrift.canceled -= instance.OnRightDrift;
+            @SlowMoBoost.started -= instance.OnSlowMoBoost;
+            @SlowMoBoost.performed -= instance.OnSlowMoBoost;
+            @SlowMoBoost.canceled -= instance.OnSlowMoBoost;
         }
 
         public void RemoveCallbacks(IP_ControlsActions instance)
@@ -375,6 +446,52 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     }
     public P_ControlsActions @P_Controls => new P_ControlsActions(this);
+
+    // GameManager
+    private readonly InputActionMap m_GameManager;
+    private List<IGameManagerActions> m_GameManagerActionsCallbackInterfaces = new List<IGameManagerActions>();
+    private readonly InputAction m_GameManager_PauseGame;
+    public struct GameManagerActions
+    {
+        private @PlayerInput m_Wrapper;
+        public GameManagerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @PauseGame => m_Wrapper.m_GameManager_PauseGame;
+        public InputActionMap Get() { return m_Wrapper.m_GameManager; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(GameManagerActions set) { return set.Get(); }
+        public void AddCallbacks(IGameManagerActions instance)
+        {
+            if (instance == null || m_Wrapper.m_GameManagerActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_GameManagerActionsCallbackInterfaces.Add(instance);
+            @PauseGame.started += instance.OnPauseGame;
+            @PauseGame.performed += instance.OnPauseGame;
+            @PauseGame.canceled += instance.OnPauseGame;
+        }
+
+        private void UnregisterCallbacks(IGameManagerActions instance)
+        {
+            @PauseGame.started -= instance.OnPauseGame;
+            @PauseGame.performed -= instance.OnPauseGame;
+            @PauseGame.canceled -= instance.OnPauseGame;
+        }
+
+        public void RemoveCallbacks(IGameManagerActions instance)
+        {
+            if (m_Wrapper.m_GameManagerActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IGameManagerActions instance)
+        {
+            foreach (var item in m_Wrapper.m_GameManagerActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_GameManagerActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public GameManagerActions @GameManager => new GameManagerActions(this);
     public interface IP_ControlsActions
     {
         void OnSteer(InputAction.CallbackContext context);
@@ -382,5 +499,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnBreak(InputAction.CallbackContext context);
         void OnLeftDrift(InputAction.CallbackContext context);
         void OnRightDrift(InputAction.CallbackContext context);
+        void OnSlowMoBoost(InputAction.CallbackContext context);
+    }
+    public interface IGameManagerActions
+    {
+        void OnPauseGame(InputAction.CallbackContext context);
     }
 }

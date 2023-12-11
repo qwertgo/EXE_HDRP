@@ -13,8 +13,11 @@ public class EnemyMovement : MonoBehaviour
 
     [Header("Variables")]
     [SerializeField] enemyState currentState;
-    // [SerializeField] private float searchTime = 9f;
     [SerializeField] private float followPlayerRadius = 20f;
+    [SerializeField] private float idleSpeed;
+    [SerializeField] private float followPlayerSpeed;
+    [SerializeField] private float lightIntensityCloseToPlayer = 14852.37f;
+    [SerializeField] private float lightIntensityFarFromPlayer = 1.520883e+07f;
     [HideInInspector] public bool finishedAttack;
 
     
@@ -40,6 +43,10 @@ public class EnemyMovement : MonoBehaviour
         StartCoroutine(Idle());
 
         playerTransform = GameVariables.instance.player.transform;
+        navMeshAgent.speed = idleSpeed;
+        navMeshAgent.acceleration = idleSpeed;
+        
+        GameVariables.instance.onPause.AddListener(PauseMe);
     }
 
     protected IEnumerator Idle()
@@ -47,6 +54,9 @@ public class EnemyMovement : MonoBehaviour
         currentState = enemyState.Idle;
         movementTarget = GetRandomTransform();
         navMeshAgent.SetDestination(movementTarget.position);
+        
+        navMeshAgent.speed = idleSpeed;
+        navMeshAgent.acceleration = idleSpeed;
         
         while (currentState == enemyState.Idle)
         {
@@ -86,13 +96,23 @@ public class EnemyMovement : MonoBehaviour
         currentState = enemyState.FollowPlayer;
         spotLight.enabled = true;
         spotLight.range = followPlayerRadius + 3;
+        spotLight.intensity = 
         
-        while (Vector3.Distance(playerTransform.position, transform.position) < followPlayerRadius)
+        navMeshAgent.speed = followPlayerSpeed;
+        navMeshAgent.acceleration = followPlayerSpeed;
+
+        float distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
+        
+        while (distanceToPlayer < followPlayerRadius)
         {
             SetMovementTarget(playerTransform);
             LookAtPlayer();
             spotLight.transform.LookAt(playerTransform);
+            spotLight.intensity = Mathf.Lerp(lightIntensityCloseToPlayer, lightIntensityFarFromPlayer, distanceToPlayer / followPlayerRadius);
+            
             yield return null;
+
+            distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
         }
 
         animator.CrossFade("Idle", 0);
@@ -179,5 +199,20 @@ public class EnemyMovement : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, followPlayerRadius);
+    }
+
+    void PauseMe()
+    {
+        StartCoroutine(WhilePaused());
+    }
+
+    IEnumerator WhilePaused()
+    {
+        float speed = navMeshAgent.speed;
+        navMeshAgent.speed = 0;
+
+        yield return new WaitWhile(() => GameVariables.instance.isPaused);
+
+        navMeshAgent.speed = speed;
     }
 }

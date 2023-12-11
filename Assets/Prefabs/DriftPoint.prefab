@@ -32,7 +32,7 @@ Transform:
   m_Children:
   - {fileID: 4397670913265582013}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &408026566128915616
 SphereCollider:
@@ -53,7 +53,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.05
+  m_Radius: 0.00001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7656716053189096758
 MonoBehaviour:
@@ -91,17 +91,17 @@ PrefabInstance:
     - target: {fileID: 5337074124895712384, guid: 3618b1434d5444045840d3cecda844ee,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5337074124895712384, guid: 3618b1434d5444045840d3cecda844ee,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.9
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5337074124895712384, guid: 3618b1434d5444045840d3cecda844ee,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5337074124895712384, guid: 3618b1434d5444045840d3cecda844ee,
         type: 3}
@@ -156,7 +156,7 @@ PrefabInstance:
     - target: {fileID: 5337074124895712384, guid: 3618b1434d5444045840d3cecda844ee,
         type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9036981826052917451, guid: 3618b1434d5444045840d3cecda844ee,
         type: 3}

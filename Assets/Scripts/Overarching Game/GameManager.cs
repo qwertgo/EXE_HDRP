@@ -2,11 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
     public static GameManager instance;
+    [HideInInspector]
     public bool gameIsPaused;
+
+    [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject continueButton;
+
+    private PlayerInput controls;
+    private GameVariables gameVariables;
+    private EventSystem eventSystem;
 
     private void Start()
     {
@@ -14,6 +24,16 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         else
             instance = this;
+
+        if (controls == null)
+        {
+            controls = new PlayerInput();
+            controls.Enable();
+            controls.GameManager.SetCallbacks(this);
+        }
+
+        gameVariables = GameVariables.instance;
+        eventSystem = EventSystem.current;
     }
 
     public void TooglePause()
@@ -22,12 +42,39 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1;
             gameIsPaused = false;
+            pauseMenu.SetActive(false);
+            gameVariables.isPaused = false;
+            gameVariables.onUnpause.Invoke();
+            eventSystem.SetSelectedGameObject(null);
         }
         else
         {
             Time.timeScale = 0;
             gameIsPaused = true;
+            pauseMenu.SetActive(true);
+            gameVariables.isPaused = true;
+            gameVariables.onPause.Invoke();
+            eventSystem.SetSelectedGameObject(continueButton);
         }
         
+    }
+
+    public void StopGame()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void OnPauseGame(InputAction.CallbackContext context)
+    {
+        if (context.started)
+            TooglePause();
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Application.Quit();
     }
 }

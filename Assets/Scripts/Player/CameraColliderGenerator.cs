@@ -37,6 +37,7 @@ public class CameraColliderGenerator : MonoBehaviour
 
         transform.position = cam.transform.position;
         eulerAnglesOffset = cam.transform.eulerAngles;
+        transform.parent = null;
     }
 
     private void Update()
