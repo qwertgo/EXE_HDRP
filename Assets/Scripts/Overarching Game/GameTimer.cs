@@ -13,7 +13,7 @@ public class GameTimer : MonoBehaviour
     private IEnumerator Start()
     {
         yield return new WaitForSeconds(timeToMorning);
-        GameManager.instance.TooglePause();
+        GameManager.instance.StopGame();
         youWonText.enabled = true;
         youWonText.gameObject.SetActive(true);
 

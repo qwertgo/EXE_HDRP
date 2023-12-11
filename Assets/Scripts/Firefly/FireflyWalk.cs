@@ -40,11 +40,17 @@ public class FireflyWalk : MonoBehaviour
         navMeshAgent.nextPosition = destinationPoint.position;
         navMeshAgent.speed = speed;
         navMeshAgent.acceleration = speed;
+        
+        GameVariables variables = GameVariables.instance;
+        variables.onPause.AddListener(PauseMe);
     }
 
     
     void Update()
     {
+        if(GameVariables.instance.isPaused)
+            return;
+        
         destinationPoint.RotateAround(rotateAroundPosition, Vector3.up, destinationPointSpeed * Time.deltaTime);
 
         navMeshAgent.SetDestination(destinationPoint.position);
@@ -96,5 +102,20 @@ public class FireflyWalk : MonoBehaviour
         sphereCollider.enabled = true;
         spline.enabled = true;
         visuals.gameObject.SetActive(true);
+    }
+
+    void PauseMe()
+    {
+        StartCoroutine(WhilePause());
+    }
+
+    IEnumerator WhilePause()
+    {
+        float speed = navMeshAgent.speed;
+        navMeshAgent.speed = 0;
+        
+        yield return new WaitWhile(() => GameVariables.instance.isPaused);
+
+        navMeshAgent.speed = speed;
     }
 }

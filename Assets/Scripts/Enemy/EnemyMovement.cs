@@ -45,6 +45,8 @@ public class EnemyMovement : MonoBehaviour
         playerTransform = GameVariables.instance.player.transform;
         navMeshAgent.speed = idleSpeed;
         navMeshAgent.acceleration = idleSpeed;
+        
+        GameVariables.instance.onPause.AddListener(PauseMe);
     }
 
     protected IEnumerator Idle()
@@ -197,5 +199,20 @@ public class EnemyMovement : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, followPlayerRadius);
+    }
+
+    void PauseMe()
+    {
+        StartCoroutine(WhilePaused());
+    }
+
+    IEnumerator WhilePaused()
+    {
+        float speed = navMeshAgent.speed;
+        navMeshAgent.speed = 0;
+
+        yield return new WaitWhile(() => GameVariables.instance.isPaused);
+
+        navMeshAgent.speed = speed;
     }
 }

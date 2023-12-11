@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float timeToGetBoost;
     [SerializeField] private float boostForce;
     [SerializeField] private float boostTime;
+    [SerializeField] private float overSteer;
     [SerializeField] private Gradient defaultParticleColor;
     [SerializeField] private Gradient boostParticleColor;
     private float outerDriftRadius;
@@ -69,7 +70,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool isDriftingRight;
     private bool arrivedAtDriftPeak;
     private bool startedDriftBoost;
-    
+
 
     [Header("References")]
     [SerializeField] private Transform playerVisuals;
@@ -80,6 +81,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private Material material;
     [SerializeField] private DriftPointContainer rightDriftPointContainer;
     [SerializeField] private DriftPointContainer leftDriftPointContainer;
+    [SerializeField] private GameObject refCylinder;
     
     private GameObject groundParticlesObject;
     private CinemachineVirtualCamera virtualCamera;
@@ -88,6 +90,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private SphereCollider sphereCollider;
     private PlayerInput controls;
     private LineRenderer lineRenderer;
+    private GameVariables gameVariables;
 
     void Start()
     {
@@ -113,7 +116,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         rightDriftPointContainer.SetRightContainer();
 
-        GameVariables.instance.player = this;
+        gameVariables = GameVariables.instance;
+        gameVariables.onPause.AddListener(PauseMe);
+
     }
 
     private void OnDestroy()
@@ -124,6 +129,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region Physics
     void FixedUpdate()
     {
+        if(gameVariables.isPaused)
+            return;
+        
         UpdateState();
         Accelerate();
     
@@ -143,6 +151,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     private void Update()
     {
+        if(gameVariables.isPaused)
+            return;
+        
         Steer();
     }
 
@@ -180,7 +191,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * steerAmount);
             
             groundSlopeRef.rotation = playerVisuals.rotation;
-            playerVisuals.rotation = AdjustToGroundSlope();
+            AdjustToGroundSlope();
 
             //update container to get closest drift point
             leftDriftPointContainer.GetDriftPoints();
@@ -211,17 +222,17 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         //get the direction the player should face at the max tonguestretchfactor
         Vector3 dirToDriftPoint = new Vector3(vecToDriftPoint.x, 0, vecToDriftPoint.z);
         dirToDriftPoint.Normalize();
-        
-        groundSlopeRef.forward = isDriftingRight ?  dirToDriftPoint.RotateLeft90Deg() : dirToDriftPoint.RotateRight90Deg();
-        Quaternion wantedRotation = AdjustToGroundSlope();
+
+        float wantedRotationFloat = isDriftingRight ? -90 + overSteer : 90 - overSteer;
+        Vector3 wantedForward = Quaternion.AngleAxis(wantedRotationFloat, Vector3.up) * dirToDriftPoint;
+        Quaternion wantedRotation = Quaternion.LookRotation(wantedForward, playerVisuals.up);
 
         playerVisuals.rotation = Quaternion.Lerp(rotationAtDriftStart, wantedRotation, tongueStretchFactor);
+        AdjustToGroundSlope();
 
         // //make the velocity face the same direction as the player
         if (isGrounded)
-        {
             rb.velocity = playerVisuals.forward * rb.velocity.magnitude;
-        }
         else
         {
             float yVelocity = rb.velocity.y;
@@ -229,7 +240,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
         }
 
-        
         //drift visuals
         if(tongueStretchFactor < .5f)
             return;
@@ -242,23 +252,25 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
     }
     
-    Quaternion AdjustToGroundSlope()
+    void AdjustToGroundSlope()
     {
+        Quaternion wantedRotation;
+        groundSlopeRef.rotation = playerVisuals.rotation;
+        
         if (isGrounded)
         {
             Physics.Raycast(transform.position, -playerVisuals.up, out RaycastHit groundHit, sphereCollider.radius + .5f, ground);
-            groundSlopeRef.forward = Vector3.ProjectOnPlane(groundSlopeRef.forward, groundHit.normal);
-            
-            float rotation = Vector3.SignedAngle(groundSlopeRef.up, groundHit.normal, groundSlopeRef.forward);
-            groundSlopeRef.Rotate(groundSlopeRef.forward, rotation, Space.World);
+
+            Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
+            wantedRotation = Quaternion.LookRotation(forward, groundHit.normal);
         }
         else
         {
-            groundSlopeRef.forward = Vector3.ProjectOnPlane(groundSlopeRef.forward, Vector3.up);
+            Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, Vector3.up);
+            wantedRotation = Quaternion.LookRotation(forward, Vector3.up);
         }
-        
-        
-        return Quaternion.Lerp(playerVisuals.rotation, groundSlopeRef.rotation, Time.deltaTime * adjustToGroundSlopeSpeed);
+
+        playerVisuals.rotation = Quaternion.Lerp(playerVisuals.rotation, wantedRotation, Time.deltaTime * adjustToGroundSlopeSpeed);
     }
 
     void Accelerate()
@@ -310,7 +322,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.isKinematic = true;
         // rb.velocity = Vector3.zero;
         enabled = false;
-        GameManager.instance.TooglePause();
+        GameManager.instance.StopGame();
     }
     
     IEnumerator Boost()
@@ -515,6 +527,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         
         //change how fast the camera copies the rotation of the player
         cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
+
+
+        // refCylinder.transform.position = currentDriftPoint.position;
+        // refCylinder.transform.localScale = new Vector3(outerDriftRadius * 2, 2, outerDriftRadius * 2);
     }
 
     void StopDrifting()
@@ -538,4 +554,21 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
     }
     #endregion
+
+    void PauseMe()
+    {
+        StartCoroutine(WhilePaused());
+    }
+
+    IEnumerator WhilePaused()
+    {
+        Vector3 velocity = rb.velocity;
+        rb.velocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        yield return new WaitWhile(() => gameVariables.isPaused);
+
+        rb.isKinematic = false;
+        rb.velocity = velocity;
+    }
 }

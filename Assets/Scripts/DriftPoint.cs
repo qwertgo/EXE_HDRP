@@ -5,22 +5,31 @@ using UnityEngine;
 
 public class DriftPoint : MonoBehaviour
 {
+    [SerializeField] private float sizeWhenShown = 2f;
     [SerializeField] private MeshRenderer indicatorRenderer;
     [SerializeField] private Material rightMat;
     [SerializeField] private Material leftMat;
 
-
-
     public bool isShown { get; private set; } = false;
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, sizeWhenShown);
+    }
+
+    private void Start()
+    {
+        indicatorRenderer.gameObject.transform.localScale = new Vector3(sizeWhenShown, sizeWhenShown, sizeWhenShown);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-
         other.GetComponent<DriftPointContainer>().AddDriftPoint(this);
     }
 
     private void OnTriggerExit(Collider other)
-    {
-        // indicator.transform.localScale /= 2;
+    { 
         other.GetComponent<DriftPointContainer>().RemoveDriftPoint(this);
         
         if(isShown)
