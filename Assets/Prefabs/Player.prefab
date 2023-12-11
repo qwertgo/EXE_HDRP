@@ -4991,9 +4991,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceleration: 17
-  steerAmount: 55
+  steerAmount: 70
   maxSpeed: 26
-  traction: 0.9
+  traction: 1
   slowFieldSlow: 20
   adjustToGroundSlopeSpeed: 3
   ground:
@@ -5009,6 +5009,7 @@ MonoBehaviour:
   timeToGetBoost: 0.25
   boostForce: 30
   boostTime: 0.3
+  overSteer: 0
   defaultParticleColor:
     serializedVersion: 2
     key0: {r: 0.5486979, g: 0.5235849, b: 1, a: 1}
@@ -5082,6 +5083,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 73fb8518b6582cc47964477828ddee4b, type: 2}
   rightDriftPointContainer: {fileID: 1582747289892162416}
   leftDriftPointContainer: {fileID: 7041608628081519611}
+  refCylinder: {fileID: 0}
 --- !u!54 &4525183451630538490
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10386,7 +10388,7 @@ Transform:
   - {fileID: 2440283806234537626}
   - {fileID: 1609444752658654278}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5107119683635567647
 MonoBehaviour:
