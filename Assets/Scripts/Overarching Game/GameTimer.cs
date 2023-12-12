@@ -12,7 +12,10 @@ public class GameTimer : MonoBehaviour
 
     private IEnumerator Start()
     {
+        GameVariables.instance.dayNightCycleController.gameTime = timeToMorning;
+        
         yield return new WaitForSeconds(timeToMorning);
+        
         GameManager.instance.StopGame();
         youWonText.enabled = true;
         youWonText.gameObject.SetActive(true);
@@ -29,6 +32,8 @@ public class GameTimer : MonoBehaviour
                 youWonText.text = "You gathered no fireflies and died of hunger";
                 break;
         }
+
+        
     }
 
     void Update()
