@@ -9,6 +9,7 @@ public class GameVariables : MonoBehaviour
     public static GameVariables instance;
 
     public PlayerController player;
+    public DayNightCycleController dayNightCycleController;
     public bool isPaused;
     public UnityEvent onPause;
     public UnityEvent onUnpause;
