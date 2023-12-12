@@ -268,7 +268,7 @@ MonoBehaviour:
   moonStartRotation: 30
   moonDestinationRotation: 170
   gameTime: 20
-  sun: {fileID: 0}
+  sun: {fileID: 6883286418933405798}
   moon: {fileID: 1589033938073835673}
 --- !u!1 &7262576276751106377
 GameObject:
