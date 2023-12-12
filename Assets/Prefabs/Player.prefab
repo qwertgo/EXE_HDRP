@@ -4991,7 +4991,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceleration: 17
-  steerAmount: 70
+  maxTurnSpeed: 120
+  minTurnSpeed: 30
   maxSpeed: 26
   traction: 1
   slowFieldSlow: 20

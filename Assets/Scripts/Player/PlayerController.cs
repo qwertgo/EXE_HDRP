@@ -23,7 +23,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     [Header("Base Movement Values")]
     [SerializeField] private float acceleration;
-    [SerializeField] private float steerAmount;
+    [SerializeField] private float maxTurnSpeed;
+    [SerializeField] private float minTurnSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float traction;
     [SerializeField] private float slowFieldSlow;
@@ -193,7 +194,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if(!isDrifting)
         {
             //steer
-            playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * steerAmount);
+            float currentTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, rb.velocity.magnitude / maxSpeed);
+            playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * currentTurnSpeed);
             
             groundSlopeRef.rotation = playerVisuals.rotation;
             AdjustToGroundSlope();
@@ -407,14 +409,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     IEnumerator SlowMoBoost()
     {
         Time.timeScale = .1f;
-        steerAmount *= 10;
+        maxTurnSpeed *= 10;
         cinemachineTransposer.m_YawDamping = 0;
         rb.velocity = Vector3.zero;
         
         yield return new WaitForSecondsRealtime(2);
         
         Time.timeScale = 1;
-        steerAmount /= 10;
+        maxTurnSpeed /= 10;
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
         
         rb.velocity = playerVisuals.forward * maxSpeed;
