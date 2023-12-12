@@ -733,7 +733,7 @@ GameObject:
   - component: {fileID: 4778768712286833628}
   - component: {fileID: 71005126979795600}
   m_Layer: 0
-  m_Name: Firefly
+  m_Name: Firefly Orange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -791,9 +791,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b1b7927eaf65094682d8e607627997c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highscoreValue: 1
   speed: 18
   timeToRespawn: 30
   collectSpeed: 10
+  type: 0
   destinationPoint: {fileID: 2275953857179831993}
   visuals: {fileID: 672368394706826093}
   spline: {fileID: 2583434942015365302}
@@ -917,6 +919,61 @@ PrefabInstance:
       propertyPath: m_Name
       value: Visuals
       objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.atime1
+      value: 25250
+      objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.ctime1
+      value: 63608
+      objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.b
+      value: 0.2638705
+      objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.g
+      value: 0.1779548
+      objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.r
+      value: 0.8773585
+      objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.b
+      value: 0.10849059
+      objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.g
+      value: 0.6553943
+      objectReference: {fileID: 0}
+    - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.m_NumColorKeys
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3856622265834232255, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e4bcfa58695016b4c8c77de59d1de5a7, type: 2}
     - target: {fileID: 4372333960453584289, guid: f972ef6ecc48d9b4fa394b94b9978c04,
         type: 3}
       propertyPath: m_Target

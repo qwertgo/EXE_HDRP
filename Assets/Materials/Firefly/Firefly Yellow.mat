@@ -23,7 +23,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Firefly
+  m_Name: Firefly Yellow
   m_Shader: {fileID: -6465566751694194690, guid: 4e234cbf379e28d41a24129062c726ea,
     type: 3}
   m_Parent: {fileID: 0}

@@ -210,9 +210,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
     IEnumerator Drift()
     {
+        groundSlopeRef.rotation = rotationAtDriftStart;
         while (isDrifting)
         {
-            // yield return new WaitForFixedUpdate();
             //variables needed
             Vector3 vecToDriftPoint = currentDriftPoint.position - transform.position;
             Vector2 vecToDriftPoint2D = new Vector2(vecToDriftPoint.x, vecToDriftPoint.z);
@@ -225,8 +225,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             dirToDriftPoint.Normalize();
 
             Quaternion wantedRotation = GetWantedDriftRotation(dirToDriftPoint);
+            groundSlopeRef.rotation = rotationAtDriftStart;
+            groundSlopeRef.rotation = Quaternion.LookRotation(groundSlopeRef.forward, playerVisuals.up);
 
-            playerVisuals.rotation = Quaternion.Lerp(rotationAtDriftStart, wantedRotation, tongueStretchFactor);
+            playerVisuals.rotation = Quaternion.Lerp(groundSlopeRef.rotation, wantedRotation, tongueStretchFactor);
             AdjustToGroundSlope();
 
             //make the velocity face the same direction as the player
@@ -434,9 +436,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     #region various Methods
 
-    public void CollectFirefly()
+    public void CollectFirefly(int amount)
     {
-        fireflyCount++;
+        fireflyCount += amount;
         material.SetFloat("_fireflyCount", fireflyCount);
     }
     #endregion

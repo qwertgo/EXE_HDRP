@@ -38,7 +38,7 @@ public class Firefly : MonoBehaviour
             yield return null;
         }
 
-        player.parent.GetComponent<PlayerController>().CollectFirefly();
+        player.parent.GetComponent<PlayerController>().CollectFirefly(1);
         Destroy(gameObject);
     }
 }

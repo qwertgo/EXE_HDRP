@@ -7,10 +7,14 @@ using UnityEngine;
 
 public class FireflyWalk : MonoBehaviour
 {
-    [Header("Variables")]
+    enum FireflyType {StillStanding, Moving}
+
+    [Header("Variables")] 
+    [SerializeField] private int highscoreValue;
     [SerializeField] float speed;
     [SerializeField] float timeToRespawn;
     [SerializeField] private float collectSpeed;
+    [SerializeField] private FireflyType type = FireflyType.Moving;
     
     private Vector3 rotateAroundPosition;
     private float walkCircleRadius;
@@ -43,17 +47,24 @@ public class FireflyWalk : MonoBehaviour
         
         GameVariables variables = GameVariables.instance;
         variables.onPause.AddListener(PauseMe);
+
+        if(type == FireflyType.Moving)
+            StartCoroutine(UpdateCoroutine());
     }
 
     
-    void Update()
+    IEnumerator UpdateCoroutine()
     {
-        if(GameVariables.instance.isPaused)
-            return;
-        
-        destinationPoint.RotateAround(rotateAroundPosition, Vector3.up, destinationPointSpeed * Time.deltaTime);
-
-        navMeshAgent.SetDestination(destinationPoint.position);
+        while (enabled)
+        {
+            yield return null;
+            
+            if(GameVariables.instance.isPaused)
+                continue;
+            
+            destinationPoint.RotateAround(rotateAroundPosition, Vector3.up, destinationPointSpeed * Time.deltaTime);
+            navMeshAgent.SetDestination(destinationPoint.position);
+        }
     }
 
     public void SetFireflyValues(float walkCircleRadius, bool moveRight)
@@ -88,7 +99,7 @@ public class FireflyWalk : MonoBehaviour
             yield return null;
         }
     
-        player.parent.GetComponent<PlayerController>().CollectFirefly();
+        player.parent.GetComponent<PlayerController>().CollectFirefly(highscoreValue);
     
         visuals.gameObject.SetActive(false);
     
