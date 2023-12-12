@@ -23,15 +23,20 @@ public class DayNightCycleController : MonoBehaviour
     {
         UpdateTime();
     }
+    private void Start()
+    {
+        sun2.enabled = false;
+        StartDay1();
+    }
     private void UpdateTime()
     {
         float alpha = timeOfDay / 24.0f;
         float sun1Rotation = Mathf.Lerp(-90, 270, alpha);
-        float moonRotation = sun1Rotation - 160;
-        //float sun2Rotation = sun1Rotation + 30;
-        sun1.transform.rotation = Quaternion.Euler(sun1Rotation, -150.0f, 0);
-        //sun2.transform.rotation = Quaternion.Euler(sun2Rotation, -150.0f, 0);
-        moon.transform.rotation = Quaternion.Euler(moonRotation, +150.0f, 0);
+        float moonRotation = sun1Rotation - 130;
+        float sun2Rotation = sun1Rotation + 60;
+        sun1.transform.rotation = Quaternion.Euler(sun1Rotation, 0, 0);
+        sun2.transform.rotation = Quaternion.Euler(sun2Rotation, 0, 0);
+        moon.transform.rotation = Quaternion.Euler(moonRotation, 0, 0);
 
         CheckNightDayTransition();
     }
@@ -41,7 +46,7 @@ public class DayNightCycleController : MonoBehaviour
         {
             if(moon.transform.rotation.eulerAngles.x > 180)
             {
-                StartDay();
+                StartDay2();
             }
         }
         else
@@ -52,16 +57,27 @@ public class DayNightCycleController : MonoBehaviour
             }
         }
     }
-    private void StartDay ()
+    private void StartDay1()
     {
         isNight = false;
         sun1.shadows = LightShadows.Soft;
+        //sun2.shadows = LightShadows.None;
         moon.shadows = LightShadows.None;
     }
     private void StartNight ()
     {
         isNight = true;
+        sun2.enabled = true;
         moon.shadows = LightShadows.Soft;
         sun1.shadows = LightShadows.None;
+        sun2.shadows = LightShadows.None;
+    }
+    private void StartDay2 ()
+    {
+        isNight = false;
+        sun1.enabled = false;
+        sun2.shadows = LightShadows.Soft;
+        //sun1.shadows = LightShadows.None;
+        moon.shadows = LightShadows.None;
     }
 }
