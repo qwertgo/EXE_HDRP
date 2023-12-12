@@ -25,12 +25,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float acceleration;
     [SerializeField] private float maxTurnSpeed;
     [SerializeField] private float minTurnSpeed;
-    [SerializeField] private float maxSpeed;
+    [SerializeField] private float baseMaxSpeed;
     [SerializeField] private float traction;
     [SerializeField] private float slowFieldSlow;
     [SerializeField] private float adjustToGroundSlopeSpeed = 3;
     [SerializeField] private LayerMask ground;
     [SerializeField] private LayerMask obstacle;
+
+    private float currentMaxSpeed;
 
     [Header("Jumping/ In Air")]
     [SerializeField] protected float jumpForce;
@@ -39,14 +41,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     [Header("Drifting")]
     [SerializeField] private float tractionWhileDrifting;
-    [SerializeField] private float timeToGetBoost;
-    [SerializeField] private float boostForce;
-    [SerializeField] private float boostTime;
     [SerializeField] private float overSteer;
     [SerializeField] private Gradient defaultParticleColor;
     [SerializeField] private Gradient boostParticleColor;
     private float outerDriftRadius;
     private float driftTimeCounter;
+    
+    [Header("Boost")]
+    [SerializeField] private float boostForce;
+    [SerializeField] private float boostSubtractPerSecond;
+    [SerializeField] private float timeToGetBoost;
 
     [Header("Camera")] 
     [SerializeField] private float lookAtMoveAmount;
@@ -109,7 +113,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         virtualCamera = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         groundParticlesObject = groundParticles.gameObject;
-        timeUntilNextWalkSound = .5f;
+        currentMaxSpeed = baseMaxSpeed;
         
         if (controls == null)
         {
@@ -119,7 +123,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         cinemachineTransposer.m_YawDamping = 5;
-        maxSpeedOriginal = maxSpeed;
 
         currentTraction = traction;
 
@@ -164,7 +167,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             return;
         
         Steer();
-        
+        ReduceMaxSpeed();
+        // Debug.Log($"speed: {rb.velocity.magnitude}, maxSpeed: {currentMaxSpeed}");
     }
 
     #endregion
@@ -194,7 +198,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if(!isDrifting)
         {
             //steer
-            float currentTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, rb.velocity.magnitude / maxSpeed);
+            float currentTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, rb.velocity.magnitude / currentMaxSpeed);
             playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * currentTurnSpeed);
             
             groundSlopeRef.rotation = playerVisuals.rotation;
@@ -305,9 +309,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             rb.velocity += acceleration * Time.fixedDeltaTime * playerVisuals.forward;
 
         //limit max speed
-        if (rb.velocity.magnitude > maxSpeed)
+        if (rb.velocity.magnitude > currentMaxSpeed)
         {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+            rb.velocity = rb.velocity.normalized * currentMaxSpeed;
         }
     }
     
@@ -363,14 +367,17 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         GameManager.instance.StopGame();
     }
     
-    IEnumerator Boost()
+    void Boost()
     {
-        ReturnToDefaultSpeed();
-        maxSpeed += boostForce;
-        rb.velocity += playerVisuals.forward * boostForce;
-        yield return new WaitForSeconds(boostTime);
+        // ReturnToDefaultSpeed();
+        currentMaxSpeed += boostForce;
+        rb.velocity = playerVisuals.forward * currentMaxSpeed;
+    }
 
-        maxSpeed = maxSpeedOriginal;
+    private void ReduceMaxSpeed()
+    {
+        currentMaxSpeed -= Time.deltaTime * boostSubtractPerSecond;
+        currentMaxSpeed = Mathf.Max(baseMaxSpeed, currentMaxSpeed);
     }
     
     public void SlowDown()
@@ -380,27 +387,27 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     IEnumerator SlowDownCoroutine()
     {
         float t = 0;
-        float from = maxSpeedOriginal;
-        float To = maxSpeedOriginal - slowFieldSlow;
+        float fromSpeed = currentMaxSpeed;
+        float toSpeed = baseMaxSpeed;
 
         while (t < 1)
         {
-            maxSpeed = Mathf.Lerp(from, To, t);
+            currentMaxSpeed = Mathf.Lerp(fromSpeed, toSpeed, t);
             t += Time.deltaTime * 2;
             yield return null;
         }
 
-        maxSpeed = To;
+        currentMaxSpeed = toSpeed;
     }
-
-    public void ReturnToDefaultSpeed()
-    {
-        if(maxSpeed >= maxSpeedOriginal)
-            return;
-        
-        StopCoroutine(nameof(SlowDownCoroutine));
-        maxSpeed = maxSpeedOriginal;
-    }
+    //
+    // public void ReturnToDefaultSpeed()
+    // {
+    //     if(currentMaxSpeed >= baseMaxSpeed)
+    //         return;
+    //     
+    //     StopCoroutine(nameof(SlowDownCoroutine));
+    //     baseMaxSpeed = maxSpeedOriginal;
+    // }
 
     public void StartSlowMoBoost()
     {
@@ -419,8 +426,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         maxTurnSpeed /= 10;
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
         
-        rb.velocity = playerVisuals.forward * maxSpeed;
-        StartCoroutine(Boost());
+        rb.velocity = playerVisuals.forward * currentMaxSpeed;
+        Boost();
     }
     
     #endregion
@@ -431,9 +438,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         if (other.gameObject.layer == 9)
         {
-            rb.velocity = Vector3.zero;
-            
-            rb.AddForce(-playerVisuals.forward * 50, ForceMode.Impulse);
+            rb.velocity = -playerVisuals.forward * 50;
+            currentMaxSpeed = baseMaxSpeed;
 
             if (isDrifting)
             {
@@ -504,7 +510,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         if (driftTimeCounter > timeToGetBoost)
         {
-            StartCoroutine(Boost());
+            Boost();
             startedDriftBoost = false;
             ChangeParticleColor(defaultParticleColor);
         }

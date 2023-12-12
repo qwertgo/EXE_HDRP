@@ -4993,7 +4993,7 @@ MonoBehaviour:
   acceleration: 17
   maxTurnSpeed: 120
   minTurnSpeed: 30
-  maxSpeed: 26
+  baseMaxSpeed: 20
   traction: 1
   slowFieldSlow: 20
   adjustToGroundSlopeSpeed: 3
@@ -5008,7 +5008,7 @@ MonoBehaviour:
   gravitationMultiplier: 3
   tractionWhileDrifting: 10
   timeToGetBoost: 0.25
-  boostForce: 30
+  boostForce: 5
   boostTime: 0.3
   overSteer: 0
   defaultParticleColor:
