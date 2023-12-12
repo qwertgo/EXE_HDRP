@@ -25,6 +25,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] public List<Transform> idleDestinationPoints = new (); // Liste für Transforms
     [SerializeField] private Animator animator;
     [SerializeField] private Light spotLight;
+    [SerializeField] private AudioSource attackPlayerSource;
 
     [SerializeField] private Collider mouthCollider;
     [SerializeField] private Collider attackPlayerCollider;
@@ -78,6 +79,7 @@ public class EnemyMovement : MonoBehaviour
         attackPlayerCollider.enabled = false;
 
         animator.CrossFade("Attack",0);
+        attackPlayerSource.Play();
 
         while (!finishedAttack)
         {

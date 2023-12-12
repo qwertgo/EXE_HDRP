@@ -6,6 +6,7 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 {
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private float horizontalLerpTo;
     private float currentTraction;
     private float maxSpeedOriginal;
+    private float timeUntilNextWalkSound;
 
     public int fireflyCount { get; private set; }
     
@@ -80,6 +82,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private Material material;
     [SerializeField] protected DriftPointContainer rightDriftPointContainer;
     [SerializeField] protected DriftPointContainer leftDriftPointContainer;
+    [SerializeField] private AudioSource walkAudioSource;
     [SerializeField] private GameObject refCylinder;
     
     protected Rigidbody rb;
@@ -105,6 +108,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         virtualCamera = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         groundParticlesObject = groundParticles.gameObject;
+        timeUntilNextWalkSound = .5f;
         
         if (controls == null)
         {
@@ -138,6 +142,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         
         UpdateState();
         Accelerate();
+        PlayWalkSound();
+        
 
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
     }
@@ -157,6 +163,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             return;
         
         Steer();
+        
     }
 
     #endregion
@@ -256,6 +263,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
                 }
                 
             }
+
             yield return null;
         }
     }
@@ -330,6 +338,19 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         ParticleSystem.ColorOverLifetimeModule colOverLifeTime = groundParticles.colorOverLifetime;
         colOverLifeTime.color = color;
+    }
+
+    void PlayWalkSound()
+    {
+        timeUntilNextWalkSound -= Time.fixedDeltaTime;
+        
+        if (isGrounded && timeUntilNextWalkSound <= 0)
+        {
+            walkAudioSource.pitch = Random.Range(.7f, 1.3f);
+            walkAudioSource.volume = Random.Range(.8f, 1.2f);
+            walkAudioSource.Play();
+            timeUntilNextWalkSound = .25f;
+        }
     }
     public void Die()
     {
