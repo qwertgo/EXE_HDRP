@@ -42,7 +42,7 @@ public class DriftPointContainer : MonoBehaviour
         if (driftPoints.Count < 1 || driftPoints.First().isShown)
             return;
 
-        if (visibleDriftPoint != null)
+        if (visibleDriftPoint)
             visibleDriftPoint.HideMe();
 
         visibleDriftPoint = driftPoints.First();

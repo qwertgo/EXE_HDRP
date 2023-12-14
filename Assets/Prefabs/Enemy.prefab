@@ -461,14 +461,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5966495437708324044}
-  m_LocalRotation: {x: -0, y: -0, z: 0.70706165, w: 0.707152}
-  m_LocalPosition: {x: 0, y: -0.42500007, z: 0.2900001}
-  m_LocalScale: {x: 0.43431, y: 0.43431, z: 0.43431}
+  m_LocalRotation: {x: -0.3248319, y: -0.3248319, z: -0.62807983, w: 0.62807983}
+  m_LocalPosition: {x: 0, y: -0.42500007, z: 0.2900002}
+  m_LocalScale: {x: 0.43431, y: 0.9008892, z: 0.43431}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6120203281414659691}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 89.993}
+  m_LocalEulerAnglesHint: {x: -54.694, y: 0, z: -90}
 --- !u!33 &3081317765078020662
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -476,7 +476,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5966495437708324044}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &5690951200579485328
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -497,7 +497,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1aa02088c2a2223498d99bd1066cde70, type: 2}
+  - {fileID: 2100000, guid: 99b6a46702d21c74298c44ac07dc3ad5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -643,13 +643,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  followPlayerRadius: 80
+  followPlayerRadius: 90
   idleSpeed: 14
-  followPlayerSpeed: 25
-  lightIntensityCloseToPlayer: 14852.37
+  followPlayerSpeed: 18
+  lightIntensityCloseToPlayer: 10000
   lightIntensityFarFromPlayer: 15208830
   finishedAttack: 0
   idleDestinationPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

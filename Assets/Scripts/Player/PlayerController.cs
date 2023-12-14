@@ -39,13 +39,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] protected float breakForce;
     [SerializeField] protected float gravitationMultiplier;
 
-    [Header("Drifting")]
+    [Header("Drifting")] 
+    [SerializeField] private float driftTurnSpeed;
+    [SerializeField] private float driftMaxTurnAbility = 30;
     [SerializeField] private float tractionWhileDrifting;
     [SerializeField] private float overSteer;
     [SerializeField] private Gradient defaultParticleColor;
     [SerializeField] private Gradient boostParticleColor;
     private float outerDriftRadius;
     private float driftTimeCounter;
+    private float currentDriftRotation;
     
     [Header("Boost")]
     [SerializeField] private float boostForce;
@@ -63,7 +66,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float turnToEnemySpeed = 10;
     [SerializeField] private float timeToWaitTillBoost = 1.5f;
     
-    protected float horizontal;
+    private float horizontal;
+    private float driftHorizontal;
     private float horizontalLerpTo;
     private float currentTraction;
     private float maxSpeedOriginal;
@@ -71,20 +75,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public int fireflyCount { get; private set; }
     
-    protected bool isGrounded;
+    private bool isGrounded;
     private bool isFalling;
-    protected bool isDrifting;
-    protected bool justStartedJumping;
-    protected bool isDriftingRight;
-    protected bool arrivedAtDriftPeak;
-    protected bool startedDriftBoost;
+    private bool isDrifting;
+    private bool justStartedJumping;
+    private bool isDriftingRight;
+    private bool arrivedAtDriftPeak;
+    private bool startedDriftBoost;
     private bool lockSteering;
 
     [Header("References")]
     [SerializeField] protected Transform playerVisuals;
     [SerializeField] private Transform tonguePoint;
     [SerializeField] private Transform lookAt;
-    [SerializeField] private Transform groundSlopeRef;
+    [FormerlySerializedAs("groundSlopeRef")] [SerializeField] private Transform rotationReference;
     [SerializeField] private ParticleSystem groundParticles;
     [SerializeField] private Material material;
     [SerializeField] protected DriftPointContainer rightDriftPointContainer;
@@ -93,8 +97,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private GameObject refCylinder;
     
     public Rigidbody rb { get; private set; }
-    protected GameObject groundParticlesObject;
-    protected Transform currentDriftPoint;
+    private GameObject groundParticlesObject;
+    private Transform currentDriftPoint;
     protected PlayerState currentState = PlayerState.Running;
     
     private PlayerInput controls;
@@ -195,61 +199,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
 
     #region Steering and Drifting ------------------------------------------------------------------------------------------------------------------------------------
-    
-    protected void StartDrifting()
-    {
-        isDrifting = true;
-        currentState = isGrounded ? PlayerState.Drifting : PlayerState.DriftJumping;
-        lineRenderer.positionCount = 2; //start renderering the tongue line
-
-        rotationAtDriftStart = playerVisuals.rotation;
-
-        outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
-
-        currentTraction = tractionWhileDrifting;
-
-        horizontal = isDriftingRight ? 1f : -1f;
-
-        driftTimeCounter = 0;
-        
-        //change how fast the camera copies the rotation of the player
-        cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
-
-        StartCoroutine(Drift());
-        // refCylinder.transform.position = currentDriftPoint.position;
-        // refCylinder.transform.localScale = new Vector3(outerDriftRadius * 2, 2, outerDriftRadius * 2);
-    }
-
-    protected void StopDrifting()
-    {
-        isDrifting = false;
-        arrivedAtDriftPeak = false;
-        lineRenderer.positionCount = 0; //stop rendering the tongue line
-        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
-        currentTraction = traction;
-
-        horizontal = 0;
-
-        if (driftTimeCounter > timeToGetBoost)
-        {
-            Boost();
-            startedDriftBoost = false;
-            ChangeParticleColor(defaultParticleColor);
-        }
-        
-        //change how fast the camera copies the rotation of the player
-        cinemachineTransposer.m_YawDamping = cameraYawDamping;
-    }
     void Steer()
     {
-        //steer or drift
         if(!isDrifting)
         {
             //steer
             float currentTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, rb.velocity.magnitude / currentMaxSpeed);
             playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * currentTurnSpeed);
             
-            groundSlopeRef.rotation = playerVisuals.rotation;
             AdjustToGroundSlope();
 
             //update container to get closest drift point
@@ -258,7 +215,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         //move LookAt Object
-        horizontalLerpTo = Mathf.Lerp(horizontalLerpTo, horizontal, Time.deltaTime * horizontalLerpSpeed);
+        horizontalLerpTo = Mathf.Lerp(horizontalLerpTo, horizontal + driftHorizontal, Time.deltaTime * horizontalLerpSpeed);
         lookAt.position = playerVisuals.position + playerVisuals.right * (horizontalLerpTo * lookAtMoveAmount);
 
         virtualCamera.m_Lens.Dutch = horizontalLerpTo * maxDutchTilt;
@@ -270,54 +227,72 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity += new Vector3(0, gravity, 0);
     }
     
+    private void StartDrifting()
+    {
+        isDrifting = true;
+        currentState = isGrounded ? PlayerState.Drifting : PlayerState.DriftJumping;
+        lineRenderer.positionCount = 2; //start renderering the tongue line
+
+        outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
+
+        rotationAtDriftStart = playerVisuals.rotation;
+        currentTraction = tractionWhileDrifting;
+        driftTimeCounter = 0;
+        currentDriftRotation = 0;
+        driftHorizontal = isDriftingRight ? .5f : -.5f;
+        
+        //change how fast the camera copies the rotation of the player
+        cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
+
+        StartCoroutine(Drift());
+        // refCylinder.transform.position = currentDriftPoint.position;
+        // refCylinder.transform.localScale = new Vector3(outerDriftRadius * 2, 2, outerDriftRadius * 2);
+    }
+
+    private void StopDrifting()
+    {
+        isDrifting = false;
+        arrivedAtDriftPeak = false;
+        lineRenderer.positionCount = 0; //stop rendering the tongue line
+        driftHorizontal = 0;
+        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
+        currentTraction = traction;
+
+        if (driftTimeCounter > timeToGetBoost)
+        {
+            Boost();
+            startedDriftBoost = false;
+            ChangeParticleColor(defaultParticleColor);
+        }
+        
+        //change how fast the camera copies the rotation of the player
+        cinemachineTransposer.m_YawDamping = cameraYawDamping;
+    }
+    
     IEnumerator Drift()
     {
-        groundSlopeRef.rotation = rotationAtDriftStart;
+        rotationReference.rotation = rotationAtDriftStart;
         while (isDrifting)
         {
-            //variables needed
+            //variables needed in whole method
             Vector3 vecToDriftPoint = currentDriftPoint.position - transform.position;
             Vector2 vecToDriftPoint2D = new Vector2(vecToDriftPoint.x, vecToDriftPoint.z);
             
-            //tonguestretchfactor indicates how much the player should go into the drift
-            float tongueStretchFactor = arrivedAtDriftPeak ? 1 : GetTongeStretchFactor(vecToDriftPoint2D) ;
+            //tongueStretchFactor indicates how much the player should drift
+            float tongueStretchFactor = arrivedAtDriftPeak ? 1 : GetTongeStretchFactor(vecToDriftPoint2D);
+
+            //get the rotation at the start of the drift with the current up vector
+            Quaternion lerpFromRotation = Quaternion.LookRotation(rotationReference.forward, playerVisuals.up);
             
-            //get the direction the player should face at the max tonguestretchfactor
-            Vector3 dirToDriftPoint = new Vector3(vecToDriftPoint.x, 0, vecToDriftPoint.z);
-            dirToDriftPoint.Normalize();
+            //get the direction the player should face at the max tongueStretchFactor
+            Vector3 dirToDriftPoint = new Vector3(vecToDriftPoint.x, 0, vecToDriftPoint.z).normalized;
+            Quaternion lerpToRotation = GetWantedDriftRotation(dirToDriftPoint);
 
-            Quaternion wantedRotation = GetWantedDriftRotation(dirToDriftPoint);
-            groundSlopeRef.rotation = rotationAtDriftStart;
-            groundSlopeRef.rotation = Quaternion.LookRotation(groundSlopeRef.forward, playerVisuals.up);
+            playerVisuals.rotation = Quaternion.Lerp(lerpFromRotation, lerpToRotation, tongueStretchFactor);
 
-            playerVisuals.rotation = Quaternion.Lerp(groundSlopeRef.rotation, wantedRotation, tongueStretchFactor);
             AdjustToGroundSlope();
-
-            //make the velocity face the same direction as the player
-            if (isGrounded && !(rb.velocity.y > .5f))
-            {
-                rb.velocity = playerVisuals.forward * rb.velocity.magnitude;
-                // Debug.Log("ground Drifting");
-            }
-            else
-            {
-                float yVelocity = rb.velocity.y;
-                Vector3 velocity2D = new Vector2(rb.velocity.x, rb.velocity.z);
-                rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
-                // Debug.Log("jump Drifting");
-            }
-
-            //drift visuals
-            if (tongueStretchFactor > .5f && !startedDriftBoost)
-            {
-                driftTimeCounter += Time.deltaTime;
-                if (driftTimeCounter > timeToGetBoost)
-                {
-                    ChangeParticleColor(boostParticleColor);
-                    startedDriftBoost = true;
-                }
-                
-            }
+            TurnVelocityToPlayerForward();
+            ChargeDriftBoost(tongueStretchFactor);
 
             yield return null;
         }
@@ -325,8 +300,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     Quaternion GetWantedDriftRotation(Vector3 dirToDriftPoint)
     {
-        float wantedRotationFloat = isDriftingRight ? -90 + overSteer : 90 - overSteer;
-        Vector3 wantedForward = Quaternion.AngleAxis(wantedRotationFloat, Vector3.up) * dirToDriftPoint;
+        currentDriftRotation += horizontal * driftTurnSpeed * Time.deltaTime;
+        if (currentDriftRotation > 0)
+            currentDriftRotation = Mathf.Min(currentDriftRotation, driftMaxTurnAbility);
+        else
+            currentDriftRotation = Mathf.Max(currentDriftRotation, -driftMaxTurnAbility);
+
+        Vector3 wantedForward = isDriftingRight ? dirToDriftPoint.RotateLeft90Deg() : dirToDriftPoint.RotateRight90Deg();
+        wantedForward = Quaternion.AngleAxis(currentDriftRotation, Vector3.up) * wantedForward;
         return Quaternion.LookRotation(wantedForward, playerVisuals.up);
     }
     
@@ -354,11 +335,41 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         return tongueStretchFactor;
     }
+
+    private void TurnVelocityToPlayerForward()
+    {
+        //make the velocity face the same direction as the player
+        if (isGrounded && !(rb.velocity.y > .5f))
+        {
+            rb.velocity = playerVisuals.forward * rb.velocity.magnitude;
+            // Debug.Log("ground Drifting");
+        }
+        else
+        {
+            float yVelocity = rb.velocity.y;
+            Vector3 velocity2D = new Vector2(rb.velocity.x, rb.velocity.z);
+            rb.velocity = playerVisuals.forward * velocity2D.magnitude + new Vector3(0, yVelocity,0);
+        }
+    }
+
+    private void ChargeDriftBoost(float tongueStretchFactor)
+    {
+        if (tongueStretchFactor > .5f && !startedDriftBoost)
+        {
+            driftTimeCounter += Time.deltaTime;
+            if (driftTimeCounter > timeToGetBoost)
+            {
+                ChangeParticleColor(boostParticleColor);
+                startedDriftBoost = true;
+            }
+                
+        }
+    }
     
     void AdjustToGroundSlope()
     {
         Quaternion wantedRotation;
-        groundSlopeRef.rotation = playerVisuals.rotation;
+        // groundSlopeRef.rotation = playerVisuals.rotation;
         
         if (isGrounded)
         {
@@ -551,15 +562,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
     #endregion
 
-    
-
     #region Input System ------------------------------------------------------------------------------------------------------------------------------------
     public void OnSteer(InputAction.CallbackContext context)
     {
-        if (isDrifting || lockSteering)
-           return;
-
-        horizontal = context.ReadValue<Vector2>().x;
+        if (!lockSteering)
+        {
+            horizontal = context.ReadValue<Vector2>().x;
+        }
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -567,7 +576,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (context.started && isGrounded)
         {
             currentState = currentState == PlayerState.Drifting ? PlayerState.DriftJumping : PlayerState.Jumping;
-            // rb.AddForce(playerVisuals.up * jumpForce, ForceMode.Impulse);
             rb.velocity += playerVisuals.up * jumpForce;
             justStartedJumping = true;
             groundParticlesObject.SetActive(false);
@@ -599,8 +607,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnSlowMoBoost(InputAction.CallbackContext context)
     {
-        if(context.started)
-            StartSlowMoBoost();
+        // if(context.started)
+        //     StartSlowMoBoost();
     }
 
     public void OnLeftDrift(InputAction.CallbackContext context)
