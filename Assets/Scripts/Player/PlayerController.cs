@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float acceleration;
     [SerializeField] private float maxTurnSpeed;
     [SerializeField] private float minTurnSpeed;
-    [SerializeField] private float baseMaxSpeed;
+    public float baseMaxSpeed;
     [SerializeField] private float traction;
     [SerializeField] private float slowFieldSlow;
     [SerializeField] private float adjustToGroundSlopeSpeed = 3;
@@ -58,9 +58,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float cameraYawDamping;
     [SerializeField] private float cameraDriftYawDamping;
     [SerializeField] private float maxDutchTilt;
-
     
-
     protected float horizontal;
     private float horizontalLerpTo;
     private float currentTraction;
@@ -90,7 +88,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AudioSource walkAudioSource;
     [SerializeField] private GameObject refCylinder;
     
-    protected Rigidbody rb;
+    public Rigidbody rb { get; private set; }
     protected GameObject groundParticlesObject;
     protected Transform currentDriftPoint;
     protected PlayerState currentState = PlayerState.Running;
@@ -102,7 +100,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private Quaternion rotationAtDriftStart;
     
     private LineRenderer lineRenderer;
-    private GameVariables gameVariables;
+    private GameVariables gameVariables => GameVariables.instance;
 
     void Start()
     {
@@ -110,7 +108,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         sphereCollider = GetComponent<SphereCollider>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 0;
-        virtualCamera = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
+        virtualCamera = gameVariables.virtualCamera;
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         groundParticlesObject = groundParticles.gameObject;
         currentMaxSpeed = baseMaxSpeed;
@@ -127,8 +125,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         currentTraction = traction;
 
         rightDriftPointContainer.SetRightContainer();
-
-        gameVariables = GameVariables.instance;
         gameVariables.onPause.AddListener(PauseMe);
 
     }
@@ -146,7 +142,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         
         UpdateState();
         Accelerate();
-        PlayWalkSound();
+        // PlayWalkSound();
         
 
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
@@ -416,11 +412,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     IEnumerator SlowMoBoost()
     {
         Time.timeScale = .1f;
-        maxTurnSpeed *= 10;
-        cinemachineTransposer.m_YawDamping = 0;
         rb.velocity = Vector3.zero;
+        cinemachineTransposer.m_YawDamping = 0;
+        float tmpTurnSpeed = maxTurnSpeed;
+        maxTurnSpeed = 0;
         
-        yield return new WaitForSecondsRealtime(2);
+        yield return TurnToEnemy();
+
+        maxTurnSpeed = tmpTurnSpeed * 10;
+        
+        yield return new WaitForSecondsRealtime(1.5f);
         
         Time.timeScale = 1;
         maxTurnSpeed /= 10;
@@ -428,6 +429,23 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
         Boost();
+    }
+
+    IEnumerator TurnToEnemy()
+    {
+        Vector3 vecToEnemy = gameVariables.enemy.transform.position - transform.position;
+        Quaternion fromRotation = playerVisuals.rotation;
+        Quaternion toRotation = Quaternion.LookRotation(vecToEnemy, playerVisuals.up);
+        float t = 0;
+
+        while (t < 1)
+        {
+            playerVisuals.rotation = Quaternion.Lerp(fromRotation, toRotation, t );
+            t += Time.deltaTime * 20;
+            yield return null;
+        }
+
+        playerVisuals.rotation = toRotation;
     }
     
     #endregion
