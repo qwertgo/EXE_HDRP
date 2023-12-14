@@ -58,6 +58,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float cameraYawDamping;
     [SerializeField] private float cameraDriftYawDamping;
     [SerializeField] private float maxDutchTilt;
+
+    [Header("EnemyAttack / Slo Mo Boost")] 
+    [SerializeField] private float turnToEnemySpeed = 10;
+    [SerializeField] private float timeToWaitTillBoost = 1.5f;
     
     protected float horizontal;
     private float horizontalLerpTo;
@@ -74,7 +78,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     protected bool isDriftingRight;
     protected bool arrivedAtDriftPeak;
     protected bool startedDriftBoost;
-
+    private bool lockSteering;
 
     [Header("References")]
     [SerializeField] protected Transform playerVisuals;
@@ -102,6 +106,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private LineRenderer lineRenderer;
     private GameVariables gameVariables => GameVariables.instance;
 
+    #region Instantiation and Destroying ------------------------------------------------------------------------------------------------------------------------------------
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -133,8 +138,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         material.SetFloat("_fireflyCount", 0);
     }
+    #endregion
 
-    #region Physics
+    #region Physics ------------------------------------------------------------------------------------------------------------------------------------
     void FixedUpdate()
     {
         if(gameVariables.isPaused)
@@ -169,7 +175,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     #endregion
 
-    #region States
+    #region States ------------------------------------------------------------------------------------------------------------------------------------
     void UpdateState()
     {
         isGrounded = IsGrounded();
@@ -188,6 +194,52 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         justStartedJumping = false;
     }
 
+    #region Steering and Drifting ------------------------------------------------------------------------------------------------------------------------------------
+    
+    protected void StartDrifting()
+    {
+        isDrifting = true;
+        currentState = isGrounded ? PlayerState.Drifting : PlayerState.DriftJumping;
+        lineRenderer.positionCount = 2; //start renderering the tongue line
+
+        rotationAtDriftStart = playerVisuals.rotation;
+
+        outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
+
+        currentTraction = tractionWhileDrifting;
+
+        horizontal = isDriftingRight ? 1f : -1f;
+
+        driftTimeCounter = 0;
+        
+        //change how fast the camera copies the rotation of the player
+        cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
+
+        StartCoroutine(Drift());
+        // refCylinder.transform.position = currentDriftPoint.position;
+        // refCylinder.transform.localScale = new Vector3(outerDriftRadius * 2, 2, outerDriftRadius * 2);
+    }
+
+    protected void StopDrifting()
+    {
+        isDrifting = false;
+        arrivedAtDriftPeak = false;
+        lineRenderer.positionCount = 0; //stop rendering the tongue line
+        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
+        currentTraction = traction;
+
+        horizontal = 0;
+
+        if (driftTimeCounter > timeToGetBoost)
+        {
+            Boost();
+            startedDriftBoost = false;
+            ChangeParticleColor(defaultParticleColor);
+        }
+        
+        //change how fast the camera copies the rotation of the player
+        cinemachineTransposer.m_YawDamping = cameraYawDamping;
+    }
     void Steer()
     {
         //steer or drift
@@ -217,6 +269,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.deltaTime) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
     }
+    
     IEnumerator Drift()
     {
         groundSlopeRef.rotation = rotationAtDriftStart;
@@ -269,46 +322,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             yield return null;
         }
     }
-    
-    void AdjustToGroundSlope()
-    {
-        Quaternion wantedRotation;
-        groundSlopeRef.rotation = playerVisuals.rotation;
-        
-        if (isGrounded)
-        {
-            Physics.Raycast(transform.position, -playerVisuals.up, out RaycastHit groundHit, sphereCollider.radius + .5f, ground);
-
-            Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
-            wantedRotation = Quaternion.LookRotation(forward, groundHit.normal);
-        }
-        else
-        {
-            Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, Vector3.up);
-            wantedRotation = Quaternion.LookRotation(forward, Vector3.up);
-        }
-
-        playerVisuals.rotation = Quaternion.Lerp(playerVisuals.rotation, wantedRotation, Time.deltaTime * adjustToGroundSlopeSpeed);
-    }
 
     Quaternion GetWantedDriftRotation(Vector3 dirToDriftPoint)
     {
         float wantedRotationFloat = isDriftingRight ? -90 + overSteer : 90 - overSteer;
         Vector3 wantedForward = Quaternion.AngleAxis(wantedRotationFloat, Vector3.up) * dirToDriftPoint;
         return Quaternion.LookRotation(wantedForward, playerVisuals.up);
-    }
-
-    void Accelerate()
-    {
-        //acceleration
-        if (currentState != PlayerState.Breaking)
-            rb.velocity += acceleration * Time.fixedDeltaTime * playerVisuals.forward;
-
-        //limit max speed
-        if (rb.velocity.magnitude > currentMaxSpeed)
-        {
-            rb.velocity = rb.velocity.normalized * currentMaxSpeed;
-        }
     }
     
     float GetTongeStretchFactor( Vector2 vecToDriftPoint2D)
@@ -335,41 +354,79 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         return tongueStretchFactor;
     }
+    
+    void AdjustToGroundSlope()
+    {
+        Quaternion wantedRotation;
+        groundSlopeRef.rotation = playerVisuals.rotation;
+        
+        if (isGrounded)
+        {
+            Physics.Raycast(transform.position, -playerVisuals.up, out RaycastHit groundHit, sphereCollider.radius + .5f, ground);
 
+            Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
+            wantedRotation = Quaternion.LookRotation(forward, groundHit.normal);
+        }
+        else
+        {
+            Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, Vector3.up);
+            wantedRotation = Quaternion.LookRotation(forward, Vector3.up);
+        }
+
+        playerVisuals.rotation = Quaternion.Lerp(playerVisuals.rotation, wantedRotation, Time.deltaTime * adjustToGroundSlopeSpeed);
+    }
+    
     void ChangeParticleColor(Gradient color)
     {
         ParticleSystem.ColorOverLifetimeModule colOverLifeTime = groundParticles.colorOverLifetime;
         colOverLifeTime.color = color;
     }
+    #endregion
 
-    void PlayWalkSound()
+    #region Acceleration ------------------------------------------------------------------------------------------------------------------------------------
+    void Accelerate()
     {
-        timeUntilNextWalkSound -= Time.fixedDeltaTime;
-        
-        if (isGrounded && timeUntilNextWalkSound <= 0)
+        //acceleration
+        if (currentState != PlayerState.Breaking)
+            rb.velocity += acceleration * Time.fixedDeltaTime * playerVisuals.forward;
+
+        //limit max speed
+        if (rb.velocity.magnitude > currentMaxSpeed)
         {
-            walkAudioSource.pitch = Random.Range(.7f, 1.3f);
-            walkAudioSource.volume = Random.Range(.8f, 1.2f);
-            walkAudioSource.Play();
-            timeUntilNextWalkSound = .25f;
+            rb.velocity = rb.velocity.normalized * currentMaxSpeed;
         }
     }
-    public void Die()
-    {
-        Debug.Log("Player Died");
-        rb.isKinematic = true;
-        // rb.velocity = Vector3.zero;
-        enabled = false;
-        GameManager.instance.StopGame();
-    }
-    
     void Boost()
     {
-        // ReturnToDefaultSpeed();
         currentMaxSpeed += boostForce;
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
     }
+    
+    public void StartSlowMoBoost()
+    {
+        StartCoroutine(SlowMoBoost());
+    }
+    IEnumerator SlowMoBoost()
+    {
+        Time.timeScale = .1f;
+        maxTurnSpeed *= 10;
+        rb.velocity = Vector3.zero;
+        cinemachineTransposer.m_YawDamping = 0;
 
+        yield return TurnToEnemy();
+
+        yield return new WaitForSecondsRealtime(timeToWaitTillBoost);
+        
+        Time.timeScale = 1;
+        maxTurnSpeed /= 10;
+        cinemachineTransposer.m_YawDamping = cameraYawDamping;
+        
+        rb.velocity = playerVisuals.forward * currentMaxSpeed;
+        Boost();
+    }
+    #endregion
+    
+    #region Decceleration ------------------------------------------------------------------------------------------------------------------------------------
     private void ReduceMaxSpeed()
     {
         currentMaxSpeed -= Time.deltaTime * boostSubtractPerSecond;
@@ -395,63 +452,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         currentMaxSpeed = toSpeed;
     }
-    //
-    // public void ReturnToDefaultSpeed()
-    // {
-    //     if(currentMaxSpeed >= baseMaxSpeed)
-    //         return;
-    //     
-    //     StopCoroutine(nameof(SlowDownCoroutine));
-    //     baseMaxSpeed = maxSpeedOriginal;
-    // }
-
-    public void StartSlowMoBoost()
-    {
-        StartCoroutine(SlowMoBoost());
-    }
-    IEnumerator SlowMoBoost()
-    {
-        Time.timeScale = .1f;
-        rb.velocity = Vector3.zero;
-        cinemachineTransposer.m_YawDamping = 0;
-        float tmpTurnSpeed = maxTurnSpeed;
-        maxTurnSpeed = 0;
-        
-        yield return TurnToEnemy();
-
-        maxTurnSpeed = tmpTurnSpeed * 10;
-        
-        yield return new WaitForSecondsRealtime(1.5f);
-        
-        Time.timeScale = 1;
-        maxTurnSpeed /= 10;
-        cinemachineTransposer.m_YawDamping = cameraYawDamping;
-        
-        rb.velocity = playerVisuals.forward * currentMaxSpeed;
-        Boost();
-    }
-
-    IEnumerator TurnToEnemy()
-    {
-        Vector3 vecToEnemy = gameVariables.enemy.transform.position - transform.position;
-        Quaternion fromRotation = playerVisuals.rotation;
-        Quaternion toRotation = Quaternion.LookRotation(vecToEnemy, playerVisuals.up);
-        float t = 0;
-
-        while (t < 1)
-        {
-            playerVisuals.rotation = Quaternion.Lerp(fromRotation, toRotation, t );
-            t += Time.deltaTime * 20;
-            yield return null;
-        }
-
-        playerVisuals.rotation = toRotation;
-    }
-    
+    #endregion
     #endregion
 
-    #region Collider
-
+    #region Collider ------------------------------------------------------------------------------------------------------------------------------------
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.layer == 9)
@@ -468,7 +472,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     #endregion
 
-    #region Bools
+    #region Bools ------------------------------------------------------------------------------------------------------------------------------------
     bool IsGrounded()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, sphereCollider.radius + .01f, ground);
@@ -481,62 +485,54 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
     #endregion
     
-    #region various Methods
+    #region Various Methods ------------------------------------------------------------------------------------------------------------------------------------
 
     public void CollectFirefly(int amount)
     {
         fireflyCount += amount;
         material.SetFloat("_fireflyCount", fireflyCount);
     }
-    #endregion
-
     
-
-    protected void StartDrifting()
+    // void PlayWalkSound()
+    // {
+    //     timeUntilNextWalkSound -= Time.fixedDeltaTime;
+    //     
+    //     if (isGrounded && timeUntilNextWalkSound <= 0)
+    //     {
+    //         walkAudioSource.pitch = Random.Range(.7f, 1.3f);
+    //         walkAudioSource.volume = Random.Range(.8f, 1.2f);
+    //         walkAudioSource.Play();
+    //         timeUntilNextWalkSound = .25f;
+    //     }
+    // }
+    public void Die()
     {
-        isDrifting = true;
-        currentState = isGrounded ? PlayerState.Drifting : PlayerState.DriftJumping;
-        lineRenderer.positionCount = 2; //start renderering the tongue line
-
-        rotationAtDriftStart = playerVisuals.rotation;
-
-        outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
-
-        currentTraction = tractionWhileDrifting;
-
-        horizontal = isDriftingRight ? 1f : -1f;
-
-        driftTimeCounter = 0;
-        
-        //change how fast the camera copies the rotation of the player
-        cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
-
-        StartCoroutine(Drift());
-        // refCylinder.transform.position = currentDriftPoint.position;
-        // refCylinder.transform.localScale = new Vector3(outerDriftRadius * 2, 2, outerDriftRadius * 2);
+        Debug.Log("Player Died");
+        rb.isKinematic = true;
+        // rb.velocity = Vector3.zero;
+        enabled = false;
+        GameManager.instance.StopGame();
     }
 
-    protected void StopDrifting()
+    IEnumerator TurnToEnemy()
     {
-        isDrifting = false;
-        arrivedAtDriftPeak = false;
-        lineRenderer.positionCount = 0; //stop rendering the tongue line
-        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
-        currentTraction = traction;
+        lockSteering = true;
+        Vector3 vecToEnemy = gameVariables.enemy.transform.position - transform.position;
+        Quaternion fromRotation = playerVisuals.rotation;
+        Quaternion toRotation = Quaternion.LookRotation(vecToEnemy, playerVisuals.up);
+        float t = 0;
 
-        horizontal = 0;
-
-        if (driftTimeCounter > timeToGetBoost)
+        while (t < 1)
         {
-            Boost();
-            startedDriftBoost = false;
-            ChangeParticleColor(defaultParticleColor);
+            playerVisuals.rotation = Quaternion.Lerp(fromRotation, toRotation, Mathf.SmoothStep(0, 1, t));
+            t += Time.deltaTime * turnToEnemySpeed;
+            yield return null;
         }
-        
-        //change how fast the camera copies the rotation of the player
-        cinemachineTransposer.m_YawDamping = cameraYawDamping;
-    }
 
+        playerVisuals.rotation = toRotation;
+        lockSteering = false;
+    }
+    
     void PauseMe()
     {
         StartCoroutine(WhilePaused());
@@ -553,12 +549,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.isKinematic = false;
         rb.velocity = velocity;
     }
+    #endregion
 
-    #region Input
+    
 
+    #region Input System ------------------------------------------------------------------------------------------------------------------------------------
     public void OnSteer(InputAction.CallbackContext context)
     {
-        if (isDrifting)
+        if (isDrifting || lockSteering)
            return;
 
         horizontal = context.ReadValue<Vector2>().x;
