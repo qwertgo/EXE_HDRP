@@ -67,6 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 617074d5588fc834cbca83fef2fc63ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeWhenShown: 2
   indicatorRenderer: {fileID: 5078965518158746011}
   rightMat: {fileID: 2100000, guid: 124c1638c55536f47863ac3cfbfd665f, type: 2}
   leftMat: {fileID: 2100000, guid: bcead8638c581f244bebbdc66a90dbbd, type: 2}
@@ -162,6 +163,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Debug Sphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 9036981826052917451, guid: 3618b1434d5444045840d3cecda844ee,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
