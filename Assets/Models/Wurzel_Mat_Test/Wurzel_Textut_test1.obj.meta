@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: sweep1Mat
-    second: {fileID: 2100000, guid: 3f64cfc2dbe4672469e5a204acf93ed7, type: 2}
+    second: {fileID: 2100000, guid: 95891977a89380b46a8fb8eef041c250, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
