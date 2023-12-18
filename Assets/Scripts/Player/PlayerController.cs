@@ -258,7 +258,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
         currentTraction = traction;
 
-        if (driftTimeCounter > timeToGetBoost)
+        if (startedDriftBoost)
         {
             Boost();
             startedDriftBoost = false;
@@ -300,7 +300,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     Quaternion GetWantedDriftRotation(Vector3 dirToDriftPoint)
     {
-        currentDriftRotation += horizontal * driftTurnSpeed * Time.deltaTime;
+        if (horizontal == 0)
+            currentDriftRotation = Mathf.Lerp(currentDriftRotation, 0, Time.deltaTime);
+        else
+            currentDriftRotation += horizontal * driftTurnSpeed * Time.deltaTime;
+        
         if (currentDriftRotation > 0)
             currentDriftRotation = Mathf.Min(currentDriftRotation, driftMaxTurnAbility);
         else

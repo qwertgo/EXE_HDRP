@@ -5043,9 +5043,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceleration: 17
-  maxTurnSpeed: 120
-  minTurnSpeed: 30
-  baseMaxSpeed: 25
+  maxTurnSpeed: 100
+  minTurnSpeed: 40
+  baseMaxSpeed: 23
   traction: 1
   slowFieldSlow: 20
   adjustToGroundSlopeSpeed: 3
@@ -5058,8 +5058,8 @@ MonoBehaviour:
   jumpForce: 15
   breakForce: 0.01
   gravitationMultiplier: 3
-  driftTurnSpeed: 25
-  driftMaxTurnAbility: 25
+  driftTurnSpeed: 30
+  driftMaxTurnAbility: 30
   tractionWhileDrifting: 10
   overSteer: 0
   defaultParticleColor:
