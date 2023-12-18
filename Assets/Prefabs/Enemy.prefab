@@ -45,7 +45,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 131072
+  m_Intensity: 220.62471
   m_Range: 85
   m_SpotAngle: 21.795933
   m_InnerSpotAngle: 4.1864305
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Intensity: 14852.37
+  m_Intensity: 25
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
@@ -461,14 +461,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5966495437708324044}
-  m_LocalRotation: {x: -0, y: -0, z: 0.70706165, w: 0.707152}
-  m_LocalPosition: {x: 0, y: -0.42500007, z: 0.2900001}
-  m_LocalScale: {x: 0.43431, y: 0.43431, z: 0.43431}
+  m_LocalRotation: {x: -0.3248319, y: -0.3248319, z: -0.62807983, w: 0.62807983}
+  m_LocalPosition: {x: 0, y: -0.42500007, z: 0.2900002}
+  m_LocalScale: {x: 0.43431, y: 0.9008892, z: 0.43431}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6120203281414659691}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 89.993}
+  m_LocalEulerAnglesHint: {x: -54.694, y: 0, z: -90}
 --- !u!33 &3081317765078020662
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -476,7 +476,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5966495437708324044}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &5690951200579485328
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -497,7 +497,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1aa02088c2a2223498d99bd1066cde70, type: 2}
+  - {fileID: 2100000, guid: 99b6a46702d21c74298c44ac07dc3ad5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -607,6 +607,7 @@ GameObject:
   - component: {fileID: 224554960124924074}
   - component: {fileID: 430753858021893133}
   - component: {fileID: 3813379599242466393}
+  - component: {fileID: 3928280293623202108}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -628,7 +629,7 @@ Transform:
   m_Children:
   - {fileID: 6120203281414659691}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9188452968715423062
 MonoBehaviour:
@@ -643,10 +644,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  followPlayerRadius: 80
+  followPlayerRadius: 90
   idleSpeed: 14
-  followPlayerSpeed: 25
-  lightIntensityCloseToPlayer: 14852.37
+  followPlayerSpeed: 18
+  lightIntensityCloseToPlayer: 13000.37
   lightIntensityFarFromPlayer: 15208830
   finishedAttack: 0
   idleDestinationPoints:
@@ -700,7 +701,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 25
+  m_Radius: 30
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &224554960124924074
 Rigidbody:
@@ -844,6 +845,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3928280293623202108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9175560092848308192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1001 &2647303791079877388
 PrefabInstance:
   m_ObjectHideFlags: 0

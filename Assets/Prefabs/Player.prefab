@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9105339177700952640}
+  - component: {fileID: 605366852683962330}
+  - component: {fileID: 8223450590443706784}
   m_Layer: 6
   m_Name: LookAt
   m_TagString: Untagged
@@ -31,6 +33,56 @@ Transform:
   m_Father: {fileID: 1609444752658654278}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &605366852683962330
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119925269545393502}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &8223450590443706784
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119925269545393502}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 257
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 1aa02088c2a2223498d99bd1066cde70, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &426879389078604672
 GameObject:
   m_ObjectHideFlags: 0
@@ -4991,9 +5043,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceleration: 17
-  maxTurnSpeed: 120
-  minTurnSpeed: 30
-  baseMaxSpeed: 20
+  maxTurnSpeed: 100
+  minTurnSpeed: 40
+  baseMaxSpeed: 23
   traction: 1
   slowFieldSlow: 20
   adjustToGroundSlopeSpeed: 3
@@ -5006,10 +5058,9 @@ MonoBehaviour:
   jumpForce: 15
   breakForce: 0.01
   gravitationMultiplier: 3
+  driftTurnSpeed: 30
+  driftMaxTurnAbility: 30
   tractionWhileDrifting: 10
-  timeToGetBoost: 0.25
-  boostForce: 5
-  boostTime: 0.3
   overSteer: 0
   defaultParticleColor:
     serializedVersion: 2
@@ -5071,15 +5122,20 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 3
+  boostForce: 18
+  boostSubtractPerSecond: 18
+  timeToGetBoost: 0.25
   lookAtMoveAmount: 3
   horizontalLerpSpeed: 0.75
   cameraYawDamping: 1.75
   cameraDriftYawDamping: 0.75
   maxDutchTilt: 5
+  turnToEnemySpeed: 10
+  timeToWaitTillBoost: 1.2
   playerVisuals: {fileID: 1609444752658654278}
   tonguePoint: {fileID: 2633907542019158644}
   lookAt: {fileID: 9105339177700952640}
-  groundSlopeRef: {fileID: 2145405288765843991}
+  rotationReference: {fileID: 2145405288765843991}
   groundParticles: {fileID: 661022337883119139}
   material: {fileID: 2100000, guid: 73fb8518b6582cc47964477828ddee4b, type: 2}
   rightDriftPointContainer: {fileID: 1582747289892162416}
