@@ -6,6 +6,7 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 {
@@ -22,13 +23,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     [Header("Base Movement Values")]
     [SerializeField] private float acceleration;
-    [SerializeField] private float steerAmount;
-    [SerializeField] private float maxSpeed;
+    [SerializeField] private float maxTurnSpeed;
+    [SerializeField] private float minTurnSpeed;
+    public float baseMaxSpeed;
     [SerializeField] private float traction;
     [SerializeField] private float slowFieldSlow;
     [SerializeField] private float adjustToGroundSlopeSpeed = 3;
     [SerializeField] private LayerMask ground;
     [SerializeField] private LayerMask obstacle;
+
+    private float currentMaxSpeed;
 
     [Header("Jumping/ In Air")]
     [SerializeField] protected float jumpForce;
@@ -37,14 +41,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     [Header("Drifting")]
     [SerializeField] private float tractionWhileDrifting;
-    [SerializeField] private float timeToGetBoost;
-    [SerializeField] private float boostForce;
-    [SerializeField] private float boostTime;
     [SerializeField] private float overSteer;
     [SerializeField] private Gradient defaultParticleColor;
     [SerializeField] private Gradient boostParticleColor;
     private float outerDriftRadius;
     private float driftTimeCounter;
+    
+    [Header("Boost")]
+    [SerializeField] private float boostForce;
+    [SerializeField] private float boostSubtractPerSecond;
+    [SerializeField] private float timeToGetBoost;
 
     [Header("Camera")] 
     [SerializeField] private float lookAtMoveAmount;
@@ -52,13 +58,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float cameraYawDamping;
     [SerializeField] private float cameraDriftYawDamping;
     [SerializeField] private float maxDutchTilt;
-
     
-
     protected float horizontal;
     private float horizontalLerpTo;
     private float currentTraction;
     private float maxSpeedOriginal;
+    private float timeUntilNextWalkSound;
 
     public int fireflyCount { get; private set; }
     
@@ -80,9 +85,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private Material material;
     [SerializeField] protected DriftPointContainer rightDriftPointContainer;
     [SerializeField] protected DriftPointContainer leftDriftPointContainer;
+    [SerializeField] private AudioSource walkAudioSource;
     [SerializeField] private GameObject refCylinder;
     
-    protected Rigidbody rb;
+    public Rigidbody rb { get; private set; }
     protected GameObject groundParticlesObject;
     protected Transform currentDriftPoint;
     protected PlayerState currentState = PlayerState.Running;
@@ -94,7 +100,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private Quaternion rotationAtDriftStart;
     
     private LineRenderer lineRenderer;
-    private GameVariables gameVariables;
+    private GameVariables gameVariables => GameVariables.instance;
 
     void Start()
     {
@@ -102,9 +108,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         sphereCollider = GetComponent<SphereCollider>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 0;
-        virtualCamera = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
+        virtualCamera = gameVariables.virtualCamera;
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         groundParticlesObject = groundParticles.gameObject;
+        currentMaxSpeed = baseMaxSpeed;
         
         if (controls == null)
         {
@@ -114,13 +121,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         cinemachineTransposer.m_YawDamping = 5;
-        maxSpeedOriginal = maxSpeed;
 
         currentTraction = traction;
 
         rightDriftPointContainer.SetRightContainer();
-
-        gameVariables = GameVariables.instance;
         gameVariables.onPause.AddListener(PauseMe);
 
     }
@@ -138,6 +142,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         
         UpdateState();
         Accelerate();
+        // PlayWalkSound();
+        
 
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
     }
@@ -157,6 +163,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             return;
         
         Steer();
+        ReduceMaxSpeed();
+        // Debug.Log($"speed: {rb.velocity.magnitude}, maxSpeed: {currentMaxSpeed}");
     }
 
     #endregion
@@ -186,7 +194,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if(!isDrifting)
         {
             //steer
-            playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * steerAmount);
+            float currentTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, rb.velocity.magnitude / currentMaxSpeed);
+            playerVisuals.Rotate(playerVisuals.up, horizontal * Time.deltaTime * currentTurnSpeed);
             
             groundSlopeRef.rotation = playerVisuals.rotation;
             AdjustToGroundSlope();
@@ -256,6 +265,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
                 }
                 
             }
+
             yield return null;
         }
     }
@@ -295,9 +305,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             rb.velocity += acceleration * Time.fixedDeltaTime * playerVisuals.forward;
 
         //limit max speed
-        if (rb.velocity.magnitude > maxSpeed)
+        if (rb.velocity.magnitude > currentMaxSpeed)
         {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+            rb.velocity = rb.velocity.normalized * currentMaxSpeed;
         }
     }
     
@@ -331,6 +341,19 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         ParticleSystem.ColorOverLifetimeModule colOverLifeTime = groundParticles.colorOverLifetime;
         colOverLifeTime.color = color;
     }
+
+    void PlayWalkSound()
+    {
+        timeUntilNextWalkSound -= Time.fixedDeltaTime;
+        
+        if (isGrounded && timeUntilNextWalkSound <= 0)
+        {
+            walkAudioSource.pitch = Random.Range(.7f, 1.3f);
+            walkAudioSource.volume = Random.Range(.8f, 1.2f);
+            walkAudioSource.Play();
+            timeUntilNextWalkSound = .25f;
+        }
+    }
     public void Die()
     {
         Debug.Log("Player Died");
@@ -340,14 +363,17 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         GameManager.instance.StopGame();
     }
     
-    IEnumerator Boost()
+    void Boost()
     {
-        ReturnToDefaultSpeed();
-        maxSpeed += boostForce;
-        rb.velocity += playerVisuals.forward * boostForce;
-        yield return new WaitForSeconds(boostTime);
+        // ReturnToDefaultSpeed();
+        currentMaxSpeed += boostForce;
+        rb.velocity = playerVisuals.forward * currentMaxSpeed;
+    }
 
-        maxSpeed = maxSpeedOriginal;
+    private void ReduceMaxSpeed()
+    {
+        currentMaxSpeed -= Time.deltaTime * boostSubtractPerSecond;
+        currentMaxSpeed = Mathf.Max(baseMaxSpeed, currentMaxSpeed);
     }
     
     public void SlowDown()
@@ -357,27 +383,27 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     IEnumerator SlowDownCoroutine()
     {
         float t = 0;
-        float from = maxSpeedOriginal;
-        float To = maxSpeedOriginal - slowFieldSlow;
+        float fromSpeed = currentMaxSpeed;
+        float toSpeed = baseMaxSpeed;
 
         while (t < 1)
         {
-            maxSpeed = Mathf.Lerp(from, To, t);
+            currentMaxSpeed = Mathf.Lerp(fromSpeed, toSpeed, t);
             t += Time.deltaTime * 2;
             yield return null;
         }
 
-        maxSpeed = To;
+        currentMaxSpeed = toSpeed;
     }
-
-    public void ReturnToDefaultSpeed()
-    {
-        if(maxSpeed >= maxSpeedOriginal)
-            return;
-        
-        StopCoroutine(nameof(SlowDownCoroutine));
-        maxSpeed = maxSpeedOriginal;
-    }
+    //
+    // public void ReturnToDefaultSpeed()
+    // {
+    //     if(currentMaxSpeed >= baseMaxSpeed)
+    //         return;
+    //     
+    //     StopCoroutine(nameof(SlowDownCoroutine));
+    //     baseMaxSpeed = maxSpeedOriginal;
+    // }
 
     public void StartSlowMoBoost()
     {
@@ -386,18 +412,40 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     IEnumerator SlowMoBoost()
     {
         Time.timeScale = .1f;
-        steerAmount *= 10;
-        cinemachineTransposer.m_YawDamping = 0;
         rb.velocity = Vector3.zero;
+        cinemachineTransposer.m_YawDamping = 0;
+        float tmpTurnSpeed = maxTurnSpeed;
+        maxTurnSpeed = 0;
         
-        yield return new WaitForSecondsRealtime(2);
+        yield return TurnToEnemy();
+
+        maxTurnSpeed = tmpTurnSpeed * 10;
+        
+        yield return new WaitForSecondsRealtime(1.5f);
         
         Time.timeScale = 1;
-        steerAmount /= 10;
+        maxTurnSpeed /= 10;
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
         
-        rb.velocity = playerVisuals.forward * maxSpeed;
-        StartCoroutine(Boost());
+        rb.velocity = playerVisuals.forward * currentMaxSpeed;
+        Boost();
+    }
+
+    IEnumerator TurnToEnemy()
+    {
+        Vector3 vecToEnemy = gameVariables.enemy.transform.position - transform.position;
+        Quaternion fromRotation = playerVisuals.rotation;
+        Quaternion toRotation = Quaternion.LookRotation(vecToEnemy, playerVisuals.up);
+        float t = 0;
+
+        while (t < 1)
+        {
+            playerVisuals.rotation = Quaternion.Lerp(fromRotation, toRotation, t );
+            t += Time.deltaTime * 20;
+            yield return null;
+        }
+
+        playerVisuals.rotation = toRotation;
     }
     
     #endregion
@@ -408,9 +456,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         if (other.gameObject.layer == 9)
         {
-            rb.velocity = Vector3.zero;
-            
-            rb.AddForce(-playerVisuals.forward * 50, ForceMode.Impulse);
+            rb.velocity = -playerVisuals.forward * 50;
+            currentMaxSpeed = baseMaxSpeed;
 
             if (isDrifting)
             {
@@ -481,7 +528,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         if (driftTimeCounter > timeToGetBoost)
         {
-            StartCoroutine(Boost());
+            Boost();
             startedDriftBoost = false;
             ChangeParticleColor(defaultParticleColor);
         }

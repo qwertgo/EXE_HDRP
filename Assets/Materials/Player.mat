@@ -180,6 +180,7 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
     - _DstBlend: 0
+    - _Emission: 60
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 1
@@ -264,7 +265,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     - _fireflyCount: 0
-    - _maxFirefyCount: 10
+    - _maxFirefyCount: 60
     m_Colors:
     - _BaseColor: {r: 0.42924526, g: 1, b: 0.5658558, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}

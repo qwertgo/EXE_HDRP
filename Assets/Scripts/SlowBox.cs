@@ -19,9 +19,9 @@ public class SlowBox : MonoBehaviour
             player.SlowDown();
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if(other.tag.Equals("Player"))
-            player.ReturnToDefaultSpeed();
-    }
+    // private void OnTriggerExit(Collider other)
+    // {
+    //     if(other.tag.Equals("Player"))
+    //         player.ReturnToDefaultSpeed();
+    // }
 }
