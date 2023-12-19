@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool isGrounded;
     private bool isFalling;
     private bool isDrifting;
+    private bool isBreaking;
     private bool justStartedJumping;
     private bool isDriftingRight;
     private bool arrivedAtDriftPeak;
@@ -402,7 +403,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     void Accelerate()
     {
         //acceleration
-        if (currentState != PlayerState.Breaking)
+        if (!isBreaking)
             rb.velocity += acceleration * Time.fixedDeltaTime * playerVisuals.forward;
 
         //limit max speed
@@ -452,20 +453,22 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         StartCoroutine(SlowDownCoroutine());
     }
-    IEnumerator SlowDownCoroutine()
+    private IEnumerator SlowDownCoroutine()
     {
+        isBreaking = true;
+        float startSpeed = rb.velocity.magnitude;
+        float endSpeed = 10;
         float t = 0;
-        float fromSpeed = currentMaxSpeed;
-        float toSpeed = baseMaxSpeed;
 
         while (t < 1)
         {
-            currentMaxSpeed = Mathf.Lerp(fromSpeed, toSpeed, t);
-            t += Time.deltaTime * 2;
+            float currentSpeed = Mathf.Lerp(startSpeed, endSpeed, t);
+            rb.velocity = rb.velocity.normalized * currentSpeed;
             yield return null;
+            t += Time.deltaTime * 2;
         }
 
-        currentMaxSpeed = toSpeed;
+        isBreaking = false;
     }
     #endregion
     #endregion
@@ -596,11 +599,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         else if (context.canceled)
         {
             currentState = PlayerState.Running;
+            isBreaking = false;
         }
     }
 
     IEnumerator Break()
     {
+        isBreaking = true;
         while (currentState == PlayerState.Breaking)
         {
             if (isGrounded)
