@@ -791,7 +791,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b1b7927eaf65094682d8e607627997c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highscoreValue: 1
+  timeValue: 1
   speed: 18
   timeToRespawn: 30
   collectSpeed: 10

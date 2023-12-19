@@ -9,8 +9,8 @@ public class FireflyWalk : MonoBehaviour
 {
     enum FireflyType {StillStanding, Moving}
 
-    [Header("Variables")] 
-    [SerializeField] private int highscoreValue;
+    [Header("Variables")]
+    [SerializeField] private float timeValue;
     [SerializeField] float speed;
     [SerializeField] float timeToRespawn;
     [SerializeField] private float collectSpeed;
@@ -99,7 +99,8 @@ public class FireflyWalk : MonoBehaviour
             yield return null;
         }
     
-        player.parent.GetComponent<PlayerController>().CollectFirefly(highscoreValue);
+        GameVariables.instance.gameTimer.AddToTimer(timeValue);
+        GameVariables.instance.fireflyCount++;
     
         visuals.gameObject.SetActive(false);
     
