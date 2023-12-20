@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3900340799598199080
 Transform:
@@ -72,7 +72,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &8546778900326912689
 Transform:
@@ -177,7 +177,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &3880388401540748522
 Transform:
@@ -280,7 +280,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &593772777295698111
 Transform:
@@ -343,7 +343,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &3435631925150669964
 Transform:
@@ -446,7 +446,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2181193796038629545
 Transform:
@@ -503,7 +503,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &5664390492751113588
 Transform:
@@ -608,7 +608,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &8087700284038670109
 Transform:
@@ -709,6 +709,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 756461602607121398, guid: 91476b97f2ebc7b499b069f0678a96fd,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3388214859895708593, guid: 91476b97f2ebc7b499b069f0678a96fd,
         type: 3}
       propertyPath: m_Name
@@ -718,6 +723,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3388214859895708593, guid: 91476b97f2ebc7b499b069f0678a96fd,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6982485032827952427, guid: 91476b97f2ebc7b499b069f0678a96fd,
         type: 3}
@@ -873,6 +883,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wurzeln_V.1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d9b5c3e7f12649248a8ce4bd8e1f7722,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 8866460667025110287, guid: d9b5c3e7f12649248a8ce4bd8e1f7722, type: 3}
@@ -900,6 +915,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 756461602607121398, guid: 91476b97f2ebc7b499b069f0678a96fd,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3388214859895708593, guid: 91476b97f2ebc7b499b069f0678a96fd,
         type: 3}
       propertyPath: m_Name
@@ -909,6 +929,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3388214859895708593, guid: 91476b97f2ebc7b499b069f0678a96fd,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6982485032827952427, guid: 91476b97f2ebc7b499b069f0678a96fd,
         type: 3}

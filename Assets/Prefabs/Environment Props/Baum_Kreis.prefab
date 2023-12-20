@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1905244091084728401
 Transform:
@@ -72,7 +72,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &1897441988613117668
 Transform:
@@ -177,7 +177,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &6952877157780791232
 Transform:
@@ -282,7 +282,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &3985175536208400574
 Transform:
@@ -385,7 +385,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5448621577899209322
 Transform:
@@ -442,7 +442,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &1062443592857851646
 Transform:
@@ -547,7 +547,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &4915313301435399294
 Transform:
@@ -650,7 +650,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1343258108073833681
 Transform:
@@ -707,7 +707,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &7403904594628587491
 Transform:
@@ -812,7 +812,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &3956273453899233885
 Transform:
@@ -917,7 +917,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &1298749477171065384
 Transform:
@@ -1022,7 +1022,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &655270667003483516
 Transform:
@@ -1127,7 +1127,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &9020883451373773326
 Transform:
@@ -1229,7 +1229,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8968524443391468435
 Transform:
@@ -1267,7 +1267,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7839069872541617691
 Transform:
@@ -1331,7 +1331,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3516068583591360325
 Transform:
@@ -1419,7 +1419,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &605892977744199393
 Transform:
@@ -1474,7 +1474,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2920272189926410514
 Transform:
@@ -1597,10 +1597,25 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -6452373167638933634, guid: 11a39a790593a404faedd3b0142d6616,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 11a39a790593a404faedd3b0142d6616,
         type: 3}
       propertyPath: m_Name
       value: Wurzeln_Kreis_V.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 11a39a790593a404faedd3b0142d6616,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1733443889240148659, guid: 11a39a790593a404faedd3b0142d6616,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1621,10 +1636,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3173156352468517622}
     m_Modifications:
+    - target: {fileID: 756461602607121398, guid: 91476b97f2ebc7b499b069f0678a96fd,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3388214859895708593, guid: 91476b97f2ebc7b499b069f0678a96fd,
         type: 3}
       propertyPath: m_Name
       value: DriftPoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 3388214859895708593, guid: 91476b97f2ebc7b499b069f0678a96fd,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6982485032827952427, guid: 91476b97f2ebc7b499b069f0678a96fd,
         type: 3}
@@ -1700,10 +1725,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3173156352468517622}
     m_Modifications:
+    - target: {fileID: 756461602607121398, guid: 91476b97f2ebc7b499b069f0678a96fd,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3388214859895708593, guid: 91476b97f2ebc7b499b069f0678a96fd,
         type: 3}
       propertyPath: m_Name
       value: DriftPoint (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3388214859895708593, guid: 91476b97f2ebc7b499b069f0678a96fd,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6982485032827952427, guid: 91476b97f2ebc7b499b069f0678a96fd,
         type: 3}
