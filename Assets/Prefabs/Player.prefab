@@ -5130,7 +5130,7 @@ MonoBehaviour:
   cameraYawDamping: 1.75
   cameraDriftYawDamping: 0.75
   maxDutchTilt: 5
-  turnToEnemySpeed: 10
+  turnToEnemySpeed: 20
   timeToWaitTillBoost: 1.2
   playerVisuals: {fileID: 1609444752658654278}
   tonguePoint: {fileID: 2633907542019158644}

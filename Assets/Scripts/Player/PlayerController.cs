@@ -83,7 +83,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool isDriftingRight;
     private bool arrivedAtDriftPeak;
     private bool startedDriftBoost;
+    
     private bool lockSteering;
+    private bool lockDrifting;
 
     [Header("References")]
     [SerializeField] protected Transform playerVisuals;
@@ -130,7 +132,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             controls.P_Controls.SetCallbacks(this);
         }
 
-        cinemachineTransposer.m_YawDamping = 5;
+        // cinemachineTransposer.m_YawDamping = 0;
 
         currentTraction = traction;
 
@@ -420,22 +422,29 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     public void StartSlowMoBoost(EnemyMovement enemy)
     {
+        StopDrifting();
+        lockDrifting = true;
         StartCoroutine(SlowMoBoost(enemy));
     }
     IEnumerator SlowMoBoost(EnemyMovement enemy)
     {
-        Time.timeScale = .1f;
-        maxTurnSpeed *= 10;
+        Time.timeScale = .05f;
+        maxTurnSpeed *= 15;
         rb.velocity = Vector3.zero;
         cinemachineTransposer.m_YawDamping = 0;
 
-        yield return TurnToEnemy(enemy);
+        Vector3 vecToEnemy = enemy.transform.position - transform.position;
+        vecToEnemy.Scale(new Vector3(1,0,1));
+        vecToEnemy.Normalize();
+
+        yield return TurnPlayerInNewDirection(vecToEnemy, turnToEnemySpeed);
 
         yield return new WaitForSecondsRealtime(timeToWaitTillBoost);
         
         Time.timeScale = 1;
-        maxTurnSpeed /= 10;
+        maxTurnSpeed /= 15;
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
+        lockDrifting = false;
         
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
         Boost();
@@ -497,10 +506,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = newForward * rb.velocity.magnitude;
         
         StopCoroutine(nameof(TurnPlayerInNewDirection));
-        StartCoroutine(TurnPlayerInNewDirection(newForward));
+        StartCoroutine(TurnPlayerInNewDirection(newForward, 2.5f));
     }
 
-    IEnumerator TurnPlayerInNewDirection(Vector3 newForward)
+    IEnumerator TurnPlayerInNewDirection(Vector3 newForward, float speed)
     {
         float t = 0;
         Vector3 startForward = playerVisuals.forward;
@@ -512,9 +521,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             playerVisuals.rotation = Quaternion.LookRotation(tmpForward, playerVisuals.up);
             
             yield return null;
-            t += Time.deltaTime * 2.5f;
+            t += Time.deltaTime * speed;
         }
 
+        playerVisuals.rotation = Quaternion.LookRotation(newForward, playerVisuals.up);
         lockSteering = false;
     }
 
@@ -562,24 +572,24 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         GameManager.instance.StopGame();
     }
 
-    IEnumerator TurnToEnemy(EnemyMovement enemy)
-    {
-        lockSteering = true;
-        Vector3 vecToEnemy = enemy.transform.position - transform.position;
-        Quaternion fromRotation = playerVisuals.rotation;
-        Quaternion toRotation = Quaternion.LookRotation(vecToEnemy, playerVisuals.up);
-        float t = 0;
-
-        while (t < 1)
-        {
-            playerVisuals.rotation = Quaternion.Lerp(fromRotation, toRotation, Mathf.SmoothStep(0, 1, t));
-            t += Time.deltaTime * turnToEnemySpeed;
-            yield return null;
-        }
-
-        playerVisuals.rotation = toRotation;
-        lockSteering = false;
-    }
+    // IEnumerator TurnToEnemy(EnemyMovement enemy)
+    // {
+    //     lockSteering = true;
+    //     Vector3 vecToEnemy = enemy.transform.position - transform.position;
+    //     Quaternion fromRotation = playerVisuals.rotation;
+    //     Quaternion toRotation = Quaternion.LookRotation(vecToEnemy, playerVisuals.up);
+    //     float t = 0;
+    //
+    //     while (t < 1)
+    //     {
+    //         playerVisuals.rotation = Quaternion.Lerp(fromRotation, toRotation, Mathf.SmoothStep(0, 1, t));
+    //         t += Time.deltaTime * turnToEnemySpeed;
+    //         yield return null;
+    //     }
+    //
+    //     playerVisuals.rotation = toRotation;
+    //     lockSteering = false;
+    // }
     
     void PauseMe()
     {
@@ -652,6 +662,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnLeftDrift(InputAction.CallbackContext context)
     {
+        if(lockDrifting)
+            return;
+        
         if (context.started && leftDriftPointContainer.driftPoints.Count > 0)
         {
             isDriftingRight = false;
@@ -667,6 +680,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnRightDrift(InputAction.CallbackContext context)
     {
+        if(lockDrifting)
+            return;
+        
         if (context.started && rightDriftPointContainer.driftPoints.Count > 0)
         {
             isDriftingRight = true;
