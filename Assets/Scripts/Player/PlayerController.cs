@@ -418,18 +418,18 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
     }
     
-    public void StartSlowMoBoost()
+    public void StartSlowMoBoost(EnemyMovement enemy)
     {
-        StartCoroutine(SlowMoBoost());
+        StartCoroutine(SlowMoBoost(enemy));
     }
-    IEnumerator SlowMoBoost()
+    IEnumerator SlowMoBoost(EnemyMovement enemy)
     {
         Time.timeScale = .1f;
         maxTurnSpeed *= 10;
         rb.velocity = Vector3.zero;
         cinemachineTransposer.m_YawDamping = 0;
 
-        yield return TurnToEnemy();
+        yield return TurnToEnemy(enemy);
 
         yield return new WaitForSecondsRealtime(timeToWaitTillBoost);
         
@@ -532,10 +532,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         GameManager.instance.StopGame();
     }
 
-    IEnumerator TurnToEnemy()
+    IEnumerator TurnToEnemy(EnemyMovement enemy)
     {
         lockSteering = true;
-        Vector3 vecToEnemy = gameVariables.enemy.transform.position - transform.position;
+        Vector3 vecToEnemy = enemy.transform.position - transform.position;
         Quaternion fromRotation = playerVisuals.rotation;
         Quaternion toRotation = Quaternion.LookRotation(vecToEnemy, playerVisuals.up);
         float t = 0;

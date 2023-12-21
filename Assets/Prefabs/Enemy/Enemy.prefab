@@ -629,7 +629,7 @@ Transform:
   m_Children:
   - {fileID: 6120203281414659691}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9188452968715423062
 MonoBehaviour:
@@ -651,15 +651,21 @@ MonoBehaviour:
   lightIntensityFarFromPlayer: 15208830
   finishedAttack: 0
   idleDestinationPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {x: -3780.8066, y: 7.7e-43, z: 2.1649663e+23}
+  - {x: 0.00000017248455, y: 1.074425e+10, z: 7.71e-43}
+  - {x: 4.6e-44, y: 0.00021668606, z: -3780.8066}
+  - {x: 7.7e-43, y: -3780.8145, z: 7.7e-43}
   animator: {fileID: 2180120577816411660}
   spotLight: {fileID: 1616911089126072602}
   attackPlayerSource: {fileID: 3813379599242466393}
   mouthCollider: {fileID: 1765703706759856921}
   attackPlayerCollider: {fileID: 8997286524052233564}
+  attackClip: {fileID: 7400000, guid: 674ed06ce16e9e145acd6c9e2a19cbcf, type: 2}
+  idleClip: {fileID: 7400000, guid: 650a03ea3487020498bb1b4fcd5bd3f4, type: 2}
+  followPlayerClip: {fileID: 7400000, guid: cf568e8b583f46940ae1e0fd36e48bbf, type: 2}
+  diveIntoWaterClip: {fileID: 7400000, guid: 43a4259002060e44abc6de8533d3b69f, type: 2}
+  surfaceFromWaterClip: {fileID: 7400000, guid: ecb73a6311b0f1d42a467072f33b25e1,
+    type: 2}
 --- !u!195 &2803009006950078493
 NavMeshAgent:
   m_ObjectHideFlags: 0

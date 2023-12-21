@@ -11,7 +11,7 @@ public class GameVariables : MonoBehaviour
     public static GameVariables instance;
 
     public PlayerController player;
-    public EnemyMovement enemy;
+    // public EnemyMovement enemy;
     public DayNightCycleController dayNightCycleController;
     public CinemachineVirtualCamera virtualCamera;
     public GameTimer gameTimer;

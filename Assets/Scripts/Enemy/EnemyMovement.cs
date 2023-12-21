@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.AI.Navigation;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class EnemyMovement : MonoBehaviour
 {
-    enum enemyState {Idle, Attack, FollowPlayer, SearchPlayer}
+    enum enemyState {Idle, Attack, FollowPlayer}
 
     [Header("Variables")]
     [SerializeField] enemyState currentState;
@@ -19,28 +20,39 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float lightIntensityCloseToPlayer = 14852.37f;
     [SerializeField] private float lightIntensityFarFromPlayer = 1.520883e+07f;
     [HideInInspector] public bool finishedAttack;
+    private int currentIdlePointIndex = 0;
 
-    
+
     [Header("References")]
-    [SerializeField] public List<Transform> idleDestinationPoints = new (); // Liste für Transforms
+    [HideInInspector] public List<Vector3> idleDestinationPoints = new (); // Liste für Transforms
     [SerializeField] private Animator animator;
     [SerializeField] private Light spotLight;
     [SerializeField] private AudioSource attackPlayerSource;
 
     [SerializeField] private Collider mouthCollider;
     [SerializeField] private Collider attackPlayerCollider;
+
+    [Header("Animations")] 
+    [SerializeField] private AnimationClip attackClip;
+    [SerializeField] private AnimationClip idleClip;
+    [SerializeField] private AnimationClip followPlayerClip;
+    [SerializeField] private AnimationClip diveIntoWaterClip;
+    [SerializeField] private AnimationClip surfaceFromWaterClip;
+    
     
     private Transform playerTransform;
     private NavMeshAgent navMeshAgent;
+
+    private UnityEvent foundPlayerEvent;
+    private UnityEvent lostPlayerEvent;
 
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    void Start()
+    private void Start()
     {
-
         playerTransform = GameVariables.instance.player.transform;
         navMeshAgent.speed = idleSpeed;
         navMeshAgent.acceleration = idleSpeed;
@@ -49,57 +61,65 @@ public class EnemyMovement : MonoBehaviour
         StartCoroutine(Idle());
     }
 
-    protected IEnumerator Idle()
+    public void SetEvents(UnityEvent enemyFoundPlayer, UnityEvent enemyLostPlayer)
+    {
+        foundPlayerEvent = enemyFoundPlayer;
+        lostPlayerEvent = enemyLostPlayer;
+        
+        foundPlayerEvent.AddListener(DiveUnderWater);
+        lostPlayerEvent.AddListener(SurfaceFromWater);
+    }
+
+    private IEnumerator Idle()
     {
         currentState = enemyState.Idle;
-        Vector3 destinationPoint = GetRandomTransform().position;
-        navMeshAgent.SetDestination(destinationPoint);
-        
+
         navMeshAgent.speed = idleSpeed;
         navMeshAgent.acceleration = idleSpeed;
         
         while (currentState == enemyState.Idle)
         {
-            if (Vector3.Distance(destinationPoint, transform.position) <= 0.5f) //ist es schon da?
-            {
-                destinationPoint = GetRandomTransform().position;
-
-                navMeshAgent.SetDestination(destinationPoint);
-            }
-
-            yield return null;
+            yield return ReachRandomIdlePoint();
         }
     }
 
-    IEnumerator Attack()
+    private IEnumerator ReachRandomIdlePoint()
     {
-        // Debug.Log("Attack");
+        Vector3 destinationPoint = GetRandomDestinationPoint();
+        navMeshAgent.SetDestination(destinationPoint);
+        yield return new WaitWhile(() => Vector3.Distance(destinationPoint, transform.position) > .5f);
+    }
+
+    private IEnumerator Attack()
+    {
         currentState = enemyState.Attack;
+        animator.CrossFade(attackClip.name,0);
+        foundPlayerEvent.Invoke();
+        
         mouthCollider.enabled = true;
         attackPlayerCollider.enabled = false;
 
-        animator.CrossFade("Attack",0);
         attackPlayerSource.Play();
-        LookAtPlayer();
+        navMeshAgent.SetDestination(playerTransform.position);
 
         while (!finishedAttack)
         {
-            navMeshAgent.SetDestination(playerTransform.position);
+            LookAtPlayer();
             yield return null;
         }
 
-        StartCoroutine(FollowPlayer());
         finishedAttack = false;
+        StartCoroutine(FollowPlayer());
     }
 
-    IEnumerator FollowPlayer()
+    private IEnumerator FollowPlayer()
     {
-        // Debug.Log("Follow");
         currentState = enemyState.FollowPlayer;
+        animator.CrossFade(followPlayerClip.name, 0);
+        
         spotLight.enabled = true;
         spotLight.range = followPlayerRadius + 3;
-        spotLight.intensity = 
-        
+
         navMeshAgent.speed = followPlayerSpeed;
         navMeshAgent.acceleration = followPlayerSpeed;
 
@@ -107,8 +127,8 @@ public class EnemyMovement : MonoBehaviour
         
         while (distanceToPlayer < followPlayerRadius)
         {
-            SetMovementTarget(playerTransform);
-            LookAtPlayer();
+            navMeshAgent.SetDestination(playerTransform.position);
+            // LookAtPlayer();
             spotLight.transform.LookAt(playerTransform);
             spotLight.intensity = Mathf.Lerp(lightIntensityCloseToPlayer, lightIntensityFarFromPlayer, distanceToPlayer / followPlayerRadius);
             
@@ -117,63 +137,50 @@ public class EnemyMovement : MonoBehaviour
             distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
         }
 
-        animator.CrossFade("Idle", 0);
         mouthCollider.enabled = false;
-        attackPlayerCollider.enabled = true;
         spotLight.enabled = false;
+        lostPlayerEvent.Invoke();
+
+        //return to searchArea and disable yourself while returning
+        DiveUnderWater();
+        yield return ReachRandomIdlePoint();
+        currentState = enemyState.Idle;
+        SurfaceFromWater();
         
         StartCoroutine(Idle());
     }
+    
+    private void DiveUnderWater()
+    {
+        if(currentState == enemyState.Attack)
+            return;
+        
+        animator.CrossFade(diveIntoWaterClip.name, 0);
+        attackPlayerCollider.enabled = false;
+    }
 
-    void LookAtPlayer()
+    private void SurfaceFromWater()
+    {
+        if(currentState == enemyState.FollowPlayer)
+            return;
+        
+        animator.CrossFade(surfaceFromWaterClip.name, 0);
+        attackPlayerCollider.enabled = true;
+    }
+
+    private void LookAtPlayer()
     {
         Vector3 direction = (playerTransform.position - transform.position).normalized;
         transform.rotation = Quaternion.LookRotation(direction);
     }
-    
-    // IEnumerator SearchPlayer()
-    // {
-    //     Debug.Log("Search");
-    //     currentState = enemyState.SearchPlayer;
-    //     float startTime = Time.realtimeSinceStartup;
-    //     bool foundPlayer = false;
-    //     Transform playerTransform = GameVariables.instance.player.transform;
-    //     
-    //     SetNewSearchDestination(out Vector3 randomPosition);
-    //
-    //     while (Time.realtimeSinceStartup - startTime < searchTime && !foundPlayer)
-    //     {
-    //         if (Vector3.Distance(randomPosition, transform.position) <= 1f)
-    //         {
-    //             //destinationReached = true;
-    //             SetNewSearchDestination(out randomPosition);       
-    //         }
-    //         else if (Vector3.Distance(playerTransform.position, transform.position) < followPlayerRadius)
-    //         {
-    //             foundPlayer = true;
-    //             StartCoroutine(FollowPlayer());
-    //         }
-    //         yield return null;
-    //     }
-    //
-    //     if (!foundPlayer)
-    //     {
-    //         animator.CrossFade("Idle", 0);
-    //         aboveSurface = false;
-    //         
-    //         currentState = enemyState.Idle;
-    //         movementTarget = GetRandomTransform();
-    //         SetMovementTarget(movementTarget);
-    //     }
-    // }
+    private Vector3 GetRandomDestinationPoint()
+    {
+        int randomIndex = Random.Range(0, idleDestinationPoints.Count - 1); // Zufälliger Index
+        randomIndex = (currentIdlePointIndex + randomIndex + 1) % idleDestinationPoints.Count;  //makes sure the same index is not picked twice
 
-    // private void SetNewSearchDestination(out Vector3 randomPosition)
-    // {
-    //     randomPosition = transform.position + new Vector3(Random.Range(-20f, 20f), 0f, Random.Range(-20f, 20f));
-    //     navMeshAgent.SetDestination(randomPosition);
-    //     //Debug.Log("Enemy Pos: " + enemyTransform.position);
-    //     //Debug.Log("Movement Target: " + movementTarget.position);
-    // }
+        currentIdlePointIndex = randomIndex;
+        return idleDestinationPoints[randomIndex]; // Gib den zufälligen Transform zurück
+    }
     
     private void OnTriggerEnter(Collider other)
     {
@@ -186,50 +193,13 @@ public class EnemyMovement : MonoBehaviour
             GameVariables.instance.player.Die();
     }
 
-    private void SetMovementTarget(Transform movementTarget)
-    {
-        navMeshAgent.SetDestination(movementTarget.position);
-    }
-    
-    private Transform GetRandomTransform()
-    {
-        int randomIndex = Random.Range(0, idleDestinationPoints.Count); // Zufälliger Index
-        return idleDestinationPoints[randomIndex]; // Gib den zufälligen Transform zurück
-    }
-
-    private Transform GetTransformClosestToPlayer()
-    {
-        float[] distancesToPlayer = new float[idleDestinationPoints.Count];
-        
-        for (int i = 0; i < distancesToPlayer.Length; i++)
-        {
-            distancesToPlayer[i] = Vector3.Distance(idleDestinationPoints[i].position, playerTransform.position);
-        }
-
-        for (int i = distancesToPlayer.Length - 1; i > 0; i--)
-        {
-            if (distancesToPlayer[i] < distancesToPlayer[i - 1])
-            {
-                float tmpDistance = distancesToPlayer[i];
-                distancesToPlayer[i] = distancesToPlayer[i - 1];
-                distancesToPlayer[i - 1] = tmpDistance;
-
-                Transform tmpDestinationPoint = idleDestinationPoints[i];
-                idleDestinationPoints[i] = idleDestinationPoints[i - 1];
-                idleDestinationPoints[i - 1] = tmpDestinationPoint;
-            }
-        }
-        Debug.Log(idleDestinationPoints[0].name);
-        return idleDestinationPoints[0];
-    }
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, followPlayerRadius);
     }
 
-    void PauseMe()
+    private void PauseMe()
     {
         StartCoroutine(WhilePaused());
     }
