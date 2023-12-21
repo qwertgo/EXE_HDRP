@@ -476,16 +476,46 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region Collider ------------------------------------------------------------------------------------------------------------------------------------
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.layer == 9)
+        if (other.gameObject.layer != 9)
+            return;
+        
+        if (isDrifting)
         {
-            rb.velocity = -playerVisuals.forward * 50;
-            currentMaxSpeed = baseMaxSpeed;
-
-            if (isDrifting)
-            {
-                StopDrifting();
-            }
+            StopDrifting();
         }
+        
+        rb.velocity = -playerVisuals.forward * 50;
+        currentMaxSpeed = baseMaxSpeed;
+
+        Vector3 colliderPos = other.transform.position;
+        Vector3 vecToCollider = colliderPos - playerVisuals.position;
+        vecToCollider.Scale(new Vector3(1,0,1));
+        float signedAngle = Vector3.SignedAngle(playerVisuals.forward, vecToCollider, Vector3.up);
+
+        float rotation = signedAngle > 0 ? -90 : 90;
+        Vector3 newForward = Quaternion.AngleAxis(rotation, playerVisuals.up) * vecToCollider.normalized;
+        rb.velocity = newForward * rb.velocity.magnitude;
+        
+        StopCoroutine(nameof(TurnPlayerInNewDirection));
+        StartCoroutine(TurnPlayerInNewDirection(newForward));
+    }
+
+    IEnumerator TurnPlayerInNewDirection(Vector3 newForward)
+    {
+        float t = 0;
+        Vector3 startForward = playerVisuals.forward;
+        lockSteering = true;
+        
+        while (t < 1)
+        {
+            Vector3 tmpForward = Vector3.Lerp(startForward, newForward, t);
+            playerVisuals.rotation = Quaternion.LookRotation(tmpForward, playerVisuals.up);
+            
+            yield return null;
+            t += Time.deltaTime * 2.5f;
+        }
+
+        lockSteering = false;
     }
 
     #endregion
