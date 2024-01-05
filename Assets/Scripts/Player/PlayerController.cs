@@ -27,10 +27,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float minTurnSpeed;
     public float baseMaxSpeed;
     [SerializeField] private float traction;
-    [SerializeField] private float slowFieldSlow;
     [SerializeField] private float adjustToGroundSlopeSpeed = 3;
     [SerializeField] private LayerMask ground;
-    [SerializeField] private LayerMask obstacle;
 
     private float currentMaxSpeed;
 
@@ -52,6 +50,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [Header("Boost")]
     [SerializeField] private float boostForce;
     [SerializeField] private float boostSubtractPerSecond;
+    [SerializeField] private float boostLerpPerSecond;
     [SerializeField] private float timeToGetBoost;
     private float boostPercentagePerSecond;
 
@@ -360,17 +359,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     private void ChargeDriftBoost(float tongueStretchFactor)
     {
-        // if (tongueStretchFactor > .5f && !startedDriftBoost)
-        // {
-        //     driftTimeCounter += Time.deltaTime;
-        //     if (driftTimeCounter > timeToGetBoost)
-        //     {
-        //         ChangeParticleColor(boostParticleColor);
-        //         startedDriftBoost = true;
-        //     }
-        //         
-        // }
-        
         if(tongueStretchFactor < .25f)
             return;
         
@@ -423,7 +411,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
     void Boost(float amount)
     {
-        currentMaxSpeed += boostForce;
+        currentMaxSpeed += amount;
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
     }
     
@@ -461,8 +449,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region Decceleration ------------------------------------------------------------------------------------------------------------------------------------
     private void ReduceMaxSpeed()
     {
-        currentMaxSpeed -= Time.deltaTime * boostSubtractPerSecond;
-        currentMaxSpeed = Mathf.Max(baseMaxSpeed, currentMaxSpeed);
+        float t = 1f - Mathf.Pow(boostLerpPerSecond, Time.deltaTime);
+        currentMaxSpeed = Mathf.Lerp(currentMaxSpeed, baseMaxSpeed, t);
+
+        // currentMaxSpeed -= Time.deltaTime * boostSubtractPerSecond;
+        // currentMaxSpeed = Mathf.Max(baseMaxSpeed, currentMaxSpeed);
     }
     
     public void SlowDown()
@@ -579,25 +570,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         GameManager.instance.StopGame();
     }
 
-    // IEnumerator TurnToEnemy(EnemyMovement enemy)
-    // {
-    //     lockSteering = true;
-    //     Vector3 vecToEnemy = enemy.transform.position - transform.position;
-    //     Quaternion fromRotation = playerVisuals.rotation;
-    //     Quaternion toRotation = Quaternion.LookRotation(vecToEnemy, playerVisuals.up);
-    //     float t = 0;
-    //
-    //     while (t < 1)
-    //     {
-    //         playerVisuals.rotation = Quaternion.Lerp(fromRotation, toRotation, Mathf.SmoothStep(0, 1, t));
-    //         t += Time.deltaTime * turnToEnemySpeed;
-    //         yield return null;
-    //     }
-    //
-    //     playerVisuals.rotation = toRotation;
-    //     lockSteering = false;
-    // }
-    
     void PauseMe()
     {
         StartCoroutine(WhilePaused());

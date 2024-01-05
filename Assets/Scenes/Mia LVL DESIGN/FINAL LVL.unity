@@ -11682,26 +11682,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 443424417985546458, guid: 341602172f457674f9e2a1a08127af17,
-        type: 3}
-      propertyPath: boostForce
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 443424417985546458, guid: 341602172f457674f9e2a1a08127af17,
-        type: 3}
-      propertyPath: baseMaxSpeed
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 443424417985546458, guid: 341602172f457674f9e2a1a08127af17,
-        type: 3}
-      propertyPath: boostSubtractPerSecond
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 3874029265196120880, guid: 341602172f457674f9e2a1a08127af17,
-        type: 3}
-      propertyPath: m_Volume
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 5364930809967892335, guid: 341602172f457674f9e2a1a08127af17,
         type: 3}
       propertyPath: m_RootOrder
