@@ -10,6 +10,7 @@ public class CameraColliderGenerator : MonoBehaviour
     [Header("Variables")]
     [SerializeField] private float nearClippingPlane;
     [SerializeField] private float farClippingPlane;
+    [SerializeField] private float scaleToCenterFactor = .8f;
 
     private Vector3 eulerAnglesOffset;
     
@@ -71,17 +72,16 @@ public class CameraColliderGenerator : MonoBehaviour
         p[11] = p[8] + (p[7] - p[8]) * .5f;
 
         //scale all points to center
-        float scaleFactor = .8f;
         Vector3 nearMiddlePoint = p[4] + (p[5] - p[4]) * .5f;
         for (int i = 0; i < 6; i++)
         {
-            p[i] = nearMiddlePoint + (p[i] - nearMiddlePoint) * scaleFactor;
+            p[i] = nearMiddlePoint + (p[i] - nearMiddlePoint) * scaleToCenterFactor;
         }
 
         Vector3 farMiddlePoint = p[10] + (p[11] - p[10]) * .5f;
         for (int i = 6; i < 12; i++)
         {
-            p[i] = farMiddlePoint + (p[i] - farMiddlePoint) * scaleFactor;
+            p[i] = farMiddlePoint + (p[i] - farMiddlePoint) * scaleToCenterFactor;
         }
 
 

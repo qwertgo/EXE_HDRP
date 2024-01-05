@@ -132,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nearClippingPlane: 10
   farClippingPlane: 40
+  scaleToCenterFactor: 0.8
   rightMeshCollider: {fileID: 1273628376073693742}
   leftMeshCollider: {fileID: 6212681499960360573}
   sphere: {fileID: 9036981826052917451, guid: 3618b1434d5444045840d3cecda844ee, type: 3}
@@ -189,14 +190,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1150277799428963807}
-  m_LocalRotation: {x: 0.99467033, y: 0.070847, z: -0.014506556, w: -0.07349269}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.31944, y: 0.31944, z: 0.31944}
+  m_LocalRotation: {x: 0, y: 0.98654366, z: 0.16349822, w: 0}
+  m_LocalPosition: {x: 0.041, y: -0.087, z: -0.166}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5268018062703375337}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 188.288, y: 2.274002, z: -8.312988}
+  m_LocalEulerAnglesHint: {x: -18.82, y: 180, z: 0}
 --- !u!198 &661022337883119139
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -280,7 +281,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.7
+      scalar: 0.15
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -333,7 +334,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 20
+      scalar: 2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -828,7 +829,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 4
+    type: 18
     angle: 19.7
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -836,7 +837,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 1, y: 1, z: 1}
+    m_Scale: {x: 5.16, y: 2.43, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -1034,7 +1035,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 10
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -5026,7 +5027,6 @@ Transform:
   m_Children:
   - {fileID: 2986745570544489724}
   - {fileID: 6914681025507124183}
-  - {fileID: 2726939431158740661}
   m_Father: {fileID: 5364930809967892335}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5045,7 +5045,7 @@ MonoBehaviour:
   acceleration: 17
   maxTurnSpeed: 100
   minTurnSpeed: 40
-  baseMaxSpeed: 23
+  baseMaxSpeed: 25
   traction: 1
   slowFieldSlow: 20
   adjustToGroundSlopeSpeed: 3
@@ -5061,7 +5061,6 @@ MonoBehaviour:
   driftTurnSpeed: 30
   driftMaxTurnAbility: 30
   tractionWhileDrifting: 10
-  overSteer: 0
   defaultParticleColor:
     serializedVersion: 2
     key0: {r: 0.5486979, g: 0.5235849, b: 1, a: 1}
@@ -5124,7 +5123,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 3
   boostForce: 18
   boostSubtractPerSecond: 18
-  timeToGetBoost: 0.25
+  timeToGetBoost: 0.5
   lookAtMoveAmount: 3
   horizontalLerpSpeed: 0.75
   cameraYawDamping: 1.75
@@ -5292,59 +5291,6 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!1 &1275153198705846181
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2726939431158740661}
-  - component: {fileID: 629527857109317966}
-  m_Layer: 6
-  m_Name: Enemy Sight Distance
-  m_TagString: PlayerGlowArea
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &2726939431158740661
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275153198705846181}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2440283806234537626}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &629527857109317966
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275153198705846181}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 7
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2007743758044179804
 GameObject:
   m_ObjectHideFlags: 0
@@ -10446,7 +10392,7 @@ Transform:
   - {fileID: 2440283806234537626}
   - {fileID: 1609444752658654278}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5107119683635567647
 MonoBehaviour:
@@ -10613,7 +10559,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 3b4add13210ba61488e950d7eb46a82f, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0

@@ -43,17 +43,17 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float driftTurnSpeed;
     [SerializeField] private float driftMaxTurnAbility = 30;
     [SerializeField] private float tractionWhileDrifting;
-    [SerializeField] private float overSteer;
     [SerializeField] private Gradient defaultParticleColor;
     [SerializeField] private Gradient boostParticleColor;
     private float outerDriftRadius;
-    private float driftTimeCounter;
     private float currentDriftRotation;
+    private float driftBoostPercentage;
     
     [Header("Boost")]
     [SerializeField] private float boostForce;
     [SerializeField] private float boostSubtractPerSecond;
     [SerializeField] private float timeToGetBoost;
+    private float boostPercentagePerSecond;
 
     [Header("Camera")] 
     [SerializeField] private float lookAtMoveAmount;
@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool justStartedJumping;
     private bool isDriftingRight;
     private bool arrivedAtDriftPeak;
-    private bool startedDriftBoost;
+    // private bool startedDriftBoost;
     
     private bool lockSteering;
     private bool lockDrifting;
@@ -124,6 +124,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         groundParticlesObject = groundParticles.gameObject;
         currentMaxSpeed = baseMaxSpeed;
+        boostPercentagePerSecond = 1 / timeToGetBoost;
         
         if (controls == null)
         {
@@ -157,7 +158,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Accelerate();
         // PlayWalkSound();
         
-
+    
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
     }
     
@@ -169,7 +170,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             lineRenderer.SetPosition(1, currentDriftPoint.position);
         }
     }
-
+    
     private void Update()
     {
         if(gameVariables.isPaused)
@@ -240,8 +241,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         rotationAtDriftStart = playerVisuals.rotation;
         currentTraction = tractionWhileDrifting;
-        driftTimeCounter = 0;
         currentDriftRotation = 0;
+        driftBoostPercentage = 0;
         driftHorizontal = isDriftingRight ? .5f : -.5f;
         
         //change how fast the camera copies the rotation of the player
@@ -261,12 +262,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
         currentTraction = traction;
 
-        if (startedDriftBoost)
-        {
-            Boost();
-            startedDriftBoost = false;
-            ChangeParticleColor(defaultParticleColor);
-        }
+        float currentBoostAmount = boostForce * driftBoostPercentage;
+        Boost(currentBoostAmount);
+        ChangeParticleColor(defaultParticleColor);
+
         
         //change how fast the camera copies the rotation of the player
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
@@ -361,18 +360,26 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     private void ChargeDriftBoost(float tongueStretchFactor)
     {
-        if (tongueStretchFactor > .5f && !startedDriftBoost)
-        {
-            driftTimeCounter += Time.deltaTime;
-            if (driftTimeCounter > timeToGetBoost)
-            {
-                ChangeParticleColor(boostParticleColor);
-                startedDriftBoost = true;
-            }
-                
-        }
+        // if (tongueStretchFactor > .5f && !startedDriftBoost)
+        // {
+        //     driftTimeCounter += Time.deltaTime;
+        //     if (driftTimeCounter > timeToGetBoost)
+        //     {
+        //         ChangeParticleColor(boostParticleColor);
+        //         startedDriftBoost = true;
+        //     }
+        //         
+        // }
+        
+        if(tongueStretchFactor < .25f)
+            return;
+        
+        driftBoostPercentage += Time.deltaTime * boostPercentagePerSecond;
+        driftBoostPercentage = Mathf.Min(driftBoostPercentage, 1);
+        Gradient tmpGradient = defaultParticleColor.LerpNoAlpha(boostParticleColor, driftBoostPercentage);
+        ChangeParticleColor(tmpGradient);
     }
-    
+
     void AdjustToGroundSlope()
     {
         Quaternion wantedRotation;
@@ -414,7 +421,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             rb.velocity = rb.velocity.normalized * currentMaxSpeed;
         }
     }
-    void Boost()
+    void Boost(float amount)
     {
         currentMaxSpeed += boostForce;
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
@@ -447,7 +454,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         lockDrifting = false;
         
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
-        Boost();
+        Boost(boostForce);
     }
     #endregion
     

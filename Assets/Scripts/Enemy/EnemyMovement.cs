@@ -17,14 +17,15 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float followPlayerRadius = 20f;
     [SerializeField] private float idleSpeed;
     [SerializeField] private float followPlayerSpeed;
+    [SerializeField] private float directionLerpFactor;
     [SerializeField] private float lightIntensityCloseToPlayer = 14852.37f;
     [SerializeField] private float lightIntensityFarFromPlayer = 1.520883e+07f;
     [HideInInspector] public bool finishedAttack;
-    private int currentIdlePointIndex = 0;
+    private int currentIdlePointIndex;
 
 
     [Header("References")]
-    [HideInInspector] public List<Vector3> idleDestinationPoints = new (); // Liste für Transforms
+    public List<Vector3> idleDestinationPoints = new ();
     [SerializeField] private Animator animator;
     [SerializeField] private Light spotLight;
     [SerializeField] private AudioSource attackPlayerSource;
@@ -56,8 +57,11 @@ public class EnemyMovement : MonoBehaviour
         playerTransform = GameVariables.instance.player.transform;
         navMeshAgent.speed = idleSpeed;
         navMeshAgent.acceleration = idleSpeed;
-        
+        navMeshAgent.autoBraking = false;
+
         GameVariables.instance.onPause.AddListener(PauseMe);
+        foundPlayerEvent = new UnityEvent();
+        lostPlayerEvent = new UnityEvent();
         StartCoroutine(Idle());
     }
 
@@ -87,7 +91,7 @@ public class EnemyMovement : MonoBehaviour
     {
         Vector3 destinationPoint = GetRandomDestinationPoint();
         navMeshAgent.SetDestination(destinationPoint);
-        yield return new WaitWhile(() => Vector3.Distance(destinationPoint, transform.position) > .5f);
+        yield return new WaitWhile(() => navMeshAgent.remainingDistance > .5f);
     }
 
     private IEnumerator Attack()
@@ -101,10 +105,12 @@ public class EnemyMovement : MonoBehaviour
 
         attackPlayerSource.Play();
         navMeshAgent.SetDestination(playerTransform.position);
+        
 
         while (!finishedAttack)
         {
             LookAtPlayer();
+            navMeshAgent.SetDestination(playerTransform.position);
             yield return null;
         }
 
@@ -128,7 +134,7 @@ public class EnemyMovement : MonoBehaviour
         while (distanceToPlayer < followPlayerRadius)
         {
             navMeshAgent.SetDestination(playerTransform.position);
-            // LookAtPlayer();
+            navMeshAgent.velocity = Vector3.Lerp(transform.forward, navMeshAgent.desiredVelocity.normalized, directionLerpFactor) * navMeshAgent.desiredVelocity.magnitude;
             spotLight.transform.LookAt(playerTransform);
             spotLight.intensity = Mathf.Lerp(lightIntensityCloseToPlayer, lightIntensityFarFromPlayer, distanceToPlayer / followPlayerRadius);
             
@@ -179,7 +185,7 @@ public class EnemyMovement : MonoBehaviour
         randomIndex = (currentIdlePointIndex + randomIndex + 1) % idleDestinationPoints.Count;  //makes sure the same index is not picked twice
 
         currentIdlePointIndex = randomIndex;
-        return idleDestinationPoints[randomIndex]; // Gib den zufälligen Transform zurück
+        return idleDestinationPoints[randomIndex];
     }
     
     private void OnTriggerEnter(Collider other)
