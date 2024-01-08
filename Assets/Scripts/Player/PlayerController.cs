@@ -39,11 +39,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float driftTurnSpeed;
     [SerializeField] private float driftMaxTurnAbility = 30;
     [SerializeField] private float tractionWhileDrifting;
+    [SerializeField] private float driftCooldown;
     [SerializeField] private Gradient defaultParticleColor;
     [SerializeField] private Gradient boostParticleColor;
     private float outerDriftRadius;
     private float currentDriftRotation;
     private float driftBoostPercentage;
+    private bool lockDriftingSlowMoBoost;
+    private bool lockDriftingCooldown;
     
     [Header("Boost")]
     [SerializeField] private float boostForce;
@@ -79,10 +82,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool justStartedJumping;
     private bool isDriftingRight;
     private bool arrivedAtDriftPeak;
-    // private bool startedDriftBoost;
-    
+
     private bool lockSteering;
-    private bool lockDrifting;
+    
 
     [Header("References")]
     [SerializeField] protected Transform playerVisuals;
@@ -245,6 +247,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         //change how fast the camera copies the rotation of the player
         cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
 
+        StartCoroutine(DriftCooldown());
         StartCoroutine(Drift());
         // refCylinder.transform.position = currentDriftPoint.position;
         // refCylinder.transform.localScale = new Vector3(outerDriftRadius * 2, 2, outerDriftRadius * 2);
@@ -295,6 +298,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
             yield return null;
         }
+    }
+
+    IEnumerator DriftCooldown()
+    {
+        lockDriftingCooldown = true;
+        yield return new WaitForSeconds(driftCooldown);
+        lockDriftingCooldown = false;
     }
 
     Quaternion GetWantedDriftRotation(Vector3 dirToDriftPoint)
@@ -416,7 +426,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     public void StartSlowMoBoost(EnemyMovement enemy)
     {
         StopDrifting();
-        lockDrifting = true;
+        lockDriftingSlowMoBoost = true;
         StartCoroutine(SlowMoBoost(enemy));
     }
     IEnumerator SlowMoBoost(EnemyMovement enemy)
@@ -437,7 +447,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Time.timeScale = 1;
         maxTurnSpeed /= 15;
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
-        lockDrifting = false;
+        lockDriftingSlowMoBoost = false;
         
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
         Boost(boostForce);
@@ -606,15 +616,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
     }
 
-    public void OnSlowMoBoost(InputAction.CallbackContext context)
-    {
-        // if(context.started)
-        //     StartSlowMoBoost();
-    }
-
     public void OnLeftDrift(InputAction.CallbackContext context)
     {
-        if(lockDrifting)
+        if(lockDriftingSlowMoBoost || lockDriftingCooldown)
             return;
         
         if (context.started && leftDriftPointContainer.driftPoints.Count > 0)
@@ -632,7 +636,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnRightDrift(InputAction.CallbackContext context)
     {
-        if(lockDrifting)
+        if(lockDriftingSlowMoBoost || lockDriftingCooldown)
             return;
         
         if (context.started && rightDriftPointContainer.driftPoints.Count > 0)
@@ -647,6 +651,5 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             StopDrifting();
         }
     }
-
     #endregion
 }

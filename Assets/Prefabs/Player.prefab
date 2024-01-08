@@ -5052,11 +5052,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   jumpForce: 15
-  breakForce: 0.01
   gravitationMultiplier: 3
   driftTurnSpeed: 30
   driftMaxTurnAbility: 30
   tractionWhileDrifting: 10
+  driftCooldown: 0.4
   defaultParticleColor:
     serializedVersion: 2
     key0: {r: 0.5486979, g: 0.5235849, b: 1, a: 1}

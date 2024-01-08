@@ -40,15 +40,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "SlowMoBoost",
-                    "type": "Button",
-                    "id": "c926d4d2-cfe6-487b-8dcf-e844fb630083",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -181,17 +172,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "RightDrift",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2b95c719-345f-43cd-bcc3-bd53177e4480",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SlowMoBoost",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
