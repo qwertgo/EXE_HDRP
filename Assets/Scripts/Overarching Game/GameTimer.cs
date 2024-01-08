@@ -4,24 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class GameTimer : MonoBehaviour
 {
-    [SerializeField] private float timeToMorning;
+    [SerializeField] private float gameTime;
     private float remainingTime;
     [SerializeField] private TextMeshProUGUI remainingTimeText;
     [SerializeField] private TextMeshProUGUI youWonText;
+    [SerializeField] private Slider sliderRight;
+    [SerializeField] private Slider sliderLeft;
 
-    private IEnumerator Start()
+    private void Start()
     {
-        GameVariables.instance.dayNightCycleController.gameTime = timeToMorning;
-        remainingTime = timeToMorning;
-        
-        yield return new WaitForSeconds(timeToMorning);
-        
-        
-
-        
+        GameVariables.instance.dayNightCycleController.gameTime = gameTime;
+        remainingTime = gameTime;
     }
 
     void Update()
@@ -59,5 +56,9 @@ public class GameTimer : MonoBehaviour
         float minutes = Mathf.FloorToInt(remainingTime / 60);
         float seconds = Mathf.FloorToInt(remainingTime % 60);
         remainingTimeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+        float remaingTimeInPercentage = remainingTime / gameTime;
+        sliderLeft.value = remaingTimeInPercentage;
+        sliderRight.value = remaingTimeInPercentage;
     }
 }
