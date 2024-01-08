@@ -7,11 +7,13 @@ using UnityEngine;
 
 public class DriftPointContainer : MonoBehaviour
 {
-    public List<DriftPoint> driftPoints { get; private set; } = new();
+    List<DriftPoint> driftPoints = new();
+    [SerializeField] private float coyoteTimer;
 
     private Transform playerTransform;
 
     private DriftPoint visibleDriftPoint;
+    private DriftPoint coyoteDriftPoint;
     private bool isRight;
 
     private void Start()
@@ -35,18 +37,28 @@ public class DriftPointContainer : MonoBehaviour
         driftPoints.Remove(p);
     }
 
-    public void GetDriftPoints()
+    public void UpdateMe()
     {
-        BubbleSortSingleIteration();
-
         if (driftPoints.Count < 1 || driftPoints.First().isShown)
             return;
+        
+        BubbleSortSingleIteration();
 
         if (visibleDriftPoint)
+        {
+            coyoteDriftPoint = visibleDriftPoint;
+            StartCoroutine(CoyoteTimer());
             visibleDriftPoint.HideMe();
+        }
 
         visibleDriftPoint = driftPoints.First();
         visibleDriftPoint.ShowMe(isRight);
+    }
+
+    IEnumerator CoyoteTimer()
+    {
+        yield return new WaitForSeconds(coyoteTimer);
+        coyoteDriftPoint = null;
     }
 
     void BubbleSortSingleIteration()
@@ -63,5 +75,14 @@ public class DriftPointContainer : MonoBehaviour
             }
         }
     }
-    
+
+    public bool HasDriftPoint()
+    {
+        return driftPoints.Count > 1 || coyoteDriftPoint;
+    }
+
+    public DriftPoint GetDriftPoint()
+    {
+        return driftPoints.Count > 1 ? driftPoints.First() : coyoteDriftPoint;
+    }
 }

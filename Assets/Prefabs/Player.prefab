@@ -5467,6 +5467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d07f312fc21cdd042beb31dd742e69ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coyoteTimer: 0.2
 --- !u!1 &6899362308272880571
 GameObject:
   m_ObjectHideFlags: 0
@@ -10740,3 +10741,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d07f312fc21cdd042beb31dd742e69ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coyoteTimer: 0.2

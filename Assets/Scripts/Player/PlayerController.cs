@@ -213,8 +213,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             AdjustToGroundSlope();
 
             //update container to get closest drift point
-            leftDriftPointContainer.GetDriftPoints();
-            rightDriftPointContainer.GetDriftPoints();
+            leftDriftPointContainer.UpdateMe();
+            rightDriftPointContainer.UpdateMe();
         }
 
         //move LookAt Object
@@ -266,7 +266,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Boost(currentBoostAmount);
         ChangeParticleColor(defaultParticleColor);
 
-        
         //change how fast the camera copies the rotation of the player
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
     }
@@ -621,10 +620,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if(lockDriftingSlowMoBoost || lockDriftingCooldown)
             return;
         
-        if (context.started && leftDriftPointContainer.driftPoints.Count > 0)
+        if (context.started && leftDriftPointContainer.HasDriftPoint())
         {
             isDriftingRight = false;
-            currentDriftPoint = leftDriftPointContainer.driftPoints.First().transform;
+            currentDriftPoint = leftDriftPointContainer.GetDriftPoint().transform;
 
             StartDrifting();
         }
@@ -639,10 +638,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if(lockDriftingSlowMoBoost || lockDriftingCooldown)
             return;
         
-        if (context.started && rightDriftPointContainer.driftPoints.Count > 0)
+        if (context.started && rightDriftPointContainer.HasDriftPoint())
         {
             isDriftingRight = true;
-            currentDriftPoint = rightDriftPointContainer.driftPoints.First().transform;
+            currentDriftPoint = rightDriftPointContainer.GetDriftPoint().transform;
 
             StartDrifting();
         }
