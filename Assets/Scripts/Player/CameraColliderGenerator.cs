@@ -10,6 +10,7 @@ public class CameraColliderGenerator : MonoBehaviour
     [Header("Variables")]
     [SerializeField] private float nearClippingPlane;
     [SerializeField] private float farClippingPlane;
+    [SerializeField] private float scaleToCenterFactor = .8f;
 
     private Vector3 eulerAnglesOffset;
     
@@ -46,8 +47,6 @@ public class CameraColliderGenerator : MonoBehaviour
         transform.eulerAngles = cam.transform.eulerAngles - eulerAnglesOffset;
     }
 
-    
-
     void CalculateCornerPoints()
     {
         //calculate collider corner points
@@ -71,7 +70,21 @@ public class CameraColliderGenerator : MonoBehaviour
 
         p[10] = p[9] + (p[6] - p[9]) * .5f;
         p[11] = p[8] + (p[7] - p[8]) * .5f;
-        
+
+        //scale all points to center
+        Vector3 nearMiddlePoint = p[4] + (p[5] - p[4]) * .5f;
+        for (int i = 0; i < 6; i++)
+        {
+            p[i] = nearMiddlePoint + (p[i] - nearMiddlePoint) * scaleToCenterFactor;
+        }
+
+        Vector3 farMiddlePoint = p[10] + (p[11] - p[10]) * .5f;
+        for (int i = 6; i < 12; i++)
+        {
+            p[i] = farMiddlePoint + (p[i] - farMiddlePoint) * scaleToCenterFactor;
+        }
+
+
         // CreateDebugSpheres();
     }
 
@@ -83,6 +96,8 @@ public class CameraColliderGenerator : MonoBehaviour
             GameObject instance = Instantiate(sphere, p[i] + camPos, Quaternion.identity);
             instance.name = "point" + i;
             instance.GetComponent<MeshRenderer>().material = i < 6 ? nearMat : farMat;
+            float scale = 3;
+            instance.transform.localScale = new Vector3(scale, scale,scale);
         }
     }
 

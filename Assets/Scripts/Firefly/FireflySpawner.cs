@@ -25,6 +25,7 @@ public class FireflySpawner : MonoBehaviour
     void Start()
     {
         float halfRingWidth = (outerRadius - innerRadius) / ringCount / 2;
+        int spawnedFireflies = 0;
 
         //for each ring
         for(int i = 0; i < ringCount; i++)
@@ -44,9 +45,10 @@ public class FireflySpawner : MonoBehaviour
                 FireflyWalk currentFirefly = Instantiate(fireflyPrefab, fireflyPosition, Quaternion.identity);
 
                 bool moveRight = i % 2 == 0;
-                currentFirefly.SetFireflyValues(halfRingWidth * .3f, moveRight);
-
+                currentFirefly.SetFireflyValues(halfRingWidth * .3f, moveRight, spawnedFireflies);
                 currentFirefly.transform.parent = transform;
+
+                spawnedFireflies++;
             }
         }         
     }

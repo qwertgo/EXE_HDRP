@@ -13,6 +13,6 @@ public class AnimationEventCatcher : MonoBehaviour
 
     public void StartSlowMoBoost()
     {
-        GameVariables.instance.player.StartSlowMoBoost();
+        GameVariables.instance.player.StartSlowMoBoost(enemyMovement);
     }
 }

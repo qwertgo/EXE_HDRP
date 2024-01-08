@@ -7,11 +7,13 @@ using UnityEngine;
 
 public class DriftPointContainer : MonoBehaviour
 {
-    public List<DriftPoint> driftPoints { get; private set; } = new();
+    List<DriftPoint> driftPoints = new();
+    [SerializeField] private float coyoteTimer;
 
     private Transform playerTransform;
 
     private DriftPoint visibleDriftPoint;
+    private DriftPoint coyoteDriftPoint;
     private bool isRight;
 
     private void Start()
@@ -32,14 +34,22 @@ public class DriftPointContainer : MonoBehaviour
 
     public void RemoveDriftPoint(DriftPoint p)
     {
+        if (p == visibleDriftPoint)
+        {
+            coyoteDriftPoint = p;
+            StartCoroutine(CoyoteTimer());
+            p.HideMe();
+            visibleDriftPoint = null;
+        }
+        
         driftPoints.Remove(p);
     }
 
-    public void GetDriftPoints()
+    public void UpdateMe()
     {
         BubbleSortSingleIteration();
-
-        if (driftPoints.Count < 1 || driftPoints.First().isShown)
+        
+        if (driftPoints.Count == 0 || driftPoints.First().isShown)
             return;
 
         if (visibleDriftPoint)
@@ -47,6 +57,12 @@ public class DriftPointContainer : MonoBehaviour
 
         visibleDriftPoint = driftPoints.First();
         visibleDriftPoint.ShowMe(isRight);
+    }
+
+    IEnumerator CoyoteTimer()
+    {
+        yield return new WaitForSeconds(coyoteTimer);
+        coyoteDriftPoint = null;
     }
 
     void BubbleSortSingleIteration()
@@ -63,5 +79,18 @@ public class DriftPointContainer : MonoBehaviour
             }
         }
     }
-    
+
+    public bool HasDriftPoint(out Transform driftPoint)
+    {
+        bool hasPoint = driftPoints.Count > 0 || coyoteDriftPoint;
+
+        driftPoint = hasPoint ? GetDriftPoint().transform : null;
+
+        return hasPoint;
+    }
+
+    public DriftPoint GetDriftPoint()
+    {
+        return driftPoints.Count > 0 ? driftPoints.First() : coyoteDriftPoint;
+    }
 }
