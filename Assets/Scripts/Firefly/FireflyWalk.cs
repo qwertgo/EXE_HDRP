@@ -27,6 +27,7 @@ public class FireflyWalk : MonoBehaviour
     [SerializeField] SplineAnimate spline;
     
     private NavMeshAgent navMeshAgent;
+    private NavMeshQueryFilter navMeshFilter;
     private Collider sphereCollider;
 
     private void OnDrawGizmos()
@@ -44,6 +45,9 @@ public class FireflyWalk : MonoBehaviour
         navMeshAgent.nextPosition = destinationPoint.position;
         navMeshAgent.speed = speed;
         navMeshAgent.acceleration = speed;
+
+        navMeshFilter.areaMask = navMeshAgent.areaMask;
+        navMeshFilter.agentTypeID = navMeshAgent.agentTypeID;
         
         GameVariables variables = GameVariables.instance;
         variables.onPause.AddListener(PauseMe);
@@ -61,13 +65,21 @@ public class FireflyWalk : MonoBehaviour
             
             if(GameVariables.instance.isPaused)
                 continue;
-            
+
             destinationPoint.RotateAround(rotateAroundPosition, Vector3.up, destinationPointSpeed * Time.deltaTime);
-            navMeshAgent.SetDestination(destinationPoint.position);
+            
+            if(NavMesh.SamplePosition(destinationPoint.position, out NavMeshHit hit, 8, navMeshFilter))
+                navMeshAgent.SetDestination(hit.position);
+            else
+            {
+                Debug.Log( gameObject.name + " could not find position to walk towards");
+            }
+                
+            
         }
     }
 
-    public void SetFireflyValues(float walkCircleRadius, bool moveRight)
+    public void SetFireflyValues(float walkCircleRadius, bool moveRight, int number)
     {
         this.moveRight = moveRight;
         this.walkCircleRadius = walkCircleRadius;
@@ -76,6 +88,9 @@ public class FireflyWalk : MonoBehaviour
         destinationPoint.position = rotateAroundPosition + Vector3.right * this.walkCircleRadius;
 
         destinationPointSpeed = speed / walkCircleRadius * 41;
+
+        destinationPoint.name = "destinationPoint " + string.Format("{0:00}", number);
+        gameObject.name = "firefly" + string.Format("{0:00}", number);
     }
 
     private void OnTriggerEnter(Collider other)
