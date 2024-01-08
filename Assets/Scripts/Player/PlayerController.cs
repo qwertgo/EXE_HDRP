@@ -378,11 +378,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     void AdjustToGroundSlope()
     {
         Quaternion wantedRotation;
-        // groundSlopeRef.rotation = playerVisuals.rotation;
-        
+
         if (isGrounded)
         {
-            Physics.Raycast(transform.position, -playerVisuals.up, out RaycastHit groundHit, sphereCollider.radius + .5f, ground);
+            //if first Raycast does not hit anything cast a second longer one straight down
+            if (!Physics.Raycast(transform.position, -playerVisuals.up, out RaycastHit groundHit, sphereCollider.radius + .5f, ground))
+            {
+                Physics.Raycast(transform.position, Vector3.down, out groundHit, sphereCollider.radius + 2, ground);
+            }
 
             Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
             wantedRotation = Quaternion.LookRotation(forward, groundHit.normal);
@@ -617,37 +620,43 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnLeftDrift(InputAction.CallbackContext context)
     {
-        if(lockDriftingSlowMoBoost || lockDriftingCooldown)
-            return;
-        
-        if (context.started && leftDriftPointContainer.HasDriftPoint())
-        {
-            isDriftingRight = false;
-            currentDriftPoint = leftDriftPointContainer.GetDriftPoint().transform;
-
-            StartDrifting();
-        }
-        else if (context.canceled && isDrifting)
+        if (context.canceled && isDrifting)
         {
             StopDrifting();
+            return;
+        }
+
+        Transform tmpDriftPoint = null;
+        bool driftingIsLocked = lockDriftingSlowMoBoost || lockDriftingCooldown;
+        bool canStartDrift = context.started && !isDrifting && leftDriftPointContainer.HasDriftPoint(out tmpDriftPoint);
+        
+        if (!driftingIsLocked && canStartDrift)
+        {
+            isDriftingRight = false;
+            currentDriftPoint = tmpDriftPoint;
+
+            StartDrifting();
         }
     }
 
     public void OnRightDrift(InputAction.CallbackContext context)
     {
-        if(lockDriftingSlowMoBoost || lockDriftingCooldown)
-            return;
-        
-        if (context.started && rightDriftPointContainer.HasDriftPoint())
-        {
-            isDriftingRight = true;
-            currentDriftPoint = rightDriftPointContainer.GetDriftPoint().transform;
-
-            StartDrifting();
-        }
-        else if (context.canceled && isDrifting)
+        if (context.canceled && isDrifting)
         {
             StopDrifting();
+            return;
+        }
+
+        Transform tmpDriftPoint = null;
+        bool driftingIsLocked = lockDriftingSlowMoBoost || lockDriftingCooldown;
+        bool canStartDrift = context.started && !isDrifting && rightDriftPointContainer.HasDriftPoint(out tmpDriftPoint);
+
+        if (!driftingIsLocked && canStartDrift)
+        {
+            isDriftingRight = true;
+            currentDriftPoint = tmpDriftPoint;
+
+            StartDrifting();
         }
     }
     #endregion

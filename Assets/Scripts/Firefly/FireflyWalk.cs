@@ -14,13 +14,15 @@ public class FireflyWalk : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float timeToRespawn;
     [SerializeField] private float collectSpeed;
+
+    [SerializeField] float speedMultiplier = 4;
     [SerializeField] private FireflyType type = FireflyType.Moving;
     
     private Vector3 rotateAroundPosition;
     private float walkCircleRadius;
     private float destinationPointSpeed;
-    private bool moveRight = true;
     
+
     [Header("References")]
     [SerializeField] private Transform destinationPoint;
     [SerializeField] Transform visuals;
@@ -28,7 +30,8 @@ public class FireflyWalk : MonoBehaviour
     
     private NavMeshAgent navMeshAgent;
     private NavMeshQueryFilter navMeshFilter;
-    private Collider sphereCollider;
+    private SphereCollider[] colliders;
+    private int currentState;
 
     private void OnDrawGizmos()
     {
@@ -40,7 +43,8 @@ public class FireflyWalk : MonoBehaviour
     {
         destinationPoint.parent = transform.parent;
         navMeshAgent = GetComponent<NavMeshAgent>();
-        sphereCollider = GetComponent<SphereCollider>();
+
+        colliders = GetComponents<SphereCollider>();
 
         navMeshAgent.nextPosition = destinationPoint.position;
         navMeshAgent.speed = speed;
@@ -53,55 +57,100 @@ public class FireflyWalk : MonoBehaviour
         variables.onPause.AddListener(PauseMe);
 
         if(type == FireflyType.Moving)
-            StartCoroutine(UpdateCoroutine());
+            StartCoroutine(Idle());
     }
-
     
-    IEnumerator UpdateCoroutine()
-    {
-        while (enabled)
-        {
-            yield return null;
-            
-            if(GameVariables.instance.isPaused)
-                continue;
-
-            destinationPoint.RotateAround(rotateAroundPosition, Vector3.up, destinationPointSpeed * Time.deltaTime);
-            
-            if(NavMesh.SamplePosition(destinationPoint.position, out NavMeshHit hit, 8, navMeshFilter))
-                navMeshAgent.SetDestination(hit.position);
-            else
-            {
-                Debug.Log( gameObject.name + " could not find position to walk towards");
-            }
-                
-            
-        }
-    }
-
     public void SetFireflyValues(float walkCircleRadius, bool moveRight, int number)
     {
-        this.moveRight = moveRight;
         this.walkCircleRadius = walkCircleRadius;
         
         rotateAroundPosition = transform.position;
         destinationPoint.position = rotateAroundPosition + Vector3.right * this.walkCircleRadius;
 
         destinationPointSpeed = speed / walkCircleRadius * 41;
+        destinationPointSpeed = moveRight ? destinationPointSpeed : -destinationPointSpeed;
 
         destinationPoint.name = "destinationPoint " + string.Format("{0:00}", number);
         gameObject.name = "firefly" + string.Format("{0:00}", number);
     }
 
-    private void OnTriggerEnter(Collider other)
+    IEnumerator Idle()
     {
-        if (other.tag.Equals("FireflyCollector"))
+        while (enabled)
         {
-            spline.enabled = false;
-            sphereCollider.enabled = false;
-            StartCoroutine(MoveToPlayer(other.transform));
+            yield return null;
+
+            if (GameVariables.instance.isPaused)
+                continue;
+
+            RotateAroundPoint(rotateAroundPosition);
         }
     }
+
+    // IEnumerator RunAway()
+    // {
+    //     while (currentState == 1)
+    //     {
+    //         yield return null;
+    //         
+    //         if(GameVariables.instance.isPaused)
+    //             continue;
+    //         
+    //         RotateAroundPoint(Vector3.zero);
+    //     }
+    // }
+
+    private void RotateAroundPoint(Vector3 position)
+    {
+        destinationPoint.RotateAround(position, Vector3.up, destinationPointSpeed * Time.deltaTime);
+            
+        if(NavMesh.SamplePosition(destinationPoint.position, out NavMeshHit hit, 8, navMeshFilter))
+            navMeshAgent.SetDestination(hit.position);
+        else
+            Debug.Log( gameObject.name + " could not find position to walk towards");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.tag.Equals("FireflyCollector"))
+            return;
+
+        currentState++;
+
+        if (currentState > 1)
+        {
+            spline.enabled = false;
+            speed /= speedMultiplier;
+
+            foreach (var col in colliders)
+                col.enabled = false;
+
+            StartCoroutine(MoveToPlayer(other.transform));
+        }
+        else
+        {
+            destinationPointSpeed *= speedMultiplier;
+            navMeshAgent.speed *= speedMultiplier;
+            navMeshAgent.acceleration *= speedMultiplier;
+            // navMeshAgent.acceleration = navMeshAgent.speed;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.tag.Equals("FireflyCollector"))
+            return;
+
+        currentState--;
+
+        if (currentState == 0)
+        {
+            speed /= speedMultiplier;
+            navMeshAgent.speed /= speedMultiplier;
+            // navMeshAgent.acceleration = navMeshAgent.speed;
+        }
+    }
+
     IEnumerator MoveToPlayer(Transform player)
     {
         Vector3 startPos = visuals.position;
@@ -125,8 +174,10 @@ public class FireflyWalk : MonoBehaviour
     IEnumerator WaitTillRespawn()
     {
         yield return new WaitForSeconds(timeToRespawn);
-    
-        sphereCollider.enabled = true;
+
+        foreach (var col in colliders)
+            col.enabled = true;
+
         spline.enabled = true;
         visuals.gameObject.SetActive(true);
     }

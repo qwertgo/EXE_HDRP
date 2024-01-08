@@ -34,22 +34,26 @@ public class DriftPointContainer : MonoBehaviour
 
     public void RemoveDriftPoint(DriftPoint p)
     {
+        if (p == visibleDriftPoint)
+        {
+            coyoteDriftPoint = p;
+            StartCoroutine(CoyoteTimer());
+            p.HideMe();
+            visibleDriftPoint = null;
+        }
+        
         driftPoints.Remove(p);
     }
 
     public void UpdateMe()
     {
-        if (driftPoints.Count < 1 || driftPoints.First().isShown)
-            return;
-        
         BubbleSortSingleIteration();
+        
+        if (driftPoints.Count == 0 || driftPoints.First().isShown)
+            return;
 
         if (visibleDriftPoint)
-        {
-            coyoteDriftPoint = visibleDriftPoint;
-            StartCoroutine(CoyoteTimer());
             visibleDriftPoint.HideMe();
-        }
 
         visibleDriftPoint = driftPoints.First();
         visibleDriftPoint.ShowMe(isRight);
@@ -76,13 +80,17 @@ public class DriftPointContainer : MonoBehaviour
         }
     }
 
-    public bool HasDriftPoint()
+    public bool HasDriftPoint(out Transform driftPoint)
     {
-        return driftPoints.Count > 1 || coyoteDriftPoint;
+        bool hasPoint = driftPoints.Count > 0 || coyoteDriftPoint;
+
+        driftPoint = hasPoint ? GetDriftPoint().transform : null;
+
+        return hasPoint;
     }
 
     public DriftPoint GetDriftPoint()
     {
-        return driftPoints.Count > 1 ? driftPoints.First() : coyoteDriftPoint;
+        return driftPoints.Count > 0 ? driftPoints.First() : coyoteDriftPoint;
     }
 }
