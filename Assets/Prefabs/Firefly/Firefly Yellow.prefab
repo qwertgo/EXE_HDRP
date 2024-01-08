@@ -732,6 +732,7 @@ GameObject:
   - component: {fileID: 7309383722410666422}
   - component: {fileID: 4778768712286833628}
   - component: {fileID: 71005126979795600}
+  - component: {fileID: 8447615255446051411}
   m_Layer: 0
   m_Name: Firefly Yellow
   m_TagString: Untagged
@@ -791,10 +792,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b1b7927eaf65094682d8e607627997c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highscoreValue: 3
+  timeValue: 5
   speed: 18
   timeToRespawn: 30
   collectSpeed: 10
+  speedMultiplier: 2
   type: 1
   destinationPoint: {fileID: 2275953857179831993}
   visuals: {fileID: 672368394706826093}
@@ -814,11 +816,32 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &8447615255446051411
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6173778791588856691}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 9
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7650349996202192347
 GameObject:

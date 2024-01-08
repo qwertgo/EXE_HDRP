@@ -24,15 +24,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Break",
-                    "type": "Button",
-                    "id": "0f4272cd-69ac-4e1a-8b1e-3ce85cccf998",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "LeftDrift",
                     "type": "Button",
                     "id": "55550699-15a2-4486-977f-f58045e29887",
@@ -45,15 +36,6 @@
                     "name": "RightDrift",
                     "type": "Button",
                     "id": "729e83cc-7396-4a2c-9b4c-7a1a497d2c3a",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SlowMoBoost",
-                    "type": "Button",
-                    "id": "c926d4d2-cfe6-487b-8dcf-e844fb630083",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -151,28 +133,6 @@
                 },
                 {
                     "name": "",
-                    "id": "5fefa35c-210e-4c0c-870f-008cb4cce784",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Break",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "17582c7b-4419-4b2f-88e4-c69ee5adef85",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Break",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "1271954f-a9b3-4fca-8ec9-37d50e22abc9",
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
@@ -212,17 +172,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "RightDrift",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2b95c719-345f-43cd-bcc3-bd53177e4480",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SlowMoBoost",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
