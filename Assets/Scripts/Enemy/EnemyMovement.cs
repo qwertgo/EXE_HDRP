@@ -32,7 +32,6 @@ public class EnemyMovement : MonoBehaviour
     
     private Transform playerTransform;
     private NavMeshAgent navMeshAgent;
-    private Transform movementTarget;
 
     private void Awake()
     {
@@ -41,30 +40,31 @@ public class EnemyMovement : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(Idle());
 
         playerTransform = GameVariables.instance.player.transform;
         navMeshAgent.speed = idleSpeed;
         navMeshAgent.acceleration = idleSpeed;
         
         GameVariables.instance.onPause.AddListener(PauseMe);
+        StartCoroutine(Idle());
     }
 
     protected IEnumerator Idle()
     {
         currentState = enemyState.Idle;
-        movementTarget = GetRandomTransform();
-        navMeshAgent.SetDestination(movementTarget.position);
+        Vector3 destinationPoint = GetRandomTransform().position;
+        navMeshAgent.SetDestination(destinationPoint);
         
         navMeshAgent.speed = idleSpeed;
         navMeshAgent.acceleration = idleSpeed;
         
         while (currentState == enemyState.Idle)
         {
-            if (Vector3.Distance(movementTarget.position, transform.position) <= 0.5f) //ist es schon da?
+            if (Vector3.Distance(destinationPoint, transform.position) <= 0.5f) //ist es schon da?
             {
-                movementTarget = GetRandomTransform();
-                SetMovementTarget(movementTarget);
+                destinationPoint = GetRandomTransform().position;
+
+                navMeshAgent.SetDestination(destinationPoint);
             }
 
             yield return null;
@@ -80,10 +80,10 @@ public class EnemyMovement : MonoBehaviour
 
         animator.CrossFade("Attack",0);
         attackPlayerSource.Play();
+        LookAtPlayer();
 
         while (!finishedAttack)
         {
-            LookAtPlayer();
             navMeshAgent.SetDestination(playerTransform.position);
             yield return null;
         }
@@ -195,6 +195,32 @@ public class EnemyMovement : MonoBehaviour
     {
         int randomIndex = Random.Range(0, idleDestinationPoints.Count); // Zufälliger Index
         return idleDestinationPoints[randomIndex]; // Gib den zufälligen Transform zurück
+    }
+
+    private Transform GetTransformClosestToPlayer()
+    {
+        float[] distancesToPlayer = new float[idleDestinationPoints.Count];
+        
+        for (int i = 0; i < distancesToPlayer.Length; i++)
+        {
+            distancesToPlayer[i] = Vector3.Distance(idleDestinationPoints[i].position, playerTransform.position);
+        }
+
+        for (int i = distancesToPlayer.Length - 1; i > 0; i--)
+        {
+            if (distancesToPlayer[i] < distancesToPlayer[i - 1])
+            {
+                float tmpDistance = distancesToPlayer[i];
+                distancesToPlayer[i] = distancesToPlayer[i - 1];
+                distancesToPlayer[i - 1] = tmpDistance;
+
+                Transform tmpDestinationPoint = idleDestinationPoints[i];
+                idleDestinationPoints[i] = idleDestinationPoints[i - 1];
+                idleDestinationPoints[i - 1] = tmpDestinationPoint;
+            }
+        }
+        Debug.Log(idleDestinationPoints[0].name);
+        return idleDestinationPoints[0];
     }
 
     private void OnDrawGizmos()
