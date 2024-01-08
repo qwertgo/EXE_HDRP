@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     protected enum PlayerState
     {
         Running,
-        Breaking,
         Drifting,
         Jumping,
         Falling,
@@ -34,7 +33,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     [Header("Jumping/ In Air")]
     [SerializeField] protected float jumpForce;
-    [SerializeField] protected float breakForce;
     [SerializeField] protected float gravitationMultiplier;
 
     [Header("Drifting")] 
@@ -605,31 +603,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             rb.velocity += playerVisuals.up * jumpForce;
             justStartedJumping = true;
             groundParticlesObject.SetActive(false);
-        }
-    }
-
-    public void OnBreak(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            currentState = PlayerState.Breaking;
-            StartCoroutine(Break());
-        }
-        else if (context.canceled)
-        {
-            currentState = PlayerState.Running;
-            isBreaking = false;
-        }
-    }
-
-    IEnumerator Break()
-    {
-        isBreaking = true;
-        while (currentState == PlayerState.Breaking)
-        {
-            if (isGrounded)
-                rb.velocity *= 1 - breakForce;
-            yield return 0;
         }
     }
 

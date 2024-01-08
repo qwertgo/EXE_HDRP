@@ -46,15 +46,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Break"",
-                    ""type"": ""Button"",
-                    ""id"": ""0f4272cd-69ac-4e1a-8b1e-3ce85cccf998"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""LeftDrift"",
                     ""type"": ""Button"",
                     ""id"": ""55550699-15a2-4486-977f-f58045e29887"",
@@ -173,28 +164,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""5fefa35c-210e-4c0c-870f-008cb4cce784"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Break"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""17582c7b-4419-4b2f-88e4-c69ee5adef85"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Break"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""1271954f-a9b3-4fca-8ec9-37d50e22abc9"",
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
@@ -296,7 +265,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_P_Controls = asset.FindActionMap("P_Controls", throwIfNotFound: true);
         m_P_Controls_Steer = m_P_Controls.FindAction("Steer", throwIfNotFound: true);
         m_P_Controls_Jump = m_P_Controls.FindAction("Jump", throwIfNotFound: true);
-        m_P_Controls_Break = m_P_Controls.FindAction("Break", throwIfNotFound: true);
         m_P_Controls_LeftDrift = m_P_Controls.FindAction("LeftDrift", throwIfNotFound: true);
         m_P_Controls_RightDrift = m_P_Controls.FindAction("RightDrift", throwIfNotFound: true);
         m_P_Controls_SlowMoBoost = m_P_Controls.FindAction("SlowMoBoost", throwIfNotFound: true);
@@ -366,7 +334,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IP_ControlsActions> m_P_ControlsActionsCallbackInterfaces = new List<IP_ControlsActions>();
     private readonly InputAction m_P_Controls_Steer;
     private readonly InputAction m_P_Controls_Jump;
-    private readonly InputAction m_P_Controls_Break;
     private readonly InputAction m_P_Controls_LeftDrift;
     private readonly InputAction m_P_Controls_RightDrift;
     private readonly InputAction m_P_Controls_SlowMoBoost;
@@ -376,7 +343,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public P_ControlsActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Steer => m_Wrapper.m_P_Controls_Steer;
         public InputAction @Jump => m_Wrapper.m_P_Controls_Jump;
-        public InputAction @Break => m_Wrapper.m_P_Controls_Break;
         public InputAction @LeftDrift => m_Wrapper.m_P_Controls_LeftDrift;
         public InputAction @RightDrift => m_Wrapper.m_P_Controls_RightDrift;
         public InputAction @SlowMoBoost => m_Wrapper.m_P_Controls_SlowMoBoost;
@@ -395,9 +361,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
-            @Break.started += instance.OnBreak;
-            @Break.performed += instance.OnBreak;
-            @Break.canceled += instance.OnBreak;
             @LeftDrift.started += instance.OnLeftDrift;
             @LeftDrift.performed += instance.OnLeftDrift;
             @LeftDrift.canceled += instance.OnLeftDrift;
@@ -417,9 +380,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
-            @Break.started -= instance.OnBreak;
-            @Break.performed -= instance.OnBreak;
-            @Break.canceled -= instance.OnBreak;
             @LeftDrift.started -= instance.OnLeftDrift;
             @LeftDrift.performed -= instance.OnLeftDrift;
             @LeftDrift.canceled -= instance.OnLeftDrift;
@@ -496,7 +456,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnSteer(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnBreak(InputAction.CallbackContext context);
         void OnLeftDrift(InputAction.CallbackContext context);
         void OnRightDrift(InputAction.CallbackContext context);
         void OnSlowMoBoost(InputAction.CallbackContext context);
