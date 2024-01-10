@@ -729,10 +729,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5748983210457015759}
-  - component: {fileID: 7309383722410666422}
-  - component: {fileID: 4778768712286833628}
   - component: {fileID: 71005126979795600}
-  - component: {fileID: 1326553574265218417}
+  - component: {fileID: 1343328379229845707}
   m_Layer: 0
   m_Name: Firefly Static
   m_TagString: Untagged
@@ -758,49 +756,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!195 &7309383722410666422
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6173778791588856691}
-  m_Enabled: 0
-  m_AgentTypeID: -1372625422
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &4778768712286833628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6173778791588856691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b1b7927eaf65094682d8e607627997c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeValue: 2
-  speed: 18
-  timeToRespawn: 30
-  collectSpeed: 10
-  speedMultiplier: 4
-  type: 0
-  destinationPoint: {fileID: 2275953857179831993}
-  visuals: {fileID: 672368394706826093}
-  spline: {fileID: 2583434942015365302}
 --- !u!135 &71005126979795600
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -820,29 +775,25 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &1326553574265218417
-SphereCollider:
+--- !u!114 &1343328379229845707
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6173778791588856691}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 8
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce9ab537074e89948bada767ee175c8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeValue: 2
+  timeToRespawn: 30
+  collectSpeed: 10
+  visuals: {fileID: 672368394706826093}
+  spline: {fileID: 2583434942015365302}
 --- !u!1 &7650349996202192347
 GameObject:
   m_ObjectHideFlags: 0
@@ -882,6 +833,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5748983210457015759}
     m_Modifications:
+    - target: {fileID: 1358848180401184142, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e4bcfa58695016b4c8c77de59d1de5a7, type: 2}
     - target: {fileID: 1595164358045673082, guid: f972ef6ecc48d9b4fa394b94b9978c04,
         type: 3}
       propertyPath: m_RootOrder
@@ -942,6 +898,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Visuals
       objectReference: {fileID: 0}
+    - target: {fileID: 1973815774077427003, guid: f972ef6ecc48d9b4fa394b94b9978c04,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e4bcfa58695016b4c8c77de59d1de5a7, type: 2}
     - target: {fileID: 2539057079393813689, guid: f972ef6ecc48d9b4fa394b94b9978c04,
         type: 3}
       propertyPath: m_Parameters.colorGradient.atime1
@@ -1002,7 +963,9 @@ PrefabInstance:
       propertyPath: m_Target
       value: 
       objectReference: {fileID: 2052631914912167197}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3856622265834232255, guid: f972ef6ecc48d9b4fa394b94b9978c04, type: 3}
+    - {fileID: 3053977293178707386, guid: f972ef6ecc48d9b4fa394b94b9978c04, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
