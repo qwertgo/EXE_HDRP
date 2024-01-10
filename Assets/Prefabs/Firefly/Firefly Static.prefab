@@ -734,7 +734,7 @@ GameObject:
   - component: {fileID: 71005126979795600}
   - component: {fileID: 1326553574265218417}
   m_Layer: 0
-  m_Name: Firefly Orange
+  m_Name: Firefly Static
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

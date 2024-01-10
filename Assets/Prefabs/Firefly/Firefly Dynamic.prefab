@@ -734,7 +734,7 @@ GameObject:
   - component: {fileID: 71005126979795600}
   - component: {fileID: 8447615255446051411}
   m_Layer: 0
-  m_Name: Firefly Yellow
+  m_Name: Firefly Dynamic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
