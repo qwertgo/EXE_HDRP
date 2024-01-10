@@ -97,16 +97,25 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] protected DriftPointContainer leftDriftPointContainer;
     [SerializeField] private AudioSource walkAudioSource;
     [SerializeField] private GameObject refCylinder;
+
+    [Header("Animations")] 
+    [SerializeField] private AnimationClip runningClip;
+    [SerializeField] private AnimationClip jumpingUpClip;
+    [SerializeField] private AnimationClip inAirClip;
+    [SerializeField] private AnimationClip landingClip;
     
     public Rigidbody rb { get; private set; }
     private GameObject groundParticlesObject;
     private Transform currentDriftPoint;
-    protected PlayerState currentState = PlayerState.Running;
+    private PlayerState currentState = PlayerState.Running;
+    
+    
     
     private PlayerInput controls;
     private CinemachineVirtualCamera virtualCamera;
     private CinemachineTransposer cinemachineTransposer;
     private SphereCollider sphereCollider;
+    private Animator animator;
     private Quaternion rotationAtDriftStart;
     
     private LineRenderer lineRenderer;
@@ -118,6 +127,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb = GetComponent<Rigidbody>();
         sphereCollider = GetComponent<SphereCollider>();
         lineRenderer = GetComponent<LineRenderer>();
+        animator = playerVisuals.GetComponentInChildren<Animator>();
         lineRenderer.positionCount = 0;
         virtualCamera = gameVariables.virtualCamera;
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
@@ -190,12 +200,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         bool stateEqualsFalling = currentState == PlayerState.Falling || (currentState == PlayerState.DriftFalling && !justStartedJumping);
 
-        if (!isGrounded && isFalling )
+        if (!isGrounded && isFalling)
+        {
             currentState = isDrifting? PlayerState.DriftFalling : PlayerState.Falling;
+
+        }
         else if (stateEqualsFalling && isGrounded)
         {
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             groundParticlesObject.SetActive(true);
+            animator.CrossFade(landingClip.name, .1f);
         }
 
         justStartedJumping = false;
@@ -596,6 +610,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.isKinematic = false;
         rb.velocity = velocity;
     }
+
+    IEnumerator WaitAndCheckIfStillFalling()
+    {
+        yield return new WaitForSeconds(.2f);
+        if(isFalling)
+            animator.CrossFade(inAirClip.name, .2f);
+    }
     #endregion
 
     #region Input System ------------------------------------------------------------------------------------------------------------------------------------
@@ -615,6 +636,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             rb.velocity += playerVisuals.up * jumpForce;
             justStartedJumping = true;
             groundParticlesObject.SetActive(false);
+            animator.CrossFade(jumpingUpClip.name, .2f);
         }
     }
 
