@@ -267,6 +267,8 @@ MonoBehaviour:
   sunDestinationRotation: 380
   moonStartRotation: 30
   moonDestinationRotation: 170
+  startColor: {r: 0.5453453, g: 0.75929713, b: 0.8962264, a: 0}
+  endColor: {r: 0.35978106, g: 0.40602723, b: 0.5188679, a: 0}
   gameTime: 300
   sun: {fileID: 6883286418933405798}
   moon: {fileID: 1589033938073835673}
