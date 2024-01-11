@@ -31,7 +31,7 @@ public class FireflyWalk : FireflyStatic
         Gizmos.DrawRay(rotateAroundPosition, Vector3.up);
     }
 
-    void Start()
+    new void Start()
     {
         base.Start();
         
