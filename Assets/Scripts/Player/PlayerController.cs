@@ -274,6 +274,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         arrivedAtDriftPeak = false;
         lineRenderer.positionCount = 0; //stop rendering the tongue line
         driftHorizontal = 0;
+        horizontal = 0;
         currentDriftRotation = 0;
         currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
         currentTraction = traction;
