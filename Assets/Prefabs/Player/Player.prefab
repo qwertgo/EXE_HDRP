@@ -5079,6 +5079,7 @@ MonoBehaviour:
   timeToWaitTillBoost: 1.2
   playerVisuals: {fileID: 1609444752658654278}
   tonguePoint: {fileID: 2633907542019158644}
+  tongueMaterial: {fileID: 2100000, guid: 70a0bec77d680a042b785f8f78772f89, type: 2}
   lookAt: {fileID: 9105339177700952640}
   rotationReference: {fileID: 2145405288765843991}
   groundParticles: {fileID: 661022337883119139}
@@ -5265,14 +5266,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2007743758044179804}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.5191394, z: -0, w: 0.8546896}
   m_LocalPosition: {x: 0, y: 1.4, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1609444752658654278}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -62.549, z: 0}
 --- !u!33 &6910792575986211782
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5301,7 +5302,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 298bd5eebc0e2d14fb3e73ecf596b2e5, type: 2}
+  - {fileID: 2100000, guid: 70a0bec77d680a042b785f8f78772f89, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

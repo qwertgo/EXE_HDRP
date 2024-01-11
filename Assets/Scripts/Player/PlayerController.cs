@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [Header("References")]
     [SerializeField] protected Transform playerVisuals;
     [SerializeField] private Transform tonguePoint;
-    
+    [SerializeField] private Material tongueMaterial;
     [SerializeField] private Transform lookAt;
     [FormerlySerializedAs("groundSlopeRef")] [SerializeField] private Transform rotationReference;
     [SerializeField] private ParticleSystem groundParticles;
@@ -252,6 +252,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         StartCoroutine(DriftCooldown());
         StartCoroutine(Drift());
+        StartCoroutine(TongueAnimation());
     }
 
     private void StopDrifting()
@@ -414,6 +415,37 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         tonguePoint.forward = vecToDriftpoint.normalized;
         Vector3 scale = tonguePoint.lossyScale;
         tonguePoint.localScale = new Vector3(scale.x, scale.y, vecToDriftpoint.magnitude);
+    }
+
+    IEnumerator TongueAnimation()
+    {
+        float t = 0;
+        tongueMaterial.SetFloat("_Height", 1);
+        tongueMaterial.SetFloat("_Frequency", 20);
+
+        while (t < 1)
+        {
+            t += Time.deltaTime * 10;
+            tongueMaterial.SetFloat("_Stretch", t);
+            yield return null;
+        }
+        
+        tongueMaterial.SetFloat("_Stretch", 1);
+
+        while (t > 0)
+        {
+            t -= Time.deltaTime * 7;
+            tongueMaterial.SetFloat("_Height", t);
+            tongueMaterial.SetFloat("_Frequency", t * 20);
+            yield return null;
+
+        }
+        
+        tongueMaterial.SetFloat("_Height", 0);
+        tongueMaterial.SetFloat("_Frequency", 0);
+
+
+
     }
     #endregion
 
