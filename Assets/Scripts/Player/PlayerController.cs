@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     public float baseMaxSpeed;
     [SerializeField] private float traction;
     [SerializeField] private float adjustToGroundSlopeSpeed = 3;
+    [SerializeField] private float animationSpeed = .1f;
     [SerializeField] private LayerMask ground;
 
     private float currentMaxSpeed;
@@ -169,6 +170,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         
     
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
+        animator.SetFloat("runningSpeed", Mathf.Max(.5f, rb.velocity.magnitude * animationSpeed));
     }
     
     private void LateUpdate()
@@ -254,7 +256,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         rotationAtDriftStart = playerVisuals.rotation;
         currentTraction = tractionWhileDrifting;
-        currentDriftRotation = 0;
         driftBoostPercentage = 0;
         driftHorizontal = isDriftingRight ? .5f : -.5f;
         
@@ -273,6 +274,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         arrivedAtDriftPeak = false;
         lineRenderer.positionCount = 0; //stop rendering the tongue line
         driftHorizontal = 0;
+        currentDriftRotation = 0;
         currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
         currentTraction = traction;
 
@@ -511,13 +513,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             return;
         
         if (isDrifting)
-        {
             StopDrifting();
-        }
-        
-        rb.velocity = -playerVisuals.forward * 50;
-        currentMaxSpeed = baseMaxSpeed;
 
+        // rb.velocity = -playerVisuals.forward * 50;
+        currentMaxSpeed = baseMaxSpeed;
+        //To DO get position on collider rather than collider position
         Vector3 colliderPos = other.transform.position;
         Vector3 vecToCollider = colliderPos - playerVisuals.position;
         vecToCollider.Scale(new Vector3(1,0,1));
@@ -528,7 +528,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = newForward * rb.velocity.magnitude;
         
         StopCoroutine(nameof(TurnPlayerInNewDirection));
-        StartCoroutine(TurnPlayerInNewDirection(newForward, 2.5f));
+        StartCoroutine(TurnPlayerInNewDirection(newForward, 2f));
     }
 
     IEnumerator TurnPlayerInNewDirection(Vector3 newForward, float speed)

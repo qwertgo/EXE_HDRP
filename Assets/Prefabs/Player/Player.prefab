@@ -5048,6 +5048,7 @@ MonoBehaviour:
   baseMaxSpeed: 25
   traction: 1
   adjustToGroundSlopeSpeed: 3
+  animationSpeed: 0.05
   ground:
     serializedVersion: 2
     m_Bits: 8
