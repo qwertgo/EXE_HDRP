@@ -33,6 +33,8 @@ public class FireflyWalk : FireflyStatic
 
     void Start()
     {
+        base.Start();
+        
         destinationPoint.parent = transform.parent;
         navMeshAgent = GetComponent<NavMeshAgent>();
 
@@ -94,12 +96,8 @@ public class FireflyWalk : FireflyStatic
 
         if (currentState > 1)
         {
-            spline.enabled = false;
             speed /= speedMultiplier;
 
-            foreach (var col in colliders)
-                col.enabled = false;
-            
             StartCoroutine(MoveToPlayer(other.transform, WaitTillRespawnDynamic()));
         }
         else
@@ -128,12 +126,19 @@ public class FireflyWalk : FireflyStatic
 
     private IEnumerator WaitTillRespawnDynamic()
     {
+        visuals.gameObject.SetActive(false);
+        FireflySpawner.updatePosition -= UpdateVisualsPosition;
+        
+        foreach (var col in colliders)
+            col.enabled = false;
+        
         yield return new WaitForSeconds(timeToRespawn);
 
+        visuals.gameObject.SetActive(true);
+        FireflySpawner.updatePosition += UpdateVisualsPosition;
+        
         foreach (var col in colliders)
             col.enabled = true;
-
-        spline.enabled = true;
-        visuals.gameObject.SetActive(true);
+        
     }
 }

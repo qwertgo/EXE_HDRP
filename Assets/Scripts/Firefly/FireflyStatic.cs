@@ -11,10 +11,19 @@ public class FireflyStatic : MonoBehaviour
     [SerializeField] protected float timeValue;
     [SerializeField] protected float timeToRespawn;
     [SerializeField] protected float collectSpeed;
+    [SerializeField] private float visualsYOffset;
     
     [Header("References")]
     [SerializeField] protected Transform visuals;
-    [SerializeField] protected SplineAnimate spline;
+
+    private MeshRenderer meshRenderer;
+    private LODGroup lodGroup;
+
+    protected void Start()
+    {
+        FireflySpawner.updatePosition += UpdateVisualsPosition;
+        meshRenderer = visuals.GetComponent<MeshRenderer>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -38,17 +47,23 @@ public class FireflyStatic : MonoBehaviour
     
         GameVariables.instance.gameTimer.AddToTimer(timeValue);
         GameVariables.instance.fireflyCount++;
-    
-        visuals.gameObject.SetActive(false);
-    
+
         StartCoroutine(waitTillRespawn);
     }
     
     private IEnumerator WaitTillRespawnStatic()
     {
+        visuals.gameObject.SetActive(false);
+        FireflySpawner.updatePosition -= UpdateVisualsPosition;
+        
         yield return new WaitForSeconds(timeToRespawn);
         
-        spline.enabled = true;
         visuals.gameObject.SetActive(true);
+        FireflySpawner.updatePosition += UpdateVisualsPosition;
+    }
+
+    protected void UpdateVisualsPosition(Vector2 localPos)
+    {
+        visuals.position = transform.position + new Vector3(0, visualsYOffset, 0)  + transform.rotation * localPos;
     }
 }
