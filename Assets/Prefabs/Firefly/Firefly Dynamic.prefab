@@ -793,14 +793,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeValue: 5
-  speed: 18
   timeToRespawn: 30
   collectSpeed: 10
-  speedMultiplier: 2
-  type: 1
-  destinationPoint: {fileID: 2275953857179831993}
+  visualsYOffset: 1.25
   visuals: {fileID: 672368394706826093}
-  spline: {fileID: 2583434942015365302}
+  speed: 18
+  speedMultiplier: 2
+  destinationPoint: {fileID: 2275953857179831993}
 --- !u!135 &71005126979795600
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -958,15 +957,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2267442523387335959}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2583434942015365302 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4372333960453584289, guid: f972ef6ecc48d9b4fa394b94b9978c04,
-    type: 3}
-  m_PrefabInstance: {fileID: 2267442523387335959}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29a074d529cf945029ef7cf40540c9df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
