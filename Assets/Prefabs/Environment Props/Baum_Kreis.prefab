@@ -1598,6 +1598,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sprung_Wurzeln
       objectReference: {fileID: 0}
+    - target: {fileID: 6365376945933367534, guid: 22b3508c973e1da47aef2618e12a9994,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1f7e8cebf4351a144bc5cb48515106b5, type: 2}
     - target: {fileID: 6416352094933757211, guid: 22b3508c973e1da47aef2618e12a9994,
         type: 3}
       propertyPath: m_StaticEditorFlags
