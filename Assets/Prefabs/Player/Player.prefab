@@ -5091,6 +5091,8 @@ MonoBehaviour:
   jumpingUpClip: {fileID: 7400000, guid: af7c4b9e3ccd3e3439040b400bdef973, type: 2}
   inAirClip: {fileID: 7400000, guid: 584273c56bc95984e98441205fc045e4, type: 2}
   landingClip: {fileID: 7400000, guid: 239ba5f40844f0149bea73616fa5a69b, type: 2}
+  tongueShoot: {fileID: 7400000, guid: 1112e510eed472f43908d0b89538a916, type: 2}
+  tongueReturn: {fileID: 7400000, guid: 22bf19b4b1b728a4ba612597a16d6546, type: 2}
 --- !u!54 &4525183451630538490
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5252,6 +5254,7 @@ GameObject:
   - component: {fileID: 2633907542019158644}
   - component: {fileID: 6910792575986211782}
   - component: {fileID: 140750477735697298}
+  - component: {fileID: 7572438563657741845}
   m_Layer: 6
   m_Name: Tounge
   m_TagString: Untagged
@@ -5289,7 +5292,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2007743758044179804}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -5324,6 +5327,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &7572438563657741845
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007743758044179804}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a731ccccd8938064e8c9850116dad9aa, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2084837728789634541
 GameObject:
   m_ObjectHideFlags: 0

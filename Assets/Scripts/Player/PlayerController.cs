@@ -104,9 +104,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AnimationClip jumpingUpClip;
     [SerializeField] private AnimationClip inAirClip;
     [SerializeField] private AnimationClip landingClip;
+    [SerializeField] private AnimationClip tongueShoot;
+    [SerializeField] private AnimationClip tongueReturn;
     
     public Rigidbody rb { get; private set; }
-    private MeshRenderer tongueMeshRenderer;
     private GameObject groundParticlesObject;
     private Transform currentDriftPoint;
     private PlayerInput controls;
@@ -114,6 +115,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private CinemachineTransposer cinemachineTransposer;
     private SphereCollider sphereCollider;
     private Animator animator;
+    private Animator tongueAnimator;
     private PlayerState currentState = PlayerState.Running;
     private Quaternion rotationAtDriftStart;
     
@@ -126,7 +128,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb = GetComponent<Rigidbody>();
         sphereCollider = GetComponent<SphereCollider>();
         animator = playerVisuals.GetComponentInChildren<Animator>();
-        tongueMeshRenderer = tonguePoint.GetComponent<MeshRenderer>();
+        tongueAnimator = tonguePoint.GetComponent<Animator>();
         virtualCamera = gameVariables.virtualCamera;
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         groundParticlesObject = groundParticles.gameObject;
@@ -238,7 +240,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         isDrifting = true;
         currentState = isGrounded ? PlayerState.Drifting : PlayerState.DriftJumping;
-        tongueMeshRenderer.enabled = true;
+        tongueAnimator.CrossFade(tongueShoot.name, 0f);
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
 
@@ -252,14 +254,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         StartCoroutine(DriftCooldown());
         StartCoroutine(Drift());
-        StartCoroutine(TongueAnimation());
+        // StartCoroutine(TongueAnimation());
     }
 
     private void StopDrifting()
     {
         isDrifting = false;
         arrivedAtDriftPeak = false;
-        tongueMeshRenderer.enabled = false;
+        tongueAnimator.CrossFade(tongueReturn.name, 0f);
         driftHorizontal = 0;
         horizontal = 0;
         currentDriftRotation = 0;
