@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 
 public class FireflySpawner : MonoBehaviour
 {
+    public static event Action<Vector2> updatePosition;
+    
     [SerializeField] FireflyWalk fireflyPrefab;
     [SerializeField] int ringCount;
     [SerializeField] float outerRadius;
@@ -50,6 +52,14 @@ public class FireflySpawner : MonoBehaviour
 
                 spawnedFireflies++;
             }
-        }         
+
+        }
+    }
+    void Update()
+    {
+        float xPos = Mathf.Sin(Time.time * 2) ;
+        float yPos = Mathf.Sin(Time.time * 4) * .5f;
+            
+        updatePosition?.Invoke(new Vector2(xPos, yPos));
     }
 }

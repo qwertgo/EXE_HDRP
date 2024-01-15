@@ -2,25 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class DriftPoint : MonoBehaviour
 {
-    [SerializeField] private float sizeWhenShown = 2f;
-    [SerializeField] private MeshRenderer indicatorRenderer;
     [SerializeField] private Material rightMat;
     [SerializeField] private Material leftMat;
+    [SerializeField] private Material defaultMat;
+
+    [FormerlySerializedAs("renderers")] [SerializeField] private MeshRenderer[] meshRenderers;
 
     public bool isShown { get; private set; } = false;
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, sizeWhenShown);
-    }
-
     private void Start()
     {
-        indicatorRenderer.gameObject.transform.localScale = new Vector3(sizeWhenShown, sizeWhenShown, sizeWhenShown);
+        meshRenderers = GetComponentsInChildren<MeshRenderer>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -39,14 +35,20 @@ public class DriftPoint : MonoBehaviour
     public void ShowMe(bool isRight)
     {
         isShown = true;
-        indicatorRenderer.enabled = true;
-        indicatorRenderer.material = isRight ? rightMat : leftMat;
+
+        foreach (var meshRenderer in meshRenderers)
+        {
+            meshRenderer.sharedMaterial = isRight ? rightMat : leftMat;
+        }
     }
 
     public void HideMe()
     {
         isShown = false;
-        indicatorRenderer.enabled = false;
+        foreach (var meshRenderer in meshRenderers)
+        {
+            meshRenderer.sharedMaterial = defaultMat;
+        }
     }
     
 }

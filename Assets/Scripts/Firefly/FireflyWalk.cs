@@ -5,19 +5,13 @@ using UnityEngine.AI;
 using UnityEngine.Splines;
 using UnityEngine;
 
-public class FireflyWalk : MonoBehaviour
+public class FireflyWalk : FireflyStatic
 {
-    enum FireflyType {StillStanding, Moving}
 
     [Header("Variables")]
-    [SerializeField] private float timeValue;
     [SerializeField] float speed;
-    [SerializeField] float timeToRespawn;
-    [SerializeField] private float collectSpeed;
-
     [SerializeField] float speedMultiplier = 4;
-    [SerializeField] private FireflyType type = FireflyType.Moving;
-    
+
     private Vector3 rotateAroundPosition;
     private float walkCircleRadius;
     private float destinationPointSpeed;
@@ -25,9 +19,7 @@ public class FireflyWalk : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform destinationPoint;
-    [SerializeField] Transform visuals;
-    [SerializeField] SplineAnimate spline;
-    
+
     private NavMeshAgent navMeshAgent;
     private NavMeshQueryFilter navMeshFilter;
     private SphereCollider[] colliders;
@@ -39,8 +31,10 @@ public class FireflyWalk : MonoBehaviour
         Gizmos.DrawRay(rotateAroundPosition, Vector3.up);
     }
 
-    void Start()
+    new void Start()
     {
+        base.Start();
+        
         destinationPoint.parent = transform.parent;
         navMeshAgent = GetComponent<NavMeshAgent>();
 
@@ -53,11 +47,7 @@ public class FireflyWalk : MonoBehaviour
         navMeshFilter.areaMask = navMeshAgent.areaMask;
         navMeshFilter.agentTypeID = navMeshAgent.agentTypeID;
         
-        GameVariables variables = GameVariables.instance;
-        variables.onPause.AddListener(PauseMe);
-
-        if(type == FireflyType.Moving)
-            StartCoroutine(Idle());
+        StartCoroutine(Idle());
     }
     
     public void SetFireflyValues(float walkCircleRadius, bool moveRight, int number)
@@ -87,19 +77,6 @@ public class FireflyWalk : MonoBehaviour
         }
     }
 
-    // IEnumerator RunAway()
-    // {
-    //     while (currentState == 1)
-    //     {
-    //         yield return null;
-    //         
-    //         if(GameVariables.instance.isPaused)
-    //             continue;
-    //         
-    //         RotateAroundPoint(Vector3.zero);
-    //     }
-    // }
-
     private void RotateAroundPoint(Vector3 position)
     {
         destinationPoint.RotateAround(position, Vector3.up, destinationPointSpeed * Time.deltaTime);
@@ -119,13 +96,9 @@ public class FireflyWalk : MonoBehaviour
 
         if (currentState > 1)
         {
-            spline.enabled = false;
             speed /= speedMultiplier;
 
-            foreach (var col in colliders)
-                col.enabled = false;
-
-            StartCoroutine(MoveToPlayer(other.transform));
+            StartCoroutine(MoveToPlayer(other.transform, WaitTillRespawnDynamic()));
         }
         else
         {
@@ -151,49 +124,21 @@ public class FireflyWalk : MonoBehaviour
         }
     }
 
-    IEnumerator MoveToPlayer(Transform player)
+    private IEnumerator WaitTillRespawnDynamic()
     {
-        Vector3 startPos = visuals.position;
-        float t = 0;
-    
-        while (t < 1)
-        {
-            t += Time.deltaTime * collectSpeed;
-            visuals.position = Vector3.Lerp(startPos, player.position, t * t);
-            yield return null;
-        }
-    
-        GameVariables.instance.gameTimer.AddToTimer(timeValue);
-        GameVariables.instance.fireflyCount++;
-    
         visuals.gameObject.SetActive(false);
-    
-        StartCoroutine(WaitTillRespawn());
-    }
-    
-    IEnumerator WaitTillRespawn()
-    {
+        FireflySpawner.updatePosition -= UpdateVisualsPosition;
+        
+        foreach (var col in colliders)
+            col.enabled = false;
+        
         yield return new WaitForSeconds(timeToRespawn);
 
+        visuals.gameObject.SetActive(true);
+        FireflySpawner.updatePosition += UpdateVisualsPosition;
+        
         foreach (var col in colliders)
             col.enabled = true;
-
-        spline.enabled = true;
-        visuals.gameObject.SetActive(true);
-    }
-
-    void PauseMe()
-    {
-        StartCoroutine(WhilePause());
-    }
-
-    IEnumerator WhilePause()
-    {
-        float speed = navMeshAgent.speed;
-        navMeshAgent.speed = 0;
         
-        yield return new WaitWhile(() => GameVariables.instance.isPaused);
-
-        navMeshAgent.speed = speed;
     }
 }

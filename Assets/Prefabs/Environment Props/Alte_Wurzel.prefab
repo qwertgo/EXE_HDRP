@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 20
   m_IsActive: 1
 --- !u!4 &9136956460357949357
 Transform:
@@ -199,6 +199,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WurzelF1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 59e1f80170addbc42a5d82965beee7e5,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1994348270441840194, guid: 59e1f80170addbc42a5d82965beee7e5,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4878191787561613047, guid: 59e1f80170addbc42a5d82965beee7e5,
         type: 3}
