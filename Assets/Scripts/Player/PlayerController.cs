@@ -91,13 +91,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] protected Transform playerVisuals;
     [SerializeField] private Transform tonguePoint;
     [SerializeField] private Material tongueMaterial;
-    [SerializeField] private Transform lookAt;
+    [FormerlySerializedAs("lookAt")] [SerializeField] private Transform cameraLookAt;
     [FormerlySerializedAs("groundSlopeRef")] [SerializeField] private Transform rotationReference;
     [SerializeField] private ParticleSystem groundParticles;
     [SerializeField] private Material material;
     [SerializeField] protected DriftPointContainer rightDriftPointContainer;
     [SerializeField] protected DriftPointContainer leftDriftPointContainer;
     [SerializeField] private AudioSource walkAudioSource;
+    [SerializeField] private Transform playerLookAt;
 
     [Header("Animations")] 
     [SerializeField] private AnimationClip runningClip;
@@ -225,7 +226,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         //move LookAt Object
         horizontalLerpTo = Mathf.Lerp(horizontalLerpTo, horizontal + driftHorizontal, Time.deltaTime * horizontalLerpSpeed);
-        lookAt.position = playerVisuals.position + playerVisuals.right * (horizontalLerpTo * lookAtMoveAmount);
+        cameraLookAt.position = playerVisuals.position + playerVisuals.right * (horizontalLerpTo * lookAtMoveAmount);
 
         virtualCamera.m_Lens.Dutch = horizontalLerpTo * maxDutchTilt;
         
@@ -267,6 +268,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         currentDriftRotation = 0;
         currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
         currentTraction = traction;
+        playerLookAt.position = new Vector3(transform.position.x, 1.5f, transform.position.z) + playerVisuals.forward;
 
         float currentBoostAmount = boostForce * driftBoostPercentage;
         Boost(currentBoostAmount);
@@ -296,6 +298,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             Quaternion lerpToRotation = GetWantedDriftRotation(dirToDriftPoint);
 
             playerVisuals.rotation = Quaternion.Lerp(lerpFromRotation, lerpToRotation, tongueStretchFactor);
+            playerLookAt.position = currentDriftPoint.position;
 
             AdjustToGroundSlope();
             TurnVelocityToPlayerForward();
