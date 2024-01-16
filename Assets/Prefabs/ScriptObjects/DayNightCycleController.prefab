@@ -26,13 +26,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5671393839942367560}
   m_LocalRotation: {x: 0.17364816, y: -0, z: -0, w: 0.9848078}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7180460159527387855}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 122.52, y: 0, z: 0}
 --- !u!108 &1589033938073835673
 Light:
   m_ObjectHideFlags: 0
@@ -263,13 +263,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d18c6209bfa575645811648525ec250a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sunStartRotation: 120
-  sunDestinationRotation: 380
-  moonStartRotation: 30
-  moonDestinationRotation: 170
-  startColor: {r: 0.5453453, g: 0.75929713, b: 0.8962264, a: 0}
-  endColor: {r: 0.35978106, g: 0.40602723, b: 0.5188679, a: 0}
-  gameTime: 300
+  timeForSunToSet: 10
+  sunDestinationRotation: 200
+  moonDestinationRotation: 120
+  moonColorStart: {r: 0.5453453, g: 0.75929713, b: 0.8962264, a: 0}
+  moonColorEnd: {r: 0.35978106, g: 0.40602723, b: 0.5188679, a: 0}
   sun: {fileID: 6883286418933405798}
   moon: {fileID: 1589033938073835673}
 --- !u!1 &7262576276751106377
@@ -284,7 +282,7 @@ GameObject:
   - component: {fileID: 6883286418933405798}
   - component: {fileID: 2717794742372982396}
   m_Layer: 0
-  m_Name: Sun1
+  m_Name: Sun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -297,8 +295,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7262576276751106377}
-  m_LocalRotation: {x: 0.9063079, y: -0, z: -0, w: 0.42261827}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0.9063079, y: 0, z: 0, w: 0.42261827}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

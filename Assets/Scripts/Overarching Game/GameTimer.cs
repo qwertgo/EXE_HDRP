@@ -17,7 +17,6 @@ public class GameTimer : MonoBehaviour
 
     private void Start()
     {
-        GameVariables.instance.dayNightCycleController.gameTime = gameTime;
         remainingTime = gameTime;
     }
 
