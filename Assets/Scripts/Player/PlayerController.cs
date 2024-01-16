@@ -196,13 +196,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (!isGrounded && isFalling)
         {
             currentState = isDrifting? PlayerState.DriftFalling : PlayerState.Falling;
-
         }
         else if (stateEqualsFalling && isGrounded)
         {
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             groundParticlesObject.SetActive(true);
-            animator.CrossFade(landingClip.name, .1f);
+            animator.CrossFade(runningClip.name, .5f);
         }
 
         justStartedJumping = false;
@@ -593,7 +592,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     bool IsFalling()
     {
-        return rb.velocity.y < -.5f;
+        bool hitGround = Physics.Raycast(transform.position, Vector3.down, sphereCollider.radius + .5f, ground);
+        return rb.velocity.y < -1f && hitGround;
     }
     #endregion
     
@@ -643,12 +643,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = velocity;
     }
 
-    IEnumerator WaitAndCheckIfStillFalling()
-    {
-        yield return new WaitForSeconds(.2f);
-        if(isFalling)
-            animator.CrossFade(inAirClip.name, .2f);
-    }
+    // IEnumerator WaitAndCheckIfStillFalling()
+    // {
+    //     yield return new WaitForSeconds(.2f);
+    //     if(isFalling)
+    //         animator.CrossFade(inAirClip.name, .2f);
+    // }
     #endregion
 
     #region Input System ------------------------------------------------------------------------------------------------------------------------------------
