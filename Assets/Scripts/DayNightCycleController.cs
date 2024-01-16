@@ -9,43 +9,60 @@ using UnityEngine.Serialization;
 
 public class DayNightCycleController : MonoBehaviour
 {
-    [SerializeField] private float sunStartRotation;
+    [SerializeField] private float timeForSunToSet = 10;
+    private float sunsetSpeed;
+    private float sunStartIntensity;
+    
     [SerializeField] private float sunDestinationRotation;
-    [SerializeField] private float moonStartRotation;
     [SerializeField] private float moonDestinationRotation;
+    private Quaternion sunStartRotation;
+    private Quaternion sunEndRotation;
+    private Quaternion moonStartRotation;
+    private Quaternion moonEndRotation;
 
-    [SerializeField] private Color startColor;
-    [SerializeField] private Color endColor;
-
-    public float gameTime = 60;
+    [FormerlySerializedAs("startColor")] [SerializeField] private Color moonColorStart;
+    [FormerlySerializedAs("endColor")] [SerializeField] private Color moonColorEnd;
 
     [SerializeField] private Light sun;
     [SerializeField] private Light moon;
 
-    private void Update()
+    private void Start()
     {
-        UpdateTime();
+        sunStartRotation = sun.transform.rotation;
+        sunEndRotation = Quaternion.Euler(sunDestinationRotation, 0, 0);
+        
+        moonStartRotation = moon.transform.rotation;
+        moonEndRotation = Quaternion.Euler(moonDestinationRotation, 0, 0);
+        
+        sunsetSpeed = 1 / timeForSunToSet;
+        sunStartIntensity = sun.intensity;
+        StartCoroutine(Sunset());
     }
 
-    private void UpdateTime()
+    IEnumerator Sunset()
     {
-        float t = Mathf.Min(Time.time / gameTime, 1);
+        float t = 0;
 
-        Color lerpedColor = Color.Lerp(startColor, endColor, t);
-        moon.color = lerpedColor;
-
-        /*float lerpedFogDistance = Mathf.Lerp(startFogDistance, endFogDistance, t);
-        HDRISky hDRISky;
-        if (globalVolume.profile.TryGet(out hDRISky))
+        while (t < 1)
         {
-            hDRISky.groundLevel.value = lerpedFogDistance;
-        }*/
+            t += Time.deltaTime * sunsetSpeed;
+            SetSunsetValues(t);
+            yield return null;
+        }
+        
+        SetSunsetValues(1);
+    }
 
+    private void SetSunsetValues(float t)
+    {
+        Color lerpedColor = Color.Lerp(moonColorStart, moonColorEnd, t);
+        moon.color = lerpedColor;
+        
+        float sunIntensityT = (t - .5f) * 2;
+        sunIntensityT = Mathf.Clamp01(sunIntensityT);
+        sun.intensity = Mathf.Lerp(sunStartIntensity, 0, sunIntensityT);
 
-        float sunRotation = Mathf.Lerp(sunStartRotation, sunDestinationRotation, t);
-        float moonRotation = Mathf.Lerp(moonStartRotation, moonDestinationRotation, t);
-
-        sun.transform.rotation = Quaternion.Euler(sunRotation, 0, 0);
-        moon.transform.rotation = Quaternion.Euler(moonRotation, 0, 0);
+        sun.transform.rotation = Quaternion.Lerp(sunStartRotation, sunEndRotation, t);
+        moon.transform.rotation = Quaternion.Lerp(moonStartRotation, moonEndRotation, t);
     }
 }
