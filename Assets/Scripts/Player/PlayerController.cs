@@ -119,8 +119,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private Animator tongueAnimator;
     private PlayerState currentState = PlayerState.Running;
     private Quaternion rotationAtDriftStart;
-    
-    // private LineRenderer lineRenderer;
     private GameVariables gameVariables => GameVariables.instance;
 
     #region Instantiation and Destroying ------------------------------------------------------------------------------------------------------------------------------------
@@ -142,8 +140,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             controls.Enable();
             controls.P_Controls.SetCallbacks(this);
         }
-
-        // cinemachineTransposer.m_YawDamping = 0;
 
         currentTraction = traction;
 
@@ -188,14 +184,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region States ------------------------------------------------------------------------------------------------------------------------------------
     void UpdateState()
     {
+        bool wasFallingLastFrame = !isGrounded && isFalling;
         isGrounded = IsGrounded();
         isFalling = IsFalling();
 
         bool stateEqualsFalling = currentState == PlayerState.Falling || (currentState == PlayerState.DriftFalling && !justStartedJumping);
 
-        if (!isGrounded && isFalling)
+        if (!isGrounded && isFalling && !wasFallingLastFrame)
         {
             currentState = isDrifting? PlayerState.DriftFalling : PlayerState.Falling;
+            animator.CrossFade(inAirClip.name, .4f);
         }
         else if (stateEqualsFalling && isGrounded)
         {
@@ -239,7 +237,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private void StartDrifting()
     {
         isDrifting = true;
-        currentState = isGrounded ? PlayerState.Drifting : PlayerState.DriftJumping;
+
+        switch (currentState)
+        {
+            case PlayerState.Jumping:
+                currentState = PlayerState.DriftJumping;
+                break;
+            case PlayerState.Falling:
+                currentState = PlayerState.DriftFalling;
+                break;
+            default:
+                currentState = PlayerState.Drifting;
+                break;
+        }
+
         tongueAnimator.CrossFade(tongueShoot.name, 0f);
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
@@ -254,7 +265,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         StartCoroutine(DriftCooldown());
         StartCoroutine(Drift());
-        // StartCoroutine(TongueAnimation());
     }
 
     private void StopDrifting()
@@ -414,42 +424,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         colOverLifeTime.color = color;
     }
 
-    void UpdateTongueVisuals(Vector3 vecToDriftpoint)
+    void UpdateTongueVisuals(Vector3 vecToDriftPoint)
     {
-        tonguePoint.forward = vecToDriftpoint.normalized;
-        Vector3 scale = tonguePoint.lossyScale;
-        tonguePoint.localScale = new Vector3(scale.x, scale.y, vecToDriftpoint.magnitude);
-    }
-
-    IEnumerator TongueAnimation()
-    {
-        float t = 0;
-        tongueMaterial.SetFloat("_Height", 1);
-        tongueMaterial.SetFloat("_Frequency", 20);
-
-        while (t < 1)
-        {
-            t += Time.deltaTime * 10;
-            tongueMaterial.SetFloat("_Stretch", t);
-            yield return null;
-        }
-        
-        tongueMaterial.SetFloat("_Stretch", 1);
-
-        while (t > 0)
-        {
-            t -= Time.deltaTime * 7;
-            tongueMaterial.SetFloat("_Height", t);
-            tongueMaterial.SetFloat("_Frequency", t * 20);
-            yield return null;
-
-        }
-        
-        tongueMaterial.SetFloat("_Height", 0);
-        tongueMaterial.SetFloat("_Frequency", 0);
-
-
-
+        tonguePoint.forward = vecToDriftPoint.normalized;
+        Vector3 scale = tonguePoint.localScale;
+        tonguePoint.localScale = new Vector3(scale.x, scale.y, vecToDriftPoint.magnitude);
     }
     #endregion
 
@@ -592,8 +571,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     bool IsFalling()
     {
-        bool hitGround = Physics.Raycast(transform.position, Vector3.down, sphereCollider.radius + .5f, ground);
-        return rb.velocity.y < -1f && hitGround;
+        if (currentState == PlayerState.Jumping || currentState == PlayerState.DriftJumping)
+            return rb.velocity.y < -.5f;
+
+        bool hitGround = Physics.Raycast(transform.position, -playerVisuals.up, sphereCollider.radius + 1f, ground);
+        return rb.velocity.y < -.5f || !hitGround;
+
     }
     #endregion
     
@@ -642,13 +625,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.isKinematic = false;
         rb.velocity = velocity;
     }
-
-    // IEnumerator WaitAndCheckIfStillFalling()
-    // {
-    //     yield return new WaitForSeconds(.2f);
-    //     if(isFalling)
-    //         animator.CrossFade(inAirClip.name, .2f);
-    // }
     #endregion
 
     #region Input System ------------------------------------------------------------------------------------------------------------------------------------
