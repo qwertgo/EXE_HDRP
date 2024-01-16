@@ -14,35 +14,43 @@ public class GameTimer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI youWonText;
     [SerializeField] private Slider sliderRight;
     [SerializeField] private Slider sliderLeft;
+    [SerializeField] private HighScoreTable highScoreTable;
+
+    private IEnumerator update;
 
     private void Start()
     {
         remainingTime = gameTime;
+        update = UpdateCoroutine();
+        StartCoroutine(update);
     }
 
-    void Update()
+    IEnumerator UpdateCoroutine()
     {
-        remainingTime -= Time.deltaTime;
-        DisplayTimer();
-
-        if (remainingTime < 0)
+        while (enabled)
         {
-            EndGame();
+            remainingTime -= Time.deltaTime;
+            DisplayTimer();
+
+            if (remainingTime < 0)
+                EndGame();
+
+            yield return null;
         }
+        
     }
 
     void EndGame()
     {
+        StopCoroutine(update);
+        
         GameManager.instance.StopGame();
         youWonText.enabled = true;
         youWonText.gameObject.SetActive(true);
 
-        float survivedMinutes = Mathf.FloorToInt(Time.time / 60);
-        float survivedSeconds = Mathf.RoundToInt(Time.time % 60);
+        HighScoreEntry newEntry = new HighScoreEntry("WOW ECHSTREM", Time.time);
         
-        string finalText = "You survived " + string.Format("{0:00}:{1:00}", survivedMinutes, survivedSeconds) + " ";
-        finalText += "and gathered " + GameVariables.instance.fireflyCount + " fireflies";
-        youWonText.text = finalText;
+        highScoreTable.CreateHighScoreVisuals(newEntry);
     }
 
     public void AddToTimer(float addedTime)

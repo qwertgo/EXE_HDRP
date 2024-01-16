@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     public static GameManager instance;
     [HideInInspector]
     public bool gameIsPaused;
+    public string playerName = "Wow Echstrem";
 
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject continueButton;

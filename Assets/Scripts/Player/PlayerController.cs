@@ -94,6 +94,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [FormerlySerializedAs("lookAt")] [SerializeField] private Transform cameraLookAt;
     [FormerlySerializedAs("groundSlopeRef")] [SerializeField] private Transform rotationReference;
     [SerializeField] private ParticleSystem groundParticles;
+    [SerializeField] private GameObject waterVFX;
     [SerializeField] private Material material;
     [SerializeField] protected DriftPointContainer rightDriftPointContainer;
     [SerializeField] protected DriftPointContainer leftDriftPointContainer;
@@ -104,12 +105,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AnimationClip runningClip;
     [SerializeField] private AnimationClip jumpingUpClip;
     [SerializeField] private AnimationClip inAirClip;
-    [SerializeField] private AnimationClip landingClip;
     [SerializeField] private AnimationClip tongueShoot;
     [SerializeField] private AnimationClip tongueReturn;
     
     public Rigidbody rb { get; private set; }
-    private GameObject groundParticlesObject;
     private Transform currentDriftPoint;
     private PlayerInput controls;
     private CinemachineVirtualCamera virtualCamera;
@@ -130,7 +129,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         tongueAnimator = tonguePoint.GetComponent<Animator>();
         virtualCamera = gameVariables.virtualCamera;
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
-        groundParticlesObject = groundParticles.gameObject;
         currentMaxSpeed = baseMaxSpeed;
         boostPercentagePerSecond = 1 / timeToGetBoost;
         
@@ -194,11 +192,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             currentState = isDrifting? PlayerState.DriftFalling : PlayerState.Falling;
             animator.CrossFade(inAirClip.name, .4f);
+            waterVFX.SetActive(false);
         }
         else if (stateEqualsFalling && isGrounded)
         {
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
-            groundParticlesObject.SetActive(true);
+            waterVFX.SetActive(true);
             animator.CrossFade(runningClip.name, .5f);
         }
 
@@ -643,7 +642,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             currentState = currentState == PlayerState.Drifting ? PlayerState.DriftJumping : PlayerState.Jumping;
             rb.velocity += playerVisuals.up * jumpForce;
             justStartedJumping = true;
-            groundParticlesObject.SetActive(false);
+            waterVFX.SetActive(false);
             animator.CrossFade(jumpingUpClip.name, .2f);
         }
     }
