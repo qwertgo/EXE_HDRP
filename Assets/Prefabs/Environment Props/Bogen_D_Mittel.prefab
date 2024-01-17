@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2400572194197005663}
   - component: {fileID: 31924324438943069}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2035289080399465}
   m_LocalRotation: {x: 0.060472474, y: -0, z: -0, w: 0.9981699}
-  m_LocalPosition: {x: 2.9, y: 6.53, z: 8.44}
+  m_LocalPosition: {x: 3.53, y: 6.64, z: 7.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -64,7 +64,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4324753088263509182}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Driftpoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,7 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2764555659333920230}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7050169824511104756}
   - component: {fileID: 4356029738404840302}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,14 +180,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5101688668399293961}
-  m_LocalRotation: {x: -0.0034500272, y: -0, z: -0, w: 0.9999941}
-  m_LocalPosition: {x: 14.74, y: 5.87, z: 3.42}
+  m_LocalRotation: {x: 0.052077215, y: -0, z: -0, w: 0.9986431}
+  m_LocalPosition: {x: 14.83, y: 6.09, z: 2.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2764555659333920230}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: -0.395, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 5.97, y: 0, z: 0}
 --- !u!136 &4356029738404840302
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -207,8 +207,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.47
-  m_Height: 5.83
+  m_Radius: 1.4
+  m_Height: 6.38
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6242863862974530872
@@ -275,7 +275,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8904061753318241741}
   - component: {fileID: 1597780183761032458}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -492,6 +492,11 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: bba02799b7c09134bb2792fa8a91a8a9,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1f7e8cebf4351a144bc5cb48515106b5, type: 2}
     - target: {fileID: -1776599074003739012, guid: bba02799b7c09134bb2792fa8a91a8a9,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

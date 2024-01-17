@@ -97,7 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8044870620020758556}
   - component: {fileID: 4834315432955443146}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleColliderAst
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +152,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2932797627534031048}
   - component: {fileID: 475112777238129397}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleColliderStamm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7399034014624259698}
   m_LocalRotation: {x: 0.72505784, y: -0, z: -0, w: 0.6886881}
-  m_LocalPosition: {x: 1.1625543, y: -5.05, z: 1.09}
+  m_LocalPosition: {x: 1.1625543, y: -4.46, z: 1.12}
   m_LocalScale: {x: 2.0278, y: 1.7434156, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -206,7 +206,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8714293912959521830}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1905244091084728401}
   - component: {fileID: 23554418764199694}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider_1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -380,7 +380,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5448621577899209322}
   - component: {fileID: 2596389975158522000}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider_1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -645,7 +645,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1343258108073833681}
   - component: {fileID: 1005174473593646427}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider_1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1224,7 +1224,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8968524443391468435}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1327,7 +1327,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3516068583591360325}
   - component: {fileID: 6983135257782939484}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider_1 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1381,7 +1381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3173156352468517622}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: DiftPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1415,7 +1415,7 @@ GameObject:
   m_Component:
   - component: {fileID: 605892977744199393}
   - component: {fileID: 7199308058899854958}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1470,7 +1470,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2920272189926410514}
   - component: {fileID: 6143598528064771537}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider_1 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

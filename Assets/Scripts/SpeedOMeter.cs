@@ -13,7 +13,10 @@ public class SpeedOMeter : MonoBehaviour
     [SerializeField] private float minOffset;
     [SerializeField] private float maxOffset;
 
+    [Header("WaterVFX")]
     [SerializeField] private Material waterVFXMaterial;
+    [SerializeField] private Vector2 waterVfxHeight;
+    [SerializeField] private Vector2 waterVfxStretch;
 
     private float lerpedSpeedT = 0;
     

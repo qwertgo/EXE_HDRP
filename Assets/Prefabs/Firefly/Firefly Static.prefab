@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce9ab537074e89948bada767ee175c8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeValue: 2
+  timeValue: 1
   timeToRespawn: 30
   collectSpeed: 10
   visualsYOffset: 1.25

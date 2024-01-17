@@ -5067,9 +5067,9 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 3
-  boostForce: 18
+  boostForce: 14
   boostSubtractPerSecond: 18
-  boostLerpPerSecond: 0.3
+  boostLerpPerSecond: 0.25
   timeToGetBoost: 0.5
   lookAtMoveAmount: 3
   horizontalLerpSpeed: 0.75
@@ -5084,6 +5084,7 @@ MonoBehaviour:
   cameraLookAt: {fileID: 9105339177700952640}
   rotationReference: {fileID: 2145405288765843991}
   groundParticles: {fileID: 661022337883119139}
+  waterVFX: {fileID: 4266321523020127444}
   material: {fileID: 2100000, guid: 73fb8518b6582cc47964477828ddee4b, type: 2}
   rightDriftPointContainer: {fileID: 1582747289892162416}
   leftDriftPointContainer: {fileID: 7041608628081519611}
@@ -5092,7 +5093,6 @@ MonoBehaviour:
   runningClip: {fileID: 7400000, guid: 3b0de527eda1c554f91ac55953d35162, type: 2}
   jumpingUpClip: {fileID: 7400000, guid: af7c4b9e3ccd3e3439040b400bdef973, type: 2}
   inAirClip: {fileID: 7400000, guid: 584273c56bc95984e98441205fc045e4, type: 2}
-  landingClip: {fileID: 7400000, guid: 239ba5f40844f0149bea73616fa5a69b, type: 2}
   tongueShoot: {fileID: 7400000, guid: 1112e510eed472f43908d0b89538a916, type: 2}
   tongueReturn: {fileID: 7400000, guid: 22bf19b4b1b728a4ba612597a16d6546, type: 2}
 --- !u!54 &4525183451630538490

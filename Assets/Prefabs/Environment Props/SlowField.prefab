@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 6156670895364111483}
   m_Layer: 0
   m_Name: SlowField
-  m_TagString: Untagged
+  m_TagString: SlowBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 125
