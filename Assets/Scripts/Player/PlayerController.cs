@@ -229,7 +229,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         //traction
         float gravity = rb.velocity.y;
         Vector3 velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, currentTraction * Time.deltaTime) * velocity.magnitude;
+        float t = 1 - Mathf.Pow(currentTraction, Time.deltaTime);
+        rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, t) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
     }
     

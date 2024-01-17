@@ -28,6 +28,7 @@ public class HighScoreTable : MonoBehaviour
         highScoreEntries.Add(newEntry);
 
         highScoreEntries = BubbleSort();
+        Debug.Log(highScoreEntries.Count);
 
         //change scale to match size of entries
         Vector2 sizeDelta = highScorePanel.sizeDelta;
