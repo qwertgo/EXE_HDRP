@@ -10,8 +10,8 @@ public class SpeedOMeter : MonoBehaviour
     [Header("Camera")] 
     [SerializeField] private float fovMin;
     [SerializeField] private float fovMax;
-    [SerializeField] private float minOffset;
-    [SerializeField] private float maxOffset;
+    [SerializeField] private Vector2 cameraZOffset;
+    [SerializeField] private Vector2 cameraYOffset;
 
     [Header("WaterVFX")]
     [SerializeField] private Material waterVFXMaterial;
@@ -37,12 +37,15 @@ public class SpeedOMeter : MonoBehaviour
         lerpedSpeedT = Mathf.Lerp(lerpedSpeedT, speedT, k);
 
         virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(fovMin, fovMax, speedT);
-        cameraTransposer.m_FollowOffset = new Vector3(0, 1.9f , Mathf.Lerp(minOffset, maxOffset, speedT));
 
-        float waterHeight = Mathf.Lerp(1, 1.5f, lerpedSpeedT);
+        float currentZOffset = Mathf.Lerp(cameraZOffset.x, cameraZOffset.y, speedT);
+        float currentYOffset = Mathf.Lerp(cameraYOffset.x, cameraYOffset.y, speedT);
+        cameraTransposer.m_FollowOffset = new Vector3(0, currentYOffset, currentZOffset);
+
+        float waterHeight = Mathf.Lerp(waterVfxHeight.x, waterVfxHeight.y, lerpedSpeedT);
         waterVFXMaterial.SetFloat("_Height", waterHeight);
 
-        float waterStretch = Mathf.Lerp(.25f, 2f, lerpedSpeedT);
+        float waterStretch = Mathf.Lerp(waterVfxStretch.x, waterVfxStretch.y, lerpedSpeedT);
         waterVFXMaterial.SetFloat("_Stretch", waterStretch);
     }
 }

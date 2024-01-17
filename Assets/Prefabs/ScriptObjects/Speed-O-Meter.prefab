@@ -44,7 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59677ee2e618f7449ad79dc4e2abb3f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fovMin: 70
-  fovMax: 90
-  minOffset: -6
-  maxOffset: -4
+  fovMin: 60
+  fovMax: 85
+  cameraZOffset: {x: -4, y: -5}
+  cameraYOffset: {x: 2.5, y: 1.5}
+  waterVFXMaterial: {fileID: 2100000, guid: 3ad9880f885eddb4eb1f01bc90cbab4d, type: 2}
+  waterVfxHeight: {x: 0.5, y: 1}
+  waterVfxStretch: {x: 0.25, y: 2}
