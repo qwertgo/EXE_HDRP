@@ -524,12 +524,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         
         if (isDrifting)
             StopDrifting();
-
-        // rb.velocity = -playerVisuals.forward * 50;
-        currentMaxSpeed = baseMaxSpeed;
-        //To DO get position on collider rather than collider position
-        Vector3 colliderPos = other.transform.position;
-        Vector3 vecToCollider = colliderPos - playerVisuals.position;
+        
+        currentMaxSpeed = Mathf.Max(baseMaxSpeed,currentMaxSpeed / 2);
+        
+        //get vector to other collider rotate it 90 degrees and turn player in that direction
+        Vector3 colliderPos = other.collider.ClosestPoint(transform.position);
+        Vector3 vecToCollider = colliderPos - transform.position;
         vecToCollider.Scale(new Vector3(1,0,1));
         float signedAngle = Vector3.SignedAngle(playerVisuals.forward, vecToCollider, Vector3.up);
 
@@ -537,7 +537,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Vector3 newForward = Quaternion.AngleAxis(rotation, playerVisuals.up) * vecToCollider.normalized;
         rb.velocity = newForward * rb.velocity.magnitude;
         
-        StopCoroutine(nameof(TurnPlayerInNewDirection));
         StartCoroutine(TurnPlayerInNewDirection(newForward, 2f));
     }
 
