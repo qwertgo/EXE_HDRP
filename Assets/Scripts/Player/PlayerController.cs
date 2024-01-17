@@ -63,8 +63,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float cameraDriftYawDamping;
     [SerializeField] private float maxDutchTilt;
 
+    [FormerlySerializedAs("turnToEnemySpeed")]
     [Header("EnemyAttack / Slo Mo Boost")] 
-    [SerializeField] private float turnToEnemySpeed = 10;
+    [SerializeField] private float turnToEnemyTime = 10;
     [SerializeField] private float timeToWaitTillBoost = 1.5f;
     
     private float horizontal;
@@ -468,7 +469,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         vecToEnemy.Scale(new Vector3(1,0,1));
         vecToEnemy.Normalize();
 
-        yield return TurnPlayerInNewDirection(vecToEnemy, turnToEnemySpeed);
+        yield return TurnPlayerInNewDirection(vecToEnemy, turnToEnemyTime * Time.timeScale);
 
         yield return new WaitForSecondsRealtime(timeToWaitTillBoost);
         
@@ -525,7 +526,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (isDrifting)
             StopDrifting();
         
-        currentMaxSpeed = Mathf.Max(baseMaxSpeed,currentMaxSpeed / 2);
+        currentMaxSpeed = Mathf.Max(baseMaxSpeed,currentMaxSpeed / 1.5f);
         
         //get vector to other collider rotate it 90 degrees and turn player in that direction
         Vector3 colliderPos = other.collider.ClosestPoint(transform.position);
@@ -537,14 +538,15 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Vector3 newForward = Quaternion.AngleAxis(rotation, playerVisuals.up) * vecToCollider.normalized;
         rb.velocity = newForward * rb.velocity.magnitude;
         
-        StartCoroutine(TurnPlayerInNewDirection(newForward, 2f));
+        StartCoroutine(TurnPlayerInNewDirection(newForward, .2f));
     }
 
-    IEnumerator TurnPlayerInNewDirection(Vector3 newForward, float speed)
+    IEnumerator TurnPlayerInNewDirection(Vector3 newForward, float timeToTurn)
     {
         float t = 0;
         Vector3 startForward = playerVisuals.forward;
         lockSteering = true;
+        float speed = 1 / timeToTurn;
         
         while (t < 1)
         {

@@ -12492,11 +12492,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 443424417985546458, guid: 341602172f457674f9e2a1a08127af17,
-        type: 3}
-      propertyPath: baseMaxSpeed
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 3874029265196120880, guid: 341602172f457674f9e2a1a08127af17,
         type: 3}
       propertyPath: m_Volume
@@ -65210,7 +65205,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823688464}
-  m_LocalRotation: {x: 0.088928826, y: 1e-45, z: -0, w: 0.996038}
+  m_LocalRotation: {x: 0.088928826, y: -0, z: -0, w: 0.996038}
   m_LocalPosition: {x: 6.7, y: 2.58, z: 102.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

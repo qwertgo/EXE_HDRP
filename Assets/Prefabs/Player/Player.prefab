@@ -4994,7 +4994,7 @@ MonoBehaviour:
   acceleration: 17
   maxTurnSpeed: 110
   minTurnSpeed: 80
-  baseMaxSpeed: 24
+  baseMaxSpeed: 25
   traction: 0.25
   adjustToGroundSlopeSpeed: 3
   animationSpeed: 0.05
@@ -5076,7 +5076,7 @@ MonoBehaviour:
   cameraYawDamping: 1.75
   cameraDriftYawDamping: 0.75
   maxDutchTilt: 5
-  turnToEnemySpeed: 20
+  turnToEnemyTime: 1
   timeToWaitTillBoost: 1.2
   playerVisuals: {fileID: 1609444752658654278}
   tonguePoint: {fileID: 2633907542019158644}
