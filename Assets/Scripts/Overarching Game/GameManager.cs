@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject continueButton;
+    [SerializeField] private HighScoreTable highScoreTable;
 
     private PlayerInput controls;
     private GameVariables gameVariables;
@@ -64,6 +65,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     public void StopGame()
     {
         Time.timeScale = 0;
+        
+        HighScoreEntry newEntry = new HighScoreEntry(playerName, Time.time);
+        highScoreTable.CreateHighScoreVisuals(newEntry);
     }
 
     public void OnPauseGame(InputAction.CallbackContext context)

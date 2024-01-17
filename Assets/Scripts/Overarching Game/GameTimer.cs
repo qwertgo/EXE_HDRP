@@ -11,10 +11,8 @@ public class GameTimer : MonoBehaviour
     [SerializeField] private float gameTime;
     private float remainingTime;
     [SerializeField] private TextMeshProUGUI remainingTimeText;
-    [SerializeField] private TextMeshProUGUI youWonText;
     [SerializeField] private Slider sliderRight;
     [SerializeField] private Slider sliderLeft;
-    [SerializeField] private HighScoreTable highScoreTable;
 
     private IEnumerator update;
 
@@ -43,14 +41,7 @@ public class GameTimer : MonoBehaviour
     void EndGame()
     {
         StopCoroutine(update);
-        
         GameManager.instance.StopGame();
-        youWonText.enabled = true;
-        youWonText.gameObject.SetActive(true);
-
-        HighScoreEntry newEntry = new HighScoreEntry("WOW ECHSTREM", Time.time);
-        
-        highScoreTable.CreateHighScoreVisuals(newEntry);
     }
 
     public void AddToTimer(float addedTime)
