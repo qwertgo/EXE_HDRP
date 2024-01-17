@@ -4994,7 +4994,7 @@ MonoBehaviour:
   acceleration: 17
   maxTurnSpeed: 110
   minTurnSpeed: 80
-  baseMaxSpeed: 20
+  baseMaxSpeed: 24
   traction: 0.25
   adjustToGroundSlopeSpeed: 3
   animationSpeed: 0.05
@@ -5067,7 +5067,7 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 3
-  boostForce: 14
+  boostForce: 16
   boostSubtractPerSecond: 18
   boostLerpPerSecond: 0.25
   timeToGetBoost: 0.5
@@ -5460,7 +5460,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2731076736763760011
 Transform:
   m_ObjectHideFlags: 0
@@ -5630,7 +5630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6778995135551428292
 Transform:
   m_ObjectHideFlags: 0
@@ -10987,7 +10987,7 @@ Transform:
   - {fileID: 2440283806234537626}
   - {fileID: 1609444752658654278}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5107119683635567647
 MonoBehaviour:
