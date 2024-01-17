@@ -1,18 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private EnemyMovement enemyPrefab;
     [SerializeField] private NavMeshAgent enemyAgent;
+    [SerializeField] private float innerSpawnRadius = 250f;
+    [SerializeField] private float outerSpawnRadius = 330f;
     private NavMeshQueryFilter filter;
 
     private readonly UnityEvent enemyFoundPlayer = new ();
     private readonly UnityEvent enemyLostPlayer = new ();
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(Vector3.zero, innerSpawnRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(Vector3.zero, outerSpawnRadius);
+    }
 
     void Start()
     {
@@ -22,7 +34,7 @@ public class EnemySpawner : MonoBehaviour
 
         for (int i = 0; i < numberOfEnemies; i++)
         {
-            Vector3 position = GetRandomPosition(250, i, numberOfEnemies, 0);
+            Vector3 position = GetRandomPosition(innerSpawnRadius, i, numberOfEnemies, 0);
 
             EnemyMovement enemy = Instantiate(enemyPrefab, position, Quaternion.identity, transform);
 
@@ -50,10 +62,10 @@ public class EnemySpawner : MonoBehaviour
         float positionAngle = Random.Range(0, maxRandomAngle) + sideBuffer / 2;
         positionAngle += indexAngle;
         
-        float distanceFromCenter = Random.Range(startRadius, 330f);
+        float distanceFromCenter = Random.Range(startRadius, outerSpawnRadius);
         Vector3 position = Quaternion.AngleAxis(positionAngle, Vector3.up) * Vector3.forward * distanceFromCenter;
             
-        if(NavMesh.SamplePosition(position, out NavMeshHit hit, 5f, filter))
+        if(NavMesh.SamplePosition(position, out NavMeshHit hit, 10f, filter))
             position = hit.position;
         else
         {

@@ -11,14 +11,16 @@ public class GameVariables : MonoBehaviour
     public static GameVariables instance;
 
     public PlayerController player;
-    // public EnemyMovement enemy;
-    public DayNightCycleController dayNightCycleController;
     public CinemachineVirtualCamera virtualCamera;
     public GameTimer gameTimer;
     public UnityEvent onPause;
     public UnityEvent onUnpause;
+    public RectTransform timeSlider;
+    [HideInInspector] public Camera cam;
+    public int fireflyCount;
 
-    [FormerlySerializedAs("collectedFireflies")] public int fireflyCount;
+    private Transform debugSphereTransform;
+
     public bool isPaused;
     private void Awake()
     {
@@ -26,6 +28,7 @@ public class GameVariables : MonoBehaviour
             Destroy(this);
         else
             instance = this;
+        
+        cam = Camera.main;
     }
-    
 }

@@ -98,7 +98,7 @@ public class FireflyWalk : FireflyStatic
         {
             speed /= speedMultiplier;
 
-            StartCoroutine(MoveToPlayer(other.transform, WaitTillRespawnDynamic()));
+            StartCoroutine(MoveToPlayer(WaitTillRespawnDynamic()));
         }
         else
         {

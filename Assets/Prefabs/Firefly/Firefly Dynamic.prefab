@@ -794,9 +794,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeValue: 3
   timeToRespawn: 30
-  collectSpeed: 10
+  timeToCollect: 0.1
   visualsYOffset: 1.25
   visuals: {fileID: 672368394706826093}
+  material: {fileID: 2100000, guid: 24f8f0d97ae42094dbac704322eca1b7, type: 2}
   speed: 18
   speedMultiplier: 2
   destinationPoint: {fileID: 2275953857179831993}
@@ -820,7 +821,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 14.5
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &8447615255446051411
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -841,7 +842,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 23
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7650349996202192347
 GameObject:
   m_ObjectHideFlags: 0

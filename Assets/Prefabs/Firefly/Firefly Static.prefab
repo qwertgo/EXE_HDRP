@@ -55,7 +55,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 4
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1343328379229845707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,9 +70,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeValue: 1
   timeToRespawn: 30
-  collectSpeed: 10
+  timeToCollect: 0.25
   visualsYOffset: 1.25
   visuals: {fileID: 672368394706826093}
+  material: {fileID: 2100000, guid: e4bcfa58695016b4c8c77de59d1de5a7, type: 2}
 --- !u!1 &7650349996202192347
 GameObject:
   m_ObjectHideFlags: 0
