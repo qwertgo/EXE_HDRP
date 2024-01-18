@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 {
-    protected enum PlayerState
+    private enum PlayerState
     {
         Running,
         Drifting,
@@ -108,6 +108,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AnimationClip inAirClip;
     [SerializeField] private AnimationClip tongueShoot;
     [SerializeField] private AnimationClip tongueReturn;
+
+    [Header("Audio Sources")] 
+    [SerializeField] private AudioSource jumpAudioSource;
+    [SerializeField] private AudioSource tongueAudioSource;
+    [SerializeField] private AudioSource grassAudioSource;
+    
+    [Header("Audio Clip Paths")]
+    [SerializeField] private string landingAudioPath;
+    [SerializeField] private string tonguePath;
+    [SerializeField] private string grassAudioPath;
+
+    private AudioClip[] landingAudioClips;
+    private AudioClip[] tongueAudioClips;
+    private AudioClip[] grassAudioClips;
     
     public Rigidbody rb { get; private set; }
     private Transform currentDriftPoint;
@@ -144,7 +158,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         rightDriftPointContainer.SetRightContainer();
         gameVariables.onPause.AddListener(PauseMe);
-
+        
+        //Load Audio Clips
+        landingAudioClips = Resources.LoadAll<AudioClip>(landingAudioPath);
+        tongueAudioClips = Resources.LoadAll<AudioClip>(tonguePath);
+        grassAudioClips = Resources.LoadAll<AudioClip>(grassAudioPath);
     }
 
     private void OnDestroy()
@@ -200,6 +218,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             waterVFX.SetActive(true);
             animator.CrossFade(runningClip.name, .5f);
+            PlayOneShotRandom(jumpAudioSource, landingAudioClips, .25f);
         }
 
         justStartedJumping = false;
@@ -253,6 +272,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         tongueAnimator.CrossFade(tongueShoot.name, 0f);
+        PlayOneShotRandom(tongueAudioSource, tongueAudioClips, .5f);
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
 
@@ -495,6 +515,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     public void SlowDown()
     {
+        PlayOneShotRandom(grassAudioSource, grassAudioClips, .5f);
         StartCoroutine(SlowDownCoroutine());
     }
     private IEnumerator SlowDownCoroutine()
@@ -583,10 +604,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     #region Various Methods ------------------------------------------------------------------------------------------------------------------------------------
 
-    public void CollectFirefly(int amount)
+    private void PlayOneShotRandom(AudioSource audioSource, AudioClip[] audioClips, float soundVolume = 1)
     {
-        fireflyCount += amount;
-        material.SetFloat("_fireflyCount", fireflyCount);
+        int i = Random.Range(0, audioClips.Length);
+        audioSource.PlayOneShot(audioClips[i], soundVolume);
     }
     
     // void PlayWalkSound()
