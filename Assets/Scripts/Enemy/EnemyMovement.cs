@@ -18,7 +18,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float idleSpeed;
     [SerializeField] private float followPlayerSpeed;
     [SerializeField] private float directionLerpFactor;
-    [SerializeField] private float lightIntensityCloseToPlayer = 14852.37f;
+    [SerializeField] private float lightIntensityCloseToPlayer = 12000f;
     [SerializeField] private float lightIntensityFarFromPlayer = 1.520883e+07f;
     [HideInInspector] public bool finishedAttack;
     private int currentIdlePointIndex;
@@ -28,10 +28,9 @@ public class EnemyMovement : MonoBehaviour
     public List<Vector3> idleDestinationPoints = new ();
     [SerializeField] private Animator animator;
     [SerializeField] private Light spotLight;
-    [SerializeField] private AudioSource attackPlayerSource;
-
-    [SerializeField] private Collider mouthCollider;
     [SerializeField] private Collider attackPlayerCollider;
+    [SerializeField] private Collider mouthCollider;
+
 
     [Header("Animations")] 
     [SerializeField] private AnimationClip attackClip;
@@ -39,8 +38,14 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private AnimationClip followPlayerClip;
     [SerializeField] private AnimationClip diveIntoWaterClip;
     [SerializeField] private AnimationClip surfaceFromWaterClip;
-    
-    
+
+    [Header("Audio")]
+    [SerializeField] private string growlAudioPath;
+    [SerializeField] private AudioSource mainAudioSource;
+    [SerializeField] private AudioSource musicAudioSource;
+
+    private AudioClip[] growlAudioClips;
+
     private Transform playerTransform;
     private NavMeshAgent navMeshAgent;
 
@@ -62,6 +67,9 @@ public class EnemyMovement : MonoBehaviour
         GameVariables.instance.onPause.AddListener(PauseMe);
         foundPlayerEvent = new UnityEvent();
         lostPlayerEvent = new UnityEvent();
+        
+        growlAudioClips = Resources.LoadAll<AudioClip>(growlAudioPath);
+
         StartCoroutine(Idle());
     }
 
@@ -103,7 +111,9 @@ public class EnemyMovement : MonoBehaviour
         mouthCollider.enabled = true;
         attackPlayerCollider.enabled = false;
 
-        attackPlayerSource.Play();
+        AudioHandler.PlayOneShotRandom(mainAudioSource, growlAudioClips);
+        musicAudioSource.volume = GameVariables.instance.globalVolume * .3f;
+        musicAudioSource.Play();
         navMeshAgent.SetDestination(playerTransform.position);
         
 
@@ -145,6 +155,7 @@ public class EnemyMovement : MonoBehaviour
 
         mouthCollider.enabled = false;
         spotLight.enabled = false;
+        musicAudioSource.Stop();
         lostPlayerEvent.Invoke();
 
         //return to searchArea and disable yourself while returning

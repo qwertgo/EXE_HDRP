@@ -13,12 +13,14 @@ public class GameVariables : MonoBehaviour
     public PlayerController player;
     public CinemachineVirtualCamera virtualCamera;
     public GameTimer gameTimer;
-    public UnityEvent onPause;
-    public UnityEvent onUnpause;
     public RectTransform timeSlider;
-    [HideInInspector] public Camera cam;
     public int fireflyCount;
+    public float globalVolume = 1;
 
+    [HideInInspector] public UnityEvent onPause;
+    [HideInInspector] public UnityEvent onUnpause;
+    [HideInInspector] public Camera cam;
+    
     private Transform debugSphereTransform;
 
     public bool isPaused;

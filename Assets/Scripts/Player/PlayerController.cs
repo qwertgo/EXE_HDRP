@@ -108,12 +108,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AnimationClip inAirClip;
     [SerializeField] private AnimationClip tongueShoot;
     [SerializeField] private AnimationClip tongueReturn;
-
-    [Header("Audio Sources")] 
-    [SerializeField] private AudioSource jumpAudioSource;
-    [SerializeField] private AudioSource tongueAudioSource;
-    [SerializeField] private AudioSource grassAudioSource;
     
+    [Header("Audio Sources")] 
+    [SerializeField] private AudioSource mainAudioSource;
+    [SerializeField] private AudioSource tongueAudioSource;
+
     [Header("Audio Clip Paths")]
     [SerializeField] private string landingAudioPath;
     [SerializeField] private string tonguePath;
@@ -218,7 +217,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             waterVFX.SetActive(true);
             animator.CrossFade(runningClip.name, .5f);
-            PlayOneShotRandom(jumpAudioSource, landingAudioClips, .25f);
+            AudioHandler.PlayOneShotRandom(mainAudioSource, landingAudioClips);
         }
 
         justStartedJumping = false;
@@ -272,7 +271,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         tongueAnimator.CrossFade(tongueShoot.name, 0f);
-        PlayOneShotRandom(tongueAudioSource, tongueAudioClips, .5f);
+        AudioHandler.PlayAudioRandom(tongueAudioSource, tongueAudioClips);
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
 
@@ -292,12 +291,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         isDrifting = false;
         arrivedAtDriftPeak = false;
+        
         tongueAnimator.CrossFade(tongueReturn.name, 0f);
+        AudioHandler.PlayAudioRandom(tongueAudioSource, tongueAudioClips, 1f, true);
+        
         driftHorizontal = 0;
         horizontal = 0;
         currentDriftRotation = 0;
-        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
         currentTraction = traction;
+        
+        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
         playerLookAt.position = new Vector3(transform.position.x, 1.5f, transform.position.z) + playerVisuals.forward;
 
         float currentBoostAmount = boostForce * driftBoostPercentage;
@@ -515,7 +518,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     public void SlowDown()
     {
-        PlayOneShotRandom(grassAudioSource, grassAudioClips, .5f);
+        AudioHandler.PlayOneShotRandom(mainAudioSource, grassAudioClips);
         StartCoroutine(SlowDownCoroutine());
     }
     private IEnumerator SlowDownCoroutine()
@@ -604,11 +607,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     #region Various Methods ------------------------------------------------------------------------------------------------------------------------------------
 
-    private void PlayOneShotRandom(AudioSource audioSource, AudioClip[] audioClips, float soundVolume = 1)
-    {
-        int i = Random.Range(0, audioClips.Length);
-        audioSource.PlayOneShot(audioClips[i], soundVolume);
-    }
+    
     
     // void PlayWalkSound()
     // {
