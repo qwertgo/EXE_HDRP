@@ -589,18 +589,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         material.SetFloat("_fireflyCount", fireflyCount);
     }
     
-    // void PlayWalkSound()
-    // {
-    //     timeUntilNextWalkSound -= Time.fixedDeltaTime;
-    //     
-    //     if (isGrounded && timeUntilNextWalkSound <= 0)
-    //     {
-    //         walkAudioSource.pitch = Random.Range(.7f, 1.3f);
-    //         walkAudioSource.volume = Random.Range(.8f, 1.2f);
-    //         walkAudioSource.Play();
-    //         timeUntilNextWalkSound = .25f;
-    //     }
-    // }
     public void Die()
     {
         Debug.Log("Player Died");
@@ -617,6 +605,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     IEnumerator WhilePaused()
     {
+        controls = null;
         Vector3 velocity = rb.velocity;
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
@@ -625,6 +614,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         rb.isKinematic = false;
         rb.velocity = velocity;
+        
+        controls = new PlayerInput();
+        controls.Enable();
+        controls.P_Controls.SetCallbacks(this);
     }
     #endregion
 
@@ -639,7 +632,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && isGrounded)
+        if (context.started && isGrounded && !GameManager.instance.gameIsPaused)
         {
             currentState = currentState == PlayerState.Drifting ? PlayerState.DriftJumping : PlayerState.Jumping;
             rb.velocity += playerVisuals.up * jumpForce;

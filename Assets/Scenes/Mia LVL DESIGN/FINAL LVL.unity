@@ -12505,17 +12505,17 @@ PrefabInstance:
     - target: {fileID: 5364930809967892335, guid: 341602172f457674f9e2a1a08127af17,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5364930809967892335, guid: 341602172f457674f9e2a1a08127af17,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.28
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 5364930809967892335, guid: 341602172f457674f9e2a1a08127af17,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 107.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5364930809967892335, guid: 341602172f457674f9e2a1a08127af17,
         type: 3}
@@ -51077,7 +51077,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422381247}
-  m_LocalRotation: {x: -0, y: -3e-45, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: 1e-45, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -65200,8 +65200,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823688464}
-  m_LocalRotation: {x: 0.088928826, y: -1e-45, z: -0, w: 0.996038}
-  m_LocalPosition: {x: 6.7, y: 2.58, z: 102.4}
+  m_LocalRotation: {x: 0.08892885, y: 1e-45, z: -0, w: 0.996038}
+  m_LocalPosition: {x: 0, y: 2.7, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -65485,6 +65485,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1501061566132913454, guid: a19cdcd6aedaafe458e1ed42716b9aeb,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1001383989}
+    - target: {fileID: 1501061566132913454, guid: a19cdcd6aedaafe458e1ed42716b9aeb,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: QuitGame
+      objectReference: {fileID: 0}
     - target: {fileID: 2157071639582976806, guid: a19cdcd6aedaafe458e1ed42716b9aeb,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -65494,6 +65504,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2638172689505275556, guid: a19cdcd6aedaafe458e1ed42716b9aeb,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1001383989}
+    - target: {fileID: 2638172689505275556, guid: a19cdcd6aedaafe458e1ed42716b9aeb,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TooglePause
       objectReference: {fileID: 0}
     - target: {fileID: 4441450277764222433, guid: a19cdcd6aedaafe458e1ed42716b9aeb,
         type: 3}
