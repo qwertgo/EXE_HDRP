@@ -15,7 +15,7 @@ public class GameVariables : MonoBehaviour
     public GameTimer gameTimer;
     public RectTransform timeSlider;
     public int fireflyCount;
-    public float globalVolume = 1;
+    // public float globalVolume = 1;
 
     [HideInInspector] public UnityEvent onPause;
     [HideInInspector] public UnityEvent onUnpause;

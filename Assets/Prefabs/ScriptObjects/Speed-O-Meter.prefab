@@ -51,3 +51,5 @@ MonoBehaviour:
   waterVFXMaterial: {fileID: 2100000, guid: 3ad9880f885eddb4eb1f01bc90cbab4d, type: 2}
   waterVfxHeight: {x: 0.5, y: 1}
   waterVfxStretch: {x: 0.25, y: 2}
+  windAudioSource: {fileID: 0}
+  windVolume: {x: 0, y: 0.2}

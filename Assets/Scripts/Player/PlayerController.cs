@@ -68,6 +68,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float turnToEnemyTime = 10;
     [SerializeField] private float timeToWaitTillBoost = 1.5f;
     
+    [Header("Audio")]
+    [SerializeField] private Vector2 tongueVolumeVariation;
+    [SerializeField] private Vector2 tonguePitchVariation;
+    
     private float horizontal;
     private float driftHorizontal;
     private float horizontalLerpTo;
@@ -113,10 +117,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AudioSource mainAudioSource;
     [SerializeField] private AudioSource tongueAudioSource;
 
-    [Header("Audio Clip Paths")]
+    [Header("Audio Source Paths")]
     [SerializeField] private string landingAudioPath;
     [SerializeField] private string tonguePath;
     [SerializeField] private string grassAudioPath;
+
 
     private AudioClip[] landingAudioClips;
     private AudioClip[] tongueAudioClips;
@@ -217,7 +222,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             waterVFX.SetActive(true);
             animator.CrossFade(runningClip.name, .5f);
-            AudioHandler.PlayOneShotRandom(mainAudioSource, landingAudioClips);
+            AudioHandler.PlayRandomOneShot(mainAudioSource, landingAudioClips);
         }
 
         justStartedJumping = false;
@@ -271,7 +276,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         tongueAnimator.CrossFade(tongueShoot.name, 0f);
-        AudioHandler.PlayAudioRandom(tongueAudioSource, tongueAudioClips);
+        AudioHandler.PlayRandomAudioVariation(tongueAudioSource, tongueAudioClips,tongueVolumeVariation, tonguePitchVariation);
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
 
@@ -293,7 +298,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         arrivedAtDriftPeak = false;
         
         tongueAnimator.CrossFade(tongueReturn.name, 0f);
-        AudioHandler.PlayAudioRandom(tongueAudioSource, tongueAudioClips, 1f, true);
+        AudioHandler.PlayRandomAudioVariation(tongueAudioSource, tongueAudioClips, tongueVolumeVariation, tonguePitchVariation, true);
         
         driftHorizontal = 0;
         horizontal = 0;
@@ -518,7 +523,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     public void SlowDown()
     {
-        AudioHandler.PlayOneShotRandom(mainAudioSource, grassAudioClips);
+        AudioHandler.PlayRandomOneShot(mainAudioSource, grassAudioClips);
         StartCoroutine(SlowDownCoroutine());
     }
     private IEnumerator SlowDownCoroutine()
@@ -606,28 +611,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #endregion
     
     #region Various Methods ------------------------------------------------------------------------------------------------------------------------------------
-
-    
-    
-    // void PlayWalkSound()
-    // {
-    //     timeUntilNextWalkSound -= Time.fixedDeltaTime;
-    //     
-    //     if (isGrounded && timeUntilNextWalkSound <= 0)
-    //     {
-    //         walkAudioSource.pitch = Random.Range(.7f, 1.3f);
-    //         walkAudioSource.volume = Random.Range(.8f, 1.2f);
-    //         walkAudioSource.Play();
-    //         timeUntilNextWalkSound = .25f;
-    //     }
-    // }
     public void Die()
     {
-        Debug.Log("Player Died");
         rb.isKinematic = true;
-        // rb.velocity = Vector3.zero;
         enabled = false;
-        GameManager.instance.StopGame();
     }
 
     void PauseMe()

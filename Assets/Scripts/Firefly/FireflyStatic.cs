@@ -61,7 +61,7 @@ public class FireflyStatic : MonoBehaviour
         GameVariables.instance.gameTimer.AddToTimer(timeValue);
         GameVariables.instance.fireflyCount++;
         
-        audioSource.PlayOneShot(collectedClip, GameVariables.instance.globalVolume);
+        audioSource.PlayOneShotVariation(collectedClip, new Vector2(.8f, 1.2f), new Vector2(.85f, 1.15f));
 
         StartCoroutine(waitTillRespawn);
     }

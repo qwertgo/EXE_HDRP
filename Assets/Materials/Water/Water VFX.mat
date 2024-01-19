@@ -178,7 +178,7 @@ Material:
     - _EnableFogOnTransparent: 1
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
-    - _Height: 0.9229503
+    - _Height: 0.99372065
     - _HeightAmplitude: 0.02
     - _HeightCenter: 0.5
     - _HeightMapParametrization: 0
@@ -232,7 +232,7 @@ Material:
     - _StencilWriteMaskDistortionVec: 4
     - _StencilWriteMaskGBuffer: 15
     - _StencilWriteMaskMV: 41
-    - _Stretch: 1.7303262
+    - _Stretch: 1.9780223
     - _SubsurfaceMask: 1
     - _SupportDecals: 1
     - _SurfaceType: 0

@@ -23,7 +23,6 @@ public class EnemyMovement : MonoBehaviour
     [HideInInspector] public bool finishedAttack;
     private int currentIdlePointIndex;
 
-
     [Header("References")]
     public List<Vector3> idleDestinationPoints = new ();
     [SerializeField] private Animator animator;
@@ -49,9 +48,6 @@ public class EnemyMovement : MonoBehaviour
     private Transform playerTransform;
     private NavMeshAgent navMeshAgent;
 
-    private UnityEvent foundPlayerEvent;
-    private UnityEvent lostPlayerEvent;
-
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -65,22 +61,23 @@ public class EnemyMovement : MonoBehaviour
         navMeshAgent.autoBraking = false;
 
         GameVariables.instance.onPause.AddListener(PauseMe);
-        foundPlayerEvent = new UnityEvent();
-        lostPlayerEvent = new UnityEvent();
-        
+
         growlAudioClips = Resources.LoadAll<AudioClip>(growlAudioPath);
+        
+        EnemyManager.foundPlayer.AddListener(DiveUnderWater);
+        EnemyManager.lostPlayer.AddListener(SurfaceFromWater);
 
         StartCoroutine(Idle());
     }
 
-    public void SetEvents(UnityEvent enemyFoundPlayer, UnityEvent enemyLostPlayer)
-    {
-        foundPlayerEvent = enemyFoundPlayer;
-        lostPlayerEvent = enemyLostPlayer;
-        
-        foundPlayerEvent.AddListener(DiveUnderWater);
-        lostPlayerEvent.AddListener(SurfaceFromWater);
-    }
+    // public void SetEvents(UnityEvent enemyFoundPlayer, UnityEvent enemyLostPlayer)
+    // {
+    //     foundPlayerEvent = enemyFoundPlayer;
+    //     lostPlayerEvent = enemyLostPlayer;
+    //     
+    //     foundPlayerEvent.AddListener(DiveUnderWater);
+    //     lostPlayerEvent.AddListener(SurfaceFromWater);
+    // }
 
     private IEnumerator Idle()
     {
@@ -106,13 +103,13 @@ public class EnemyMovement : MonoBehaviour
     {
         currentState = enemyState.Attack;
         animator.CrossFade(attackClip.name,0);
-        foundPlayerEvent.Invoke();
-        
+        EnemyManager.foundPlayer.Invoke();
+
         mouthCollider.enabled = true;
         attackPlayerCollider.enabled = false;
 
-        AudioHandler.PlayOneShotRandom(mainAudioSource, growlAudioClips);
-        musicAudioSource.volume = GameVariables.instance.globalVolume * .3f;
+        AudioHandler.PlayRandomOneShot(mainAudioSource, growlAudioClips);
+        musicAudioSource.volume = 1f;
         musicAudioSource.Play();
         navMeshAgent.SetDestination(playerTransform.position);
         
@@ -145,8 +142,12 @@ public class EnemyMovement : MonoBehaviour
         {
             navMeshAgent.SetDestination(playerTransform.position);
             navMeshAgent.velocity = Vector3.Lerp(transform.forward, navMeshAgent.desiredVelocity.normalized, directionLerpFactor) * navMeshAgent.desiredVelocity.magnitude;
+            
             spotLight.transform.LookAt(playerTransform);
-            spotLight.intensity = Mathf.Lerp(lightIntensityCloseToPlayer, lightIntensityFarFromPlayer, distanceToPlayer / followPlayerRadius);
+
+            float distancePercentage = distanceToPlayer / followPlayerRadius;
+            spotLight.intensity = Mathf.Lerp(lightIntensityCloseToPlayer, lightIntensityFarFromPlayer, distancePercentage);
+            musicAudioSource.volume = distancePercentage * -1 + 1;
             
             yield return null;
 
@@ -156,7 +157,7 @@ public class EnemyMovement : MonoBehaviour
         mouthCollider.enabled = false;
         spotLight.enabled = false;
         musicAudioSource.Stop();
-        lostPlayerEvent.Invoke();
+        EnemyManager.lostPlayer.Invoke();
 
         //return to searchArea and disable yourself while returning
         DiveUnderWater();
@@ -169,6 +170,7 @@ public class EnemyMovement : MonoBehaviour
     
     private void DiveUnderWater()
     {
+        Debug.Log(name + " got disabled");
         if(currentState == enemyState.Attack)
             return;
         
@@ -178,6 +180,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void SurfaceFromWater()
     {
+        Debug.Log(name + " got enabled");
         if(currentState == enemyState.FollowPlayer)
             return;
         
@@ -207,7 +210,7 @@ public class EnemyMovement : MonoBehaviour
         if(currentState == enemyState.Idle)
             StartCoroutine(Attack());
         else if(currentState > 0)
-            GameVariables.instance.player.Die();
+            GameManager.instance.StopGame();
     }
 
     private void OnDrawGizmos()

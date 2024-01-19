@@ -5113,7 +5113,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 31c4dbabb8bed2e4383f8797b68e7fe2, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -5335,6 +5335,8 @@ MonoBehaviour:
   maxDutchTilt: 5
   turnToEnemyTime: 1
   timeToWaitTillBoost: 1.2
+  tongueVolumeVariation: {x: 0.8, y: 1.2}
+  tonguePitchVariation: {x: 0.9, y: 1.4}
   playerVisuals: {fileID: 1609444752658654278}
   tonguePoint: {fileID: 2633907542019158644}
   tongueMaterial: {fileID: 2100000, guid: 70a0bec77d680a042b785f8f78772f89, type: 2}
@@ -11411,7 +11413,7 @@ Transform:
   - {fileID: 2440283806234537626}
   - {fileID: 1609444752658654278}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5107119683635567647
 MonoBehaviour:
