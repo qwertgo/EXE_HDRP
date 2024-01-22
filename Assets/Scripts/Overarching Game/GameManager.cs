@@ -9,8 +9,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
     public static GameManager instance;
-    [HideInInspector]
-    public bool gameIsPaused;
+    [HideInInspector] public bool gameIsPaused;
     public string playerName = "Wow Echstrem";
 
     [SerializeField] private GameObject pauseMenu;
@@ -57,6 +56,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
             pauseMenu.SetActive(true);
             gameVariables.isPaused = true;
             gameVariables.onPause.Invoke();
+            eventSystem.SetSelectedGameObject(null);
             eventSystem.SetSelectedGameObject(continueButton);
         }
         
@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     public void StopGame()
     {
         Time.timeScale = 0;
+        GameVariables.instance.player.Die();
         
         HighScoreEntry newEntry = new HighScoreEntry(playerName, Time.time);
         highScoreTable.CreateHighScoreVisuals(newEntry);

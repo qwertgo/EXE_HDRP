@@ -13,6 +13,8 @@ public class GameTimer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI remainingTimeText;
     [SerializeField] private Slider sliderRight;
     [SerializeField] private Slider sliderLeft;
+    [SerializeField] private Color sliderColorBase;
+    [SerializeField] private Color sliderColorSpecial;
 
     private IEnumerator update;
 
@@ -21,6 +23,8 @@ public class GameTimer : MonoBehaviour
         remainingTime = gameTime;
         update = UpdateCoroutine();
         StartCoroutine(update);
+        sliderLeft.image.color = sliderColorBase;
+        sliderRight.image.color = sliderColorBase;
     }
 
     IEnumerator UpdateCoroutine()
@@ -47,6 +51,26 @@ public class GameTimer : MonoBehaviour
     public void AddToTimer(float addedTime)
     {
         remainingTime += addedTime;
+        StartCoroutine(SliderGlowUp());
+    }
+
+    IEnumerator SliderGlowUp()
+    {
+        float t = 0;
+        
+        while (t < 2)
+        {
+            t += Time.deltaTime * 4;
+
+            float k = Mathf.PingPong(t, 1f);
+            
+            Color tmpColor = Color.Lerp(sliderColorBase, sliderColorSpecial, k * k);
+
+            sliderLeft.image.color = tmpColor;
+            sliderRight.image.color = tmpColor;
+
+            yield return null;
+        }
     }
 
     void DisplayTimer()
