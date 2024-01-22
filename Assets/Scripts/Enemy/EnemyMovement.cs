@@ -142,6 +142,7 @@ public class EnemyMovement : MonoBehaviour
         {
             navMeshAgent.SetDestination(playerTransform.position);
             navMeshAgent.velocity = Vector3.Lerp(transform.forward, navMeshAgent.desiredVelocity.normalized, directionLerpFactor) * navMeshAgent.desiredVelocity.magnitude;
+            Debug.DrawRay(transform.position, navMeshAgent.desiredVelocity.normalized * 5);
             
             spotLight.transform.LookAt(playerTransform);
 

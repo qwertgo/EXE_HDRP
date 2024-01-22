@@ -21373,15 +21373,15 @@ MonoBehaviour:
   player: {fileID: 343528028}
   virtualCamera: {fileID: 1422381249}
   gameTimer: {fileID: 2094331056}
+  timeSlider: {fileID: 745468944}
+  fireflyCount: 0
   onPause:
     m_PersistentCalls:
       m_Calls: []
   onUnpause:
     m_PersistentCalls:
       m_Calls: []
-  timeSlider: {fileID: 745468944}
   cam: {fileID: 0}
-  fireflyCount: 0
   isPaused: 0
 --- !u!4 &598890478
 Transform:
@@ -53145,6 +53145,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Speed-O-Meter
       objectReference: {fileID: 0}
+    - target: {fileID: 3046338165358103783, guid: 8783d97710970554fa5f809ffe9cc250,
+        type: 3}
+      propertyPath: windAudioSource
+      value: 
+      objectReference: {fileID: 1779032771}
     - target: {fileID: 6832269563109722012, guid: 8783d97710970554fa5f809ffe9cc250,
         type: 3}
       propertyPath: m_RootOrder
@@ -63994,6 +63999,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac153e98937a7b8409d59aeeb47f6a9a, type: 3}
+--- !u!82 &1779032771 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 7516722881654011985, guid: 341602172f457674f9e2a1a08127af17,
+    type: 3}
+  m_PrefabInstance: {fileID: 343528027}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1779751279
 PrefabInstance:
   m_ObjectHideFlags: 0

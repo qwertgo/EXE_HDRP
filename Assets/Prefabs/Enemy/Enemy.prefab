@@ -108133,7 +108133,7 @@ MonoBehaviour:
   followPlayerRadius: 90
   idleSpeed: 14
   followPlayerSpeed: 18
-  directionLerpFactor: 0.025
+  directionLerpFactor: 0.1
   lightIntensityCloseToPlayer: 13000.37
   lightIntensityFarFromPlayer: 15208830
   finishedAttack: 0
