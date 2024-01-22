@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
-public class EnemySpawner : MonoBehaviour
+public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private EnemyMovement enemyPrefab;
     [SerializeField] private NavMeshAgent enemyAgent;
@@ -15,8 +15,8 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float outerSpawnRadius = 330f;
     private NavMeshQueryFilter filter;
 
-    private readonly UnityEvent enemyFoundPlayer = new ();
-    private readonly UnityEvent enemyLostPlayer = new ();
+    public static readonly UnityEvent foundPlayer = new ();
+    public static readonly UnityEvent lostPlayer = new ();
 
     private void OnDrawGizmosSelected()
     {
@@ -26,7 +26,7 @@ public class EnemySpawner : MonoBehaviour
         Gizmos.DrawWireSphere(Vector3.zero, outerSpawnRadius);
     }
 
-    void Start()
+    private void Start()
     {
         int numberOfEnemies = 4;
         filter.areaMask = enemyAgent.areaMask;
@@ -47,14 +47,13 @@ public class EnemySpawner : MonoBehaviour
 
             enemy.name = "Enemy " + i;
             enemy.idleDestinationPoints = idleDestinationPoints;
-            enemy.SetEvents(enemyFoundPlayer, enemyLostPlayer);
         }
     }
 
     //This Method generates a random position by rotating a vector by a random
     //value and the scaling the vector by a second random value
     //this makes sure the positions stay in a circular area
-    Vector3 GetRandomPosition(float startRadius, int i, int numberOfEnemies, float sideBuffer)
+    private Vector3 GetRandomPosition(float startRadius, int i, int numberOfEnemies, float sideBuffer)
     {
         float indexAngle = 360f / numberOfEnemies * i;
         

@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 {
-    protected enum PlayerState
+    private enum PlayerState
     {
         Running,
         Drifting,
@@ -68,6 +68,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float turnToEnemyTime = 10;
     [SerializeField] private float timeToWaitTillBoost = 1.5f;
     
+    [Header("Audio")]
+    [SerializeField] private Vector2 tongueVolumeVariation;
+    [SerializeField] private Vector2 tonguePitchVariation;
+    
     private float horizontal;
     private float driftHorizontal;
     private float horizontalLerpTo;
@@ -109,6 +113,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AnimationClip tongueShoot;
     [SerializeField] private AnimationClip tongueReturn;
     
+    [Header("Audio Sources")] 
+    [SerializeField] private AudioSource mainAudioSource;
+    [SerializeField] private AudioSource tongueAudioSource;
+
+    [Header("Audio Source Paths")]
+    [SerializeField] private string landingAudioPath;
+    [SerializeField] private string tonguePath;
+    [SerializeField] private string grassAudioPath;
+
+
+    private AudioClip[] landingAudioClips;
+    private AudioClip[] tongueAudioClips;
+    private AudioClip[] grassAudioClips;
+    
     public Rigidbody rb { get; private set; }
     private Transform currentDriftPoint;
     private PlayerInput controls;
@@ -144,7 +162,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         rightDriftPointContainer.SetRightContainer();
         gameVariables.onPause.AddListener(PauseMe);
-
+        
+        //Load Audio Clips
+        landingAudioClips = Resources.LoadAll<AudioClip>(landingAudioPath);
+        tongueAudioClips = Resources.LoadAll<AudioClip>(tonguePath);
+        grassAudioClips = Resources.LoadAll<AudioClip>(grassAudioPath);
     }
 
     private void OnDestroy()
@@ -200,6 +222,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             waterVFX.SetActive(true);
             animator.CrossFade(runningClip.name, .5f);
+            AudioHandler.PlayRandomOneShot(mainAudioSource, landingAudioClips);
         }
 
         justStartedJumping = false;
@@ -253,6 +276,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         tongueAnimator.CrossFade(tongueShoot.name, 0f);
+        AudioHandler.PlayRandomAudioVariation(tongueAudioSource, tongueAudioClips,tongueVolumeVariation, tonguePitchVariation);
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
 
@@ -272,12 +296,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         isDrifting = false;
         arrivedAtDriftPeak = false;
+        
         tongueAnimator.CrossFade(tongueReturn.name, 0f);
+        AudioHandler.PlayRandomAudioVariation(tongueAudioSource, tongueAudioClips, tongueVolumeVariation, tonguePitchVariation, true);
+        
         driftHorizontal = 0;
         horizontal = 0;
         currentDriftRotation = 0;
-        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
         currentTraction = traction;
+        
+        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
         playerLookAt.position = new Vector3(transform.position.x, 1.5f, transform.position.z) + playerVisuals.forward;
 
         float currentBoostAmount = boostForce * driftBoostPercentage;
@@ -495,6 +523,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     public void SlowDown()
     {
+        AudioHandler.PlayRandomOneShot(mainAudioSource, grassAudioClips);
         StartCoroutine(SlowDownCoroutine());
     }
     private IEnumerator SlowDownCoroutine()
@@ -582,20 +611,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #endregion
     
     #region Various Methods ------------------------------------------------------------------------------------------------------------------------------------
-
-    public void CollectFirefly(int amount)
-    {
-        fireflyCount += amount;
-        material.SetFloat("_fireflyCount", fireflyCount);
-    }
-    
     public void Die()
     {
-        Debug.Log("Player Died");
         rb.isKinematic = true;
-        // rb.velocity = Vector3.zero;
         enabled = false;
-        GameManager.instance.StopGame();
     }
 
     void PauseMe()

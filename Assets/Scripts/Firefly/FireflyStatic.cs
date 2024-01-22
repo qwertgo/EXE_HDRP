@@ -16,15 +16,20 @@ public class FireflyStatic : MonoBehaviour
     
     [Header("References")]
     [SerializeField] protected Transform visuals;
+    [SerializeField] private AudioClip collectedClip;
+
 
     private MeshRenderer meshRenderer;
     private LODGroup lodGroup;
+    private AudioSource audioSource;
 
     protected void Start()
     {
         FireflySpawner.updatePosition += UpdateVisualsPosition;
 
         collectSpeed = 1 / timeToCollect;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -55,6 +60,8 @@ public class FireflyStatic : MonoBehaviour
     
         GameVariables.instance.gameTimer.AddToTimer(timeValue);
         GameVariables.instance.fireflyCount++;
+        
+        audioSource.PlayOneShotVariation(collectedClip, new Vector2(.8f, 1.2f), new Vector2(.85f, 1.15f));
 
         StartCoroutine(waitTillRespawn);
     }
