@@ -5258,7 +5258,7 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 8
-  jumpForce: 15
+  jumpForce: 20
   gravitationMultiplier: 3
   driftTurnSpeed: 30
   driftMaxTurnAbility: 40
