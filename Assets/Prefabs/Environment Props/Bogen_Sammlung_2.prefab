@@ -151,7 +151,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6752306578763532296}
   - component: {fileID: 8186473031306485838}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -206,7 +206,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8655810786809936676}
   - component: {fileID: 4106850793138502398}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -858,7 +858,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7548602237633742448}
   - component: {fileID: 681407850691436643}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1438,7 +1438,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2243983287108152431}
   - component: {fileID: 5035286720113233419}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1598,7 +1598,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2199008435970232132}
   - component: {fileID: 4600073621832063240}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1712,7 +1712,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7007960422975906550}
   - component: {fileID: 7125883877268689584}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2013,7 +2013,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1816540238379678450}
   - component: {fileID: 5731596489114727600}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2173,7 +2173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4024972010446299163}
   - component: {fileID: 5757900875141929756}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2369,7 +2369,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9097287209517544304}
   - component: {fileID: 5613899588612637793}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2989,7 +2989,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 260970532498971382}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3031,7 +3031,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2888762680979822967}
   - component: {fileID: 7919293076549191255}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CapsuleCollider (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

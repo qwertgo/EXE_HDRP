@@ -224,6 +224,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             animator.CrossFade(runningClip.name, .5f);
             AudioHandler.PlayRandomOneShot(mainAudioSource, landingAudioClips);
         }
+        
+        Debug.Log(currentState);
 
         justStartedJumping = false;
     }
