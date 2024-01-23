@@ -48,15 +48,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Moos_Diffuse:
-        m_Texture: {fileID: 2800000, guid: 18c6631a331547b43ac0fb3443d913c9, type: 3}
+        m_Texture: {fileID: 2800000, guid: aa085b7d1a83a134b981651d1dc70675, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Moos_Mask_Map:
-        m_Texture: {fileID: 2800000, guid: d549e4abffaabd0498cd60c3254151d9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 749b32979d08d304dbf5b02ec89f0fa3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Moos_Normal:
-        m_Texture: {fileID: 2800000, guid: a754413b5c386b84fa90b74df90f7d6b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0406b0d4bf23b674c8371601a931dccb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Wood_Diffuse:
@@ -68,7 +68,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Wood_Normal:
-        m_Texture: {fileID: 2800000, guid: 9cee0e1acd46a2d47ac9bce05e78ed02, type: 3}
+        m_Texture: {fileID: 2800000, guid: ce5f93f34c52f3f4d832054cfa08e55c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -100,8 +100,11 @@ Material:
     - _DstBlend: 0
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
+    - _Float: 7.31
     - _HeightFalloff: 1.09
     - _HeightOffset: -0.82
+    - _MaskNoiseScale: 35
+    - _MaskSharpness: 2
     - _OpaqueCullMode: 2
     - _RayTracing: 0
     - _ReceivesSSR: 1
@@ -135,10 +138,11 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
+    - _Color: {r: 111.30265, g: 36.22587, b: 36.22587, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _HeightFade: {r: 2, g: 4, b: 0, a: 0}
-    - _Moos_Scale: {r: 4, g: 4, b: 0, a: 0}
+    - _HeightFade: {r: -2, g: 6, b: 0, a: 0}
+    - _Moos_Scale: {r: 5, g: 5, b: 0, a: 0}
     - _Wood_Color: {r: 1, g: 0.80784315, b: 0.68235296, a: 0}
     - _Wood_Scale: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

@@ -34,7 +34,7 @@ public class SpeedOMeter : MonoBehaviour
         cameraTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
     }
 
-    void Update()
+    private void Update()
     {
         float speedT = player.rb.velocity.magnitude / player.baseMaxSpeed;
 
@@ -57,5 +57,11 @@ public class SpeedOMeter : MonoBehaviour
         
         //Sound
         windAudioSource.volume = Mathf.Lerp(windVolume.x, windVolume.y, speedT * speedT);
+    }
+
+    private void OnDestroy()
+    {
+        waterVFXMaterial.SetFloat("_Height", 1);
+        waterVFXMaterial.SetFloat("_Stretch", 1);
     }
 }
