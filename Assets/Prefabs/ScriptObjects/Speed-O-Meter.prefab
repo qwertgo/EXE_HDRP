@@ -48,7 +48,7 @@ MonoBehaviour:
   fovMax: 85
   cameraZOffset: {x: -4, y: -5}
   cameraYOffset: {x: 2.5, y: 1.5}
-  waterVFXMaterial: {fileID: 2100000, guid: 3ad9880f885eddb4eb1f01bc90cbab4d, type: 2}
+  waterVFXMaterial: {fileID: 2100000, guid: 7d69923e43a6136478a009305a4c9ada, type: 2}
   waterVfxHeight: {x: 0.5, y: 1}
   waterVfxStretch: {x: 0.25, y: 2}
   windAudioSource: {fileID: 0}

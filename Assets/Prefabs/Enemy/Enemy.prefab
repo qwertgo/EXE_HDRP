@@ -108136,6 +108136,9 @@ MonoBehaviour:
   directionLerpFactor: 0.1
   lightIntensityCloseToPlayer: 13000.37
   lightIntensityFarFromPlayer: 15208830
+  groundObstacleLayer:
+    serializedVersion: 2
+    m_Bits: 520
   finishedAttack: 0
   idleDestinationPoints:
   - {x: -3780.8066, y: 7.7e-43, z: 2.1649663e+23}
