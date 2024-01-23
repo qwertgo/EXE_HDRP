@@ -63,6 +63,7 @@ public class EnemyMovement : MonoBehaviour
         GameVariables.instance.onPause.AddListener(PauseMe);
 
         growlAudioClips = Resources.LoadAll<AudioClip>(growlAudioPath);
+        mainAudioSource.PlayRandomOneShot(growlAudioClips);
         
         EnemyManager.foundPlayer.AddListener(DiveUnderWater);
         EnemyManager.lostPlayer.AddListener(SurfaceFromWater);
@@ -108,7 +109,8 @@ public class EnemyMovement : MonoBehaviour
         mouthCollider.enabled = true;
         attackPlayerCollider.enabled = false;
 
-        AudioHandler.PlayRandomOneShot(mainAudioSource, growlAudioClips);
+        
+        mainAudioSource.PlayRandomOneShot(growlAudioClips);
         musicAudioSource.volume = 1f;
         musicAudioSource.Play();
         navMeshAgent.SetDestination(playerTransform.position);
