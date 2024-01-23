@@ -50,4 +50,3 @@ MonoBehaviour:
     type: 3}
   innerSpawnRadius: 200
   outerSpawnRadius: 330
-  numberOfEnemies: 6
