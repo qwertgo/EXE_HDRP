@@ -173,7 +173,7 @@ public class EnemyMovement : MonoBehaviour
     
     private void DiveUnderWater()
     {
-        Debug.Log(name + " got disabled");
+        // Debug.Log(name + " got disabled");
         if(currentState == enemyState.Attack)
             return;
         
@@ -183,7 +183,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void SurfaceFromWater()
     {
-        Debug.Log(name + " got enabled");
+        // Debug.Log(name + " got enabled");
         if(currentState == enemyState.FollowPlayer)
             return;
         

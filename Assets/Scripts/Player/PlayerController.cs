@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool isFalling;
     private bool isDrifting;
     private bool isBreaking;
+    private bool isInAir;
     private bool justStartedJumping;
     private bool isDriftingRight;
     private bool arrivedAtDriftPeak;
@@ -209,23 +210,24 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         isGrounded = IsGrounded();
         isFalling = IsFalling();
 
-        bool stateEqualsFalling = currentState == PlayerState.Falling || (currentState == PlayerState.DriftFalling && !justStartedJumping);
+        // bool stateEqualsFalling = currentState == PlayerState.Falling || (currentState == PlayerState.DriftFalling && !justStartedJumping);
 
+        //started falling
         if (!isGrounded && isFalling && !wasFallingLastFrame)
         {
             currentState = isDrifting? PlayerState.DriftFalling : PlayerState.Falling;
             animator.CrossFade(inAirClip.name, .4f);
             waterVFX.SetActive(false);
+            isInAir = true;
         }
-        else if (stateEqualsFalling && isGrounded)
+        else if (isInAir && !justStartedJumping && isGrounded)  //just landed
         {
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             waterVFX.SetActive(true);
             animator.CrossFade(runningClip.name, .5f);
             mainAudioSource.PlayRandomOneShot( landingAudioClips);
+            isInAir = false;
         }
-        
-        // Debug.Log(currentState);
 
         justStartedJumping = false;
     }
@@ -658,6 +660,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             currentState = currentState == PlayerState.Drifting ? PlayerState.DriftJumping : PlayerState.Jumping;
             rb.velocity += playerVisuals.up * jumpForce;
             justStartedJumping = true;
+            isInAir = true;
             waterVFX.SetActive(false);
             animator.CrossFade(jumpingUpClip.name, .2f);
         }
