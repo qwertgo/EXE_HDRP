@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 public class EnemyMovement : MonoBehaviour
 {
-    enum enemyState {Idle, Attack, FollowPlayer}
+    enum enemyState {Idle, Attack, FollowPlayer, TryReachPlayer}
 
     [Header("Variables")]
     [SerializeField] enemyState currentState;
@@ -20,6 +20,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float directionLerpFactor;
     [SerializeField] private float lightIntensityCloseToPlayer = 12000f;
     [SerializeField] private float lightIntensityFarFromPlayer = 1.520883e+07f;
+    [SerializeField] private LayerMask groundObstacleLayer;
     [HideInInspector] public bool finishedAttack;
     private int currentIdlePointIndex;
 
@@ -27,8 +28,8 @@ public class EnemyMovement : MonoBehaviour
     public List<Vector3> idleDestinationPoints = new ();
     [SerializeField] private Animator animator;
     [SerializeField] private Light spotLight;
-    [SerializeField] private Collider attackPlayerCollider;
-    [SerializeField] private Collider mouthCollider;
+    [SerializeField] private SphereCollider attackPlayerCollider;
+    [SerializeField] private SphereCollider mouthCollider;
 
 
     [Header("Animations")] 
@@ -47,6 +48,8 @@ public class EnemyMovement : MonoBehaviour
 
     private Transform playerTransform;
     private NavMeshAgent navMeshAgent;
+    private IEnumerator reachIdlePointCoroutine;
+    private IEnumerator reachPlayerCoroutine;
 
     private void Awake()
     {
@@ -63,22 +66,12 @@ public class EnemyMovement : MonoBehaviour
         GameVariables.instance.onPause.AddListener(PauseMe);
 
         growlAudioClips = Resources.LoadAll<AudioClip>(growlAudioPath);
-        mainAudioSource.PlayRandomOneShot(growlAudioClips);
-        
+
         EnemyManager.foundPlayer.AddListener(DiveUnderWater);
         EnemyManager.lostPlayer.AddListener(SurfaceFromWater);
 
         StartCoroutine(Idle());
     }
-
-    // public void SetEvents(UnityEvent enemyFoundPlayer, UnityEvent enemyLostPlayer)
-    // {
-    //     foundPlayerEvent = enemyFoundPlayer;
-    //     lostPlayerEvent = enemyLostPlayer;
-    //     
-    //     foundPlayerEvent.AddListener(DiveUnderWater);
-    //     lostPlayerEvent.AddListener(SurfaceFromWater);
-    // }
 
     private IEnumerator Idle()
     {
@@ -89,7 +82,8 @@ public class EnemyMovement : MonoBehaviour
         
         while (currentState == enemyState.Idle)
         {
-            yield return ReachRandomIdlePoint();
+            reachIdlePointCoroutine = ReachRandomIdlePoint();
+            yield return reachIdlePointCoroutine;
         }
     }
 
@@ -102,9 +96,35 @@ public class EnemyMovement : MonoBehaviour
 
     private IEnumerator Attack()
     {
+        if (!HasClearSightToPlayer())
+        {
+            if(reachPlayerCoroutine != null)
+                StartCoroutine(reachPlayerCoroutine);
+            
+            reachPlayerCoroutine = TryToReachPlayer();
+            StartCoroutine(reachPlayerCoroutine);
+            yield break;
+        }
+        
+        AttackPreparation();
+
+        while (!finishedAttack)
+        {
+            LookAtPlayer();
+            navMeshAgent.SetDestination(playerTransform.position);
+            yield return null;
+        }
+
+        finishedAttack = false;
+        StartCoroutine(FollowPlayer());
+    }
+
+    private void AttackPreparation()
+    {
         currentState = enemyState.Attack;
         animator.CrossFade(attackClip.name,0);
         EnemyManager.foundPlayer.Invoke();
+        StopCoroutine(reachIdlePointCoroutine);
 
         mouthCollider.enabled = true;
         attackPlayerCollider.enabled = false;
@@ -114,17 +134,39 @@ public class EnemyMovement : MonoBehaviour
         musicAudioSource.volume = .35f;
         musicAudioSource.Play();
         navMeshAgent.SetDestination(playerTransform.position);
+    }
 
-        while (!finishedAttack)
+    private bool HasClearSightToPlayer()
+    {
+        Vector3 vecToPlayer = playerTransform.position - spotLight.transform.position;
+        bool gotSight = !Physics.Raycast(spotLight.transform.position, vecToPlayer.normalized,out RaycastHit hit, vecToPlayer.magnitude,
+            groundObstacleLayer);
+
+        return gotSight;
+    }
+
+    //tries to reach player as long as its inside the followPlayerRadius
+    IEnumerator TryToReachPlayer()
+    {
+        currentState = enemyState.TryReachPlayer;
+        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+
+        while (currentState == enemyState.TryReachPlayer && distanceToPlayer < followPlayerRadius)
         {
-            LookAtPlayer();
             navMeshAgent.SetDestination(playerTransform.position);
+
+            if (distanceToPlayer < attackPlayerCollider.radius && HasClearSightToPlayer())
+            {
+                StartCoroutine(Attack());
+                yield break;
+            }
+            
             yield return null;
+            distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position); 
         }
 
-
-        finishedAttack = false;
-        StartCoroutine(FollowPlayer());
+        reachPlayerCoroutine = null;
+        yield return ReturnToSearchArea();
     }
 
     private IEnumerator FollowPlayer()
@@ -162,12 +204,15 @@ public class EnemyMovement : MonoBehaviour
         musicAudioSource.Stop();
         EnemyManager.lostPlayer.Invoke();
 
-        //return to searchArea and disable yourself while returning
+        yield return ReturnToSearchArea();
+    }
+    
+    //return to searchArea and disable yourself while returning
+    IEnumerator ReturnToSearchArea()
+    {
         DiveUnderWater();
         yield return ReachRandomIdlePoint();
-        currentState = enemyState.Idle;
         SurfaceFromWater();
-        
         StartCoroutine(Idle());
     }
     
