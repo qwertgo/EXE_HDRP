@@ -222,10 +222,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             waterVFX.SetActive(true);
             animator.CrossFade(runningClip.name, .5f);
-            AudioHandler.PlayRandomOneShot(mainAudioSource, landingAudioClips);
+            mainAudioSource.PlayRandomOneShot( landingAudioClips);
         }
         
-        Debug.Log(currentState);
+        // Debug.Log(currentState);
 
         justStartedJumping = false;
     }

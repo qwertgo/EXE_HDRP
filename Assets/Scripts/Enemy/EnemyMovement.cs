@@ -109,12 +109,11 @@ public class EnemyMovement : MonoBehaviour
         mouthCollider.enabled = true;
         attackPlayerCollider.enabled = false;
 
-        
         mainAudioSource.PlayRandomOneShot(growlAudioClips);
-        musicAudioSource.volume = 1f;
+        
+        musicAudioSource.volume = .35f;
         musicAudioSource.Play();
         navMeshAgent.SetDestination(playerTransform.position);
-        
 
         while (!finishedAttack)
         {
@@ -122,6 +121,7 @@ public class EnemyMovement : MonoBehaviour
             navMeshAgent.SetDestination(playerTransform.position);
             yield return null;
         }
+
 
         finishedAttack = false;
         StartCoroutine(FollowPlayer());
@@ -144,7 +144,7 @@ public class EnemyMovement : MonoBehaviour
         {
             navMeshAgent.SetDestination(playerTransform.position);
             navMeshAgent.velocity = Vector3.Lerp(transform.forward, navMeshAgent.desiredVelocity.normalized, directionLerpFactor) * navMeshAgent.desiredVelocity.magnitude;
-            Debug.DrawRay(transform.position, navMeshAgent.desiredVelocity.normalized * 5);
+            
             
             spotLight.transform.LookAt(playerTransform);
 
