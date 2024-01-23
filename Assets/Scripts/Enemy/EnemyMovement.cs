@@ -20,6 +20,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float directionLerpFactor;
     [SerializeField] private float lightIntensityCloseToPlayer = 12000f;
     [SerializeField] private float lightIntensityFarFromPlayer = 1.520883e+07f;
+    [SerializeField] private LayerMask groundObstacleMask;
     [HideInInspector] public bool finishedAttack;
     private int currentIdlePointIndex;
 
@@ -47,6 +48,7 @@ public class EnemyMovement : MonoBehaviour
 
     private Transform playerTransform;
     private NavMeshAgent navMeshAgent;
+    private IEnumerator reachIdlePointCoroutine;
 
     private void Awake()
     {
@@ -70,15 +72,7 @@ public class EnemyMovement : MonoBehaviour
 
         StartCoroutine(Idle());
     }
-
-    // public void SetEvents(UnityEvent enemyFoundPlayer, UnityEvent enemyLostPlayer)
-    // {
-    //     foundPlayerEvent = enemyFoundPlayer;
-    //     lostPlayerEvent = enemyLostPlayer;
-    //     
-    //     foundPlayerEvent.AddListener(DiveUnderWater);
-    //     lostPlayerEvent.AddListener(SurfaceFromWater);
-    // }
+    
 
     private IEnumerator Idle()
     {
@@ -89,7 +83,8 @@ public class EnemyMovement : MonoBehaviour
         
         while (currentState == enemyState.Idle)
         {
-            yield return ReachRandomIdlePoint();
+            reachIdlePointCoroutine = ReachRandomIdlePoint();
+            yield return reachIdlePointCoroutine;
         }
     }
 
@@ -97,14 +92,30 @@ public class EnemyMovement : MonoBehaviour
     {
         Vector3 destinationPoint = GetRandomDestinationPoint();
         navMeshAgent.SetDestination(destinationPoint);
-        yield return new WaitWhile(() => navMeshAgent.remainingDistance > .5f);
+
+        yield return new WaitWhile(() => Vector3.Distance(transform.position, destinationPoint) > .5f);
     }
+
+    // IEnumerator ReachPlayer()
+    // {
+    //     while (Vector3.Distance(playerTransform.position, transform.position) < followPlayerRadius)
+    //     {
+    //         
+    //     }
+    // }
 
     private IEnumerator Attack()
     {
+        // Vector3 vecToPlayer = playerTransform.position - spotLight.transform.position;
+        // if (Physics.Raycast(spotLight.transform.position, vecToPlayer.normalized, out RaycastHit hit, vecToPlayer.magnitude , groundObstacleMask))
+        // {
+        //     Debug.Log(hit.transform.name + " is in the way");
+        // }
+        
         currentState = enemyState.Attack;
         animator.CrossFade(attackClip.name,0);
         EnemyManager.foundPlayer.Invoke();
+        StopCoroutine(reachIdlePointCoroutine);
 
         mouthCollider.enabled = true;
         attackPlayerCollider.enabled = false;
@@ -129,14 +140,7 @@ public class EnemyMovement : MonoBehaviour
 
     private IEnumerator FollowPlayer()
     {
-        currentState = enemyState.FollowPlayer;
-        animator.CrossFade(followPlayerClip.name, 0);
-        
-        spotLight.enabled = true;
-        spotLight.range = followPlayerRadius + 3;
-
-        navMeshAgent.speed = followPlayerSpeed;
-        navMeshAgent.acceleration = followPlayerSpeed;
+        FollowPlayerPreparation();
 
         float distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
         
@@ -169,6 +173,18 @@ public class EnemyMovement : MonoBehaviour
         SurfaceFromWater();
         
         StartCoroutine(Idle());
+    }
+
+    private void FollowPlayerPreparation()
+    {
+        currentState = enemyState.FollowPlayer;
+        animator.CrossFade(followPlayerClip.name, 0);
+        
+        spotLight.enabled = true;
+        spotLight.range = followPlayerRadius + 3;
+
+        navMeshAgent.speed = followPlayerSpeed;
+        navMeshAgent.acceleration = followPlayerSpeed;
     }
     
     private void DiveUnderWater()
