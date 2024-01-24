@@ -606,7 +606,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         currentMaxSpeed = Mathf.Max(baseMaxSpeed,currentMaxSpeed / 1.5f);
         
         //get vector to other collider rotate it 90 degrees and turn player in that direction
-        Vector3 colliderPos = other.collider.ClosestPoint(transform.position);
+        Collider col = other.collider;
+        Vector3 colliderPos = col is MeshCollider ? other.contacts[0].point : col.ClosestPoint(transform.position);
+
         Vector3 vecToCollider = colliderPos - transform.position;
         vecToCollider.Scale(new Vector3(1,0,1));
         float signedAngle = Vector3.SignedAngle(playerVisuals.forward, vecToCollider, Vector3.up);
