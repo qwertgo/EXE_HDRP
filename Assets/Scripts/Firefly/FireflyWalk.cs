@@ -127,7 +127,7 @@ public class FireflyWalk : FireflyStatic
     private IEnumerator WaitTillRespawnDynamic()
     {
         visuals.gameObject.SetActive(false);
-        FireflySpawner.updatePosition -= UpdateVisualsPosition;
+        FireflyManager.updatePosition -= UpdateVisualsPosition;
         
         foreach (var col in colliders)
             col.enabled = false;
@@ -135,7 +135,7 @@ public class FireflyWalk : FireflyStatic
         yield return new WaitForSeconds(timeToRespawn);
 
         visuals.gameObject.SetActive(true);
-        FireflySpawner.updatePosition += UpdateVisualsPosition;
+        FireflyManager.updatePosition += UpdateVisualsPosition;
         
         foreach (var col in colliders)
             col.enabled = true;

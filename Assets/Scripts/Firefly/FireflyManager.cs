@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-public class FireflySpawner : MonoBehaviour
+public class FireflyManager : MonoBehaviour
 {
     public static event Action<Vector2> updatePosition;
     
@@ -14,7 +14,10 @@ public class FireflySpawner : MonoBehaviour
     [SerializeField] float outerRadius;
     [SerializeField] float innerRadius;
 
-    
+    private IEnumerator fireFlyCollectSound;
+    private static int lastCollectedFireflies;
+    private static float pitchOffset;
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
@@ -52,8 +55,9 @@ public class FireflySpawner : MonoBehaviour
 
                 spawnedFireflies++;
             }
-
         }
+
+        // fireFlyCollectSound = CollectSoundPingPong();
     }
     void Update()
     {
@@ -61,5 +65,22 @@ public class FireflySpawner : MonoBehaviour
         float yPos = Mathf.Sin(Time.time * 4) * .5f;
             
         updatePosition?.Invoke(new Vector2(xPos, yPos));
+    }
+
+    public static IEnumerator PlayStaticFireflySound(AudioSource audioSource, AudioClip audioClip)
+    {
+        if (lastCollectedFireflies == 0)
+            pitchOffset = Random.Range(-.2f, .2f);
+
+        float pitch = 1 + pitchOffset + lastCollectedFireflies / 10f;
+        lastCollectedFireflies++;
+        int tmpCollectedFireflies = lastCollectedFireflies;
+        
+        audioSource.PlayAudioPitched(audioClip, pitch);
+        
+        yield return new WaitForSeconds(2f);
+
+        if (tmpCollectedFireflies == lastCollectedFireflies)
+            lastCollectedFireflies = 0;
     }
 }

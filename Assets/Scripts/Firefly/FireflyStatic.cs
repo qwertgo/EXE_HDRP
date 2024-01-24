@@ -25,7 +25,7 @@ public class FireflyStatic : MonoBehaviour
 
     protected void Start()
     {
-        FireflySpawner.updatePosition += UpdateVisualsPosition;
+        FireflyManager.updatePosition += UpdateVisualsPosition;
 
         collectSpeed = 1 / timeToCollect;
 
@@ -60,8 +60,13 @@ public class FireflyStatic : MonoBehaviour
     
         GameVariables.instance.gameTimer.AddToTimer(timeValue);
         GameVariables.instance.fireflyCount++;
+
+        if (this is FireflyWalk)
+            audioSource.PlayOneShotVariation(collectedClip, new Vector2(.8f, 1.2f), new Vector2(.85f, 1.15f));
+        else
+            StartCoroutine(FireflyManager.PlayStaticFireflySound(audioSource, collectedClip));
+            
         
-        audioSource.PlayOneShotVariation(collectedClip, new Vector2(.8f, 1.2f), new Vector2(.85f, 1.15f));
 
         StartCoroutine(waitTillRespawn);
     }
@@ -69,12 +74,12 @@ public class FireflyStatic : MonoBehaviour
     private IEnumerator WaitTillRespawnStatic()
     {
         visuals.gameObject.SetActive(false);
-        FireflySpawner.updatePosition -= UpdateVisualsPosition;
+        FireflyManager.updatePosition -= UpdateVisualsPosition;
         
         yield return new WaitForSeconds(timeToRespawn);
         
         visuals.gameObject.SetActive(true);
-        FireflySpawner.updatePosition += UpdateVisualsPosition;
+        FireflyManager.updatePosition += UpdateVisualsPosition;
     }
 
     protected void UpdateVisualsPosition(Vector2 localPos)

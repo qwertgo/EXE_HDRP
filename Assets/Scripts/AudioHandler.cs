@@ -51,4 +51,13 @@ public static class AudioHandler
         
         audioSource.Play();
     }
+
+    public static void PlayAudioPitched(this AudioSource audioSource, AudioClip audioClip, float pitch,
+        float volume = 1)
+    {
+        audioSource.volume = volume;
+        audioSource.pitch = pitch;
+        audioSource.clip = audioClip;
+        audioSource.Play();
+    }
 }

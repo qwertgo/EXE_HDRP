@@ -284,7 +284,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         tongueAnimator.CrossFade(tongueShoot.name, 0f);
-        AudioHandler.PlayRandomAudioVariation(tongueAudioSource, tongueAudioClips,tongueVolumeVariation, tonguePitchVariation);
+        tongueAudioSource.PlayRandomAudioVariation(tongueAudioClips,tongueVolumeVariation, tonguePitchVariation);
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
 
@@ -326,7 +326,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
     }
     
-    IEnumerator Drift()
+    private IEnumerator Drift()
     {
         rotationReference.rotation = rotationAtDriftStart;
         while (isDrifting)
@@ -336,7 +336,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             Vector2 vecToDriftPoint2D = new Vector2(vecToDriftPoint.x, vecToDriftPoint.z);
             
             //tongueStretchFactor indicates how much the player should drift
-            float tongueStretchFactor = arrivedAtDriftPeak ? 1 : GetTongeStretchFactor(vecToDriftPoint2D);
+            float tongueStretchFactor = arrivedAtDriftPeak ? 1 : GetTongueStretchFactor(vecToDriftPoint2D);
 
             //get the rotation at the start of the drift with the current up vector
             Quaternion lerpFromRotation = Quaternion.LookRotation(rotationReference.forward, playerVisuals.up);
@@ -357,14 +357,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
     }
 
-    IEnumerator DriftCooldown()
+    private IEnumerator DriftCooldown()
     {
         lockDriftingCooldown = true;
         yield return new WaitForSeconds(driftCooldown);
         lockDriftingCooldown = false;
     }
 
-    Quaternion GetWantedDriftRotation(Vector3 dirToDriftPoint)
+    private Quaternion GetWantedDriftRotation(Vector3 dirToDriftPoint)
     {
         if (horizontal == 0)
             currentDriftRotation = Mathf.Lerp(currentDriftRotation, 0, Time.deltaTime);
@@ -381,7 +381,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         return Quaternion.LookRotation(wantedForward, playerVisuals.up);
     }
     
-    float GetTongeStretchFactor( Vector2 vecToDriftPoint2D)
+    private float GetTongueStretchFactor( Vector2 vecToDriftPoint2D)
     {
         //get distance to drift point
         float distanceToDriftPoint = Vector3.Distance(currentDriftPoint.position, transform.position);
@@ -559,7 +559,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     public void SlowDown()
     {
-        AudioHandler.PlayRandomOneShot(mainAudioSource, grassAudioClips);
+        mainAudioSource.PlayRandomOneShot(grassAudioClips);
         StartCoroutine(SlowDownCoroutine());
     }
     private IEnumerator SlowDownCoroutine()
