@@ -52,8 +52,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [Header("Boost")]
     [SerializeField] private float boostForce;
     [SerializeField] private float boostSubtractPerSecond;
+    [SerializeField] private float boostDuration = 1f;
     [SerializeField] private float boostLerpPerSecond;
     [SerializeField] private float timeToGetBoost;
+    [SerializeField] private AnimationCurve boostCurve;
     private float boostPercentagePerSecond;
 
     [Header("Camera")] 
@@ -140,6 +142,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private Quaternion rotationAtDriftStart;
     private GameVariables gameVariables => GameVariables.instance;
 
+    private List<IEnumerator> boostCoroutines = new();
+
     #region Instantiation and Destroying ------------------------------------------------------------------------------------------------------------------------------------
     void Start()
     {
@@ -197,7 +201,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             return;
         
         Steer();
-        ReduceMaxSpeed();
+        // ReduceMaxSpeed();
         // Debug.Log($"speed: {rb.velocity.magnitude}, maxSpeed: {currentMaxSpeed}");
     }
 
@@ -313,7 +317,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         playerLookAt.position = new Vector3(transform.position.x, 1.5f, transform.position.z) + playerVisuals.forward;
 
         float currentBoostAmount = boostForce * driftBoostPercentage;
-        Boost(currentBoostAmount);
+        boostCoroutines.Add(NewBoost(currentBoostAmount));
+        StartCoroutine(boostCoroutines.Last());
+
         ChangeParticleColor(defaultParticleColor);
 
         //change how fast the camera copies the rotation of the player
@@ -483,6 +489,30 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         currentMaxSpeed += amount;
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
     }
+
+    IEnumerator NewBoost(float boostAmount)
+    {
+        float elapsedTime = 0;
+        float addedBoost = 0;
+
+        while (elapsedTime <= 1)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / boostDuration;
+
+            currentMaxSpeed -= addedBoost;
+            float velocityMagnitude = rb.velocity.magnitude - addedBoost;
+            
+            addedBoost = boostCurve.Evaluate(t) * boostAmount;
+            
+            currentMaxSpeed += addedBoost;
+            velocityMagnitude += addedBoost;
+            rb.velocity = rb.velocity.normalized * velocityMagnitude;
+            yield return null;
+        }
+        
+        boostCoroutines.RemoveAt(0);
+    }
     
     public void StartSlowMoBoost(EnemyMovement enemy)
     {
@@ -510,8 +540,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
         lockDriftingSlowMoBoost = false;
         
-        rb.velocity = playerVisuals.forward * currentMaxSpeed;
-        Boost(boostForce);
+        // rb.velocity = playerVisuals.forward * currentMaxSpeed;
+        StopBoosting();
+        boostCoroutines.Add(NewBoost(boostForce));
+        StartCoroutine(boostCoroutines.Last());
     }
     #endregion
     
@@ -532,6 +564,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
     private IEnumerator SlowDownCoroutine()
     {
+        StopBoosting();
+        
         isBreaking = true;
         float startSpeed = rb.velocity.magnitude;
         float endSpeed = 10;
@@ -547,6 +581,15 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         isBreaking = false;
     }
+
+    private void StopBoosting()
+    {
+        foreach (var boost in boostCoroutines)
+        {
+            StopCoroutine(boost);
+        }
+        boostCoroutines.Clear();
+    }
     #endregion
     #endregion
 
@@ -559,6 +602,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (isDrifting)
             StopDrifting();
         
+        StopBoosting();
         currentMaxSpeed = Mathf.Max(baseMaxSpeed,currentMaxSpeed / 1.5f);
         
         //get vector to other collider rotate it 90 degrees and turn player in that direction

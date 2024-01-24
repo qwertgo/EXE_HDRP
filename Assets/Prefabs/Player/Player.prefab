@@ -5326,8 +5326,51 @@ MonoBehaviour:
     m_NumAlphaKeys: 3
   boostForce: 16
   boostSubtractPerSecond: 18
+  boostDuration: 1.5
   boostLerpPerSecond: 0.25
   timeToGetBoost: 0.5
+  boostCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 18.91274
+      outSlope: 18.91274
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.033670027
+    - serializedVersion: 3
+      time: 0.1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.07648223
+    - serializedVersion: 3
+      time: 0.2
+      value: 1
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.52974194
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0010986
+      value: 0
+      inSlope: -0.17053258
+      outSlope: -0.17053258
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.05741118
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   lookAtMoveAmount: 3
   horizontalLerpSpeed: 0.75
   cameraYawDamping: 1.75
