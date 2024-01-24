@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.Splines;
 using UnityEngine;
 
-public class FireflyWalk : FireflyStatic
+public class FireflyDynamic : FireflyStatic
 {
 
     [Header("Variables")]

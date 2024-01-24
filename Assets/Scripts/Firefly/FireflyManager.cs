@@ -9,10 +9,12 @@ public class FireflyManager : MonoBehaviour
 {
     public static event Action<Vector2> updatePosition;
     
-    [SerializeField] FireflyWalk fireflyPrefab;
+    [SerializeField] FireflyDynamic fireflyPrefab;
     [SerializeField] int ringCount;
     [SerializeField] float outerRadius;
     [SerializeField] float innerRadius;
+
+    [SerializeField] private float fireflySpeed = 2f;
 
     private IEnumerator fireFlyCollectSound;
     private static int lastCollectedFireflies;
@@ -47,7 +49,7 @@ public class FireflyManager : MonoBehaviour
             {
                 float fireflyRotation = randomRotation + rotationPerFirefly * o;
                 Vector3 fireflyPosition = Quaternion.Euler(0, fireflyRotation, 0) * fireflyStartPosition;
-                FireflyWalk currentFirefly = Instantiate(fireflyPrefab, fireflyPosition, Quaternion.identity);
+                FireflyDynamic currentFirefly = Instantiate(fireflyPrefab, fireflyPosition, Quaternion.identity);
 
                 bool moveRight = i % 2 == 0;
                 currentFirefly.SetFireflyValues(halfRingWidth * .3f, moveRight, spawnedFireflies);
@@ -61,8 +63,8 @@ public class FireflyManager : MonoBehaviour
     }
     void Update()
     {
-        float xPos = Mathf.Sin(Time.time * 2) ;
-        float yPos = Mathf.Sin(Time.time * 4) * .5f;
+        float xPos = Mathf.Sin(Time.time * 2 * fireflySpeed) ;
+        float yPos = Mathf.Sin(Time.time * 4 * fireflySpeed) * .5f;
             
         updatePosition?.Invoke(new Vector2(xPos, yPos));
     }
