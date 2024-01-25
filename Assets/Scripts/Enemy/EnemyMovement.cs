@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.AI.Navigation;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
@@ -22,6 +23,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float lightIntensityFarFromPlayer = 1.520883e+07f;
     [SerializeField] private LayerMask groundObstacleLayer;
     [HideInInspector] public bool finishedAttack;
+    [SerializeField] bool isStartEnemy;
     private int currentIdlePointIndex;
 
     [Header("References")]
@@ -66,13 +68,14 @@ public class EnemyMovement : MonoBehaviour
         GameVariables.instance.onPause.AddListener(PauseMe);
 
         growlAudioClips = Resources.LoadAll<AudioClip>(growlAudioPath);
-
+        
         EnemyManager.foundPlayer.AddListener(DiveUnderWater);
         EnemyManager.lostPlayer.AddListener(SurfaceFromWater);
 
         StartCoroutine(Idle());
     }
 
+    #region idle
     private IEnumerator Idle()
     {
         currentState = enemyState.Idle;
@@ -93,7 +96,18 @@ public class EnemyMovement : MonoBehaviour
         navMeshAgent.SetDestination(destinationPoint);
         yield return new WaitWhile(() => navMeshAgent.remainingDistance > .5f);
     }
+    
+    private Vector3 GetRandomDestinationPoint()
+    {
+        int randomIndex = Random.Range(0, idleDestinationPoints.Count - 1); // Zufälliger Index
+        randomIndex = (currentIdlePointIndex + randomIndex + 1) % idleDestinationPoints.Count;  //makes sure the same index is not picked twice
 
+        currentIdlePointIndex = randomIndex;
+        return idleDestinationPoints[randomIndex];
+    }
+    #endregion
+
+    #region attack
     private IEnumerator Attack()
     {
         if (!HasClearSightToPlayer())
@@ -105,6 +119,10 @@ public class EnemyMovement : MonoBehaviour
             StartCoroutine(reachPlayerCoroutine);
             yield break;
         }
+        
+        //the startEnemy invokes the foundPlayer Event before other enemies have a chance 
+        //assign themselves to the event, Wait a frame to avoid this case
+        yield return null;
         
         AttackPreparation();
 
@@ -144,6 +162,13 @@ public class EnemyMovement : MonoBehaviour
 
         return gotSight;
     }
+    private void LookAtPlayer()
+    {
+        Vector3 direction = (playerTransform.position - transform.position).normalized;
+        transform.rotation = Quaternion.LookRotation(direction);
+    }
+    
+    
 
     //tries to reach player as long as its inside the followPlayerRadius
     IEnumerator TryToReachPlayer()
@@ -168,7 +193,9 @@ public class EnemyMovement : MonoBehaviour
         reachPlayerCoroutine = null;
         yield return ReturnToSearchArea();
     }
+    #endregion
 
+    #region follow player
     private IEnumerator FollowPlayer()
     {
         currentState = enemyState.FollowPlayer;
@@ -203,7 +230,10 @@ public class EnemyMovement : MonoBehaviour
         spotLight.enabled = false;
         musicAudioSource.Stop();
         EnemyManager.lostPlayer.Invoke();
-
+        
+        if(isStartEnemy)
+            gameObject.SetActive(false);
+        
         yield return ReturnToSearchArea();
     }
     
@@ -215,41 +245,29 @@ public class EnemyMovement : MonoBehaviour
         SurfaceFromWater();
         StartCoroutine(Idle());
     }
+    #endregion
     
     private void DiveUnderWater()
     {
-        // Debug.Log(name + " got disabled");
         if(currentState == enemyState.Attack)
             return;
         
+        // Debug.Log(name + " got disabled");
         animator.CrossFade(diveIntoWaterClip.name, 0);
         attackPlayerCollider.enabled = false;
     }
 
     private void SurfaceFromWater()
     {
-        // Debug.Log(name + " got enabled");
         if(currentState == enemyState.FollowPlayer)
             return;
         
+        // Debug.Log(name + " got enabled");
         animator.CrossFade(surfaceFromWaterClip.name, 0);
         attackPlayerCollider.enabled = true;
     }
 
-    private void LookAtPlayer()
-    {
-        Vector3 direction = (playerTransform.position - transform.position).normalized;
-        transform.rotation = Quaternion.LookRotation(direction);
-    }
-    private Vector3 GetRandomDestinationPoint()
-    {
-        int randomIndex = Random.Range(0, idleDestinationPoints.Count - 1); // Zufälliger Index
-        randomIndex = (currentIdlePointIndex + randomIndex + 1) % idleDestinationPoints.Count;  //makes sure the same index is not picked twice
-
-        currentIdlePointIndex = randomIndex;
-        return idleDestinationPoints[randomIndex];
-    }
-    
+    #region Collision
     private void OnTriggerEnter(Collider other)
     {
         if (!other.tag.Equals("Player"))
@@ -260,6 +278,7 @@ public class EnemyMovement : MonoBehaviour
         else if(currentState > 0)
             GameManager.instance.StopGame();
     }
+    #endregion
 
     private void OnDrawGizmos()
     {
