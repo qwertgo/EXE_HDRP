@@ -13,6 +13,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private NavMeshAgent enemyAgent;
     [SerializeField] private float innerSpawnRadius = 250f;
     [SerializeField] private float outerSpawnRadius = 330f;
+    [SerializeField] private int numberOfEnemies = 4;
     private NavMeshQueryFilter filter;
 
     public static readonly UnityEvent foundPlayer = new ();
@@ -28,20 +29,20 @@ public class EnemyManager : MonoBehaviour
 
     private void Start()
     {
-        int numberOfEnemies = 4;
+        
         filter.areaMask = enemyAgent.areaMask;
         filter.agentTypeID = enemyAgent.agentTypeID;
 
         for (int i = 0; i < numberOfEnemies; i++)
         {
-            Vector3 position = GetRandomPosition(innerSpawnRadius, i, numberOfEnemies, 0);
+            Vector3 position = GetRandomPosition(innerSpawnRadius, i, 0);
 
             EnemyMovement enemy = Instantiate(enemyPrefab, position, Quaternion.identity, transform);
 
             List<Vector3> idleDestinationPoints = new List<Vector3>();
             for (int o = 0; o < 20; o++)
             {
-                Vector3 pos = GetRandomPosition(100, i, numberOfEnemies, 20);
+                Vector3 pos = GetRandomPosition(80, i, 15);
                 idleDestinationPoints.Add(pos);
             }
 
@@ -53,7 +54,7 @@ public class EnemyManager : MonoBehaviour
     //This Method generates a random position by rotating a vector by a random
     //value and the scaling the vector by a second random value
     //this makes sure the positions stay in a circular area
-    private Vector3 GetRandomPosition(float startRadius, int i, int numberOfEnemies, float sideBuffer)
+    private Vector3 GetRandomPosition(float startRadius, int i, float sideBuffer)
     {
         float indexAngle = 360f / numberOfEnemies * i;
         

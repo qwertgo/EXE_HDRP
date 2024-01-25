@@ -99,7 +99,7 @@ public class EnemyMovement : MonoBehaviour
         if (!HasClearSightToPlayer())
         {
             if(reachPlayerCoroutine != null)
-                StartCoroutine(reachPlayerCoroutine);
+                StopCoroutine(reachPlayerCoroutine);
             
             reachPlayerCoroutine = TryToReachPlayer();
             StartCoroutine(reachPlayerCoroutine);

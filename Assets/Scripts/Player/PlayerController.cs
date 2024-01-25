@@ -494,6 +494,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         float elapsedTime = 0;
         float addedBoost = 0;
+        float velocityMagnitude;
 
         while (elapsedTime <= 1)
         {
@@ -501,7 +502,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             float t = elapsedTime / boostDuration;
 
             currentMaxSpeed -= addedBoost;
-            float velocityMagnitude = rb.velocity.magnitude - addedBoost;
+            velocityMagnitude = rb.velocity.magnitude - addedBoost;
             
             addedBoost = boostCurve.Evaluate(t) * boostAmount;
             
@@ -510,13 +511,24 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             rb.velocity = rb.velocity.normalized * velocityMagnitude;
             yield return null;
         }
+
+        if (boostCoroutines.Count == 1)
+            currentMaxSpeed = baseMaxSpeed;
+        else
+        {
+            currentMaxSpeed -= addedBoost;
+            velocityMagnitude = rb.velocity.magnitude - addedBoost;
+            rb.velocity = rb.velocity.normalized * velocityMagnitude;
+        }
         
         boostCoroutines.RemoveAt(0);
     }
     
     public void StartSlowMoBoost(EnemyMovement enemy)
     {
-        StopDrifting();
+        if(isDrifting)
+            StopDrifting();
+        
         lockDriftingSlowMoBoost = true;
         StartCoroutine(SlowMoBoost(enemy));
     }
@@ -588,6 +600,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             StopCoroutine(boost);
         }
+
+        currentMaxSpeed = baseMaxSpeed;
         boostCoroutines.Clear();
     }
     #endregion
