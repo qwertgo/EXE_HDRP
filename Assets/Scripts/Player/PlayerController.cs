@@ -540,8 +540,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
         lockDriftingSlowMoBoost = false;
         
-        // rb.velocity = playerVisuals.forward * currentMaxSpeed;
         StopBoosting();
+        rb.velocity = playerVisuals.forward * currentMaxSpeed;
         boostCoroutines.Add(NewBoost(boostForce));
         StartCoroutine(boostCoroutines.Last());
     }
