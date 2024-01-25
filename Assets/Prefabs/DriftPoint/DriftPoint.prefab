@@ -35,7 +35,7 @@ Transform:
   - {fileID: 1170670226754830151}
   - {fileID: 6850259307868121513}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &408026566128915616
 SphereCollider:
@@ -141,7 +141,7 @@ PrefabInstance:
     - target: {fileID: 4902703723159655061, guid: 79f644146f6c3ae44bd9f305c22b8d3b,
         type: 3}
       propertyPath: m_Name
-      value: driftpoint_02
+      value: dp_visuals_02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -165,7 +165,7 @@ PrefabInstance:
     - target: {fileID: 4010117773335330814, guid: 48b32277de4f5a94fbc3ca9c6972fe7b,
         type: 3}
       propertyPath: m_Name
-      value: driftpoint_03
+      value: dp_visuals_03
       objectReference: {fileID: 0}
     - target: {fileID: 4315214530368328884, guid: 48b32277de4f5a94fbc3ca9c6972fe7b,
         type: 3}
@@ -244,7 +244,7 @@ PrefabInstance:
     - target: {fileID: 3132318234994580906, guid: 15b9b979895c3964ab4d28185dd8fe33,
         type: 3}
       propertyPath: m_Name
-      value: driftpoint_01
+      value: dp_visuals_01
       objectReference: {fileID: 0}
     - target: {fileID: 8924404224086755617, guid: 15b9b979895c3964ab4d28185dd8fe33,
         type: 3}
@@ -378,7 +378,7 @@ PrefabInstance:
     - target: {fileID: 7684834560949518887, guid: 5c027d6e78bfac1449981ee3dfc6c2bb,
         type: 3}
       propertyPath: m_Name
-      value: driftpoint_04
+      value: dp_visuals_04
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
