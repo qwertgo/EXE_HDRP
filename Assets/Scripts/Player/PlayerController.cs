@@ -93,12 +93,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool arrivedAtDriftPeak;
 
     private bool lockSteering;
-    
 
     [Header("References")]
     [SerializeField] protected Transform playerVisuals;
     [SerializeField] private Transform tonguePoint;
-    [SerializeField] private Material tongueMaterial;
     [FormerlySerializedAs("lookAt")] [SerializeField] private Transform cameraLookAt;
     [FormerlySerializedAs("groundSlopeRef")] [SerializeField] private Transform rotationReference;
     [SerializeField] private ParticleSystem groundParticles;
