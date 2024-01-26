@@ -72,7 +72,7 @@ MonoBehaviour:
   timeToCollect: 0.25
   visualsYOffset: 1.25
   visuals: {fileID: 672368394706826093}
-  collectedClip: {fileID: 8300000, guid: d2541074f1a36f84089e10e6ff5c8588, type: 3}
+  collectedClip: {fileID: 8300000, guid: 727977e9444e60246aa5aa2dcfcdbc9b, type: 3}
 --- !u!1001 &2267442523387335959
 PrefabInstance:
   m_ObjectHideFlags: 0

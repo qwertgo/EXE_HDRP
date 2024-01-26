@@ -76,7 +76,7 @@ MonoBehaviour:
   timeToCollect: 0.1
   visualsYOffset: 1.25
   visuals: {fileID: 672368394706826093}
-  collectedClip: {fileID: 8300000, guid: c18e563e088bf834db4fb9b6b518a7a6, type: 3}
+  collectedClip: {fileID: 8300000, guid: d2541074f1a36f84089e10e6ff5c8588, type: 3}
   speed: 18
   speedMultiplier: 2
   destinationPoint: {fileID: 2275953857179831993}
