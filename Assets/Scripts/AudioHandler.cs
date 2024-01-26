@@ -60,4 +60,11 @@ public static class AudioHandler
         audioSource.clip = audioClip;
         audioSource.Play();
     }
+
+    public static void PlayOneShotPitched(this AudioSource audioSource, AudioClip audioClip, float pitch,
+        float volume = 1)
+    {
+        audioSource.pitch = pitch;
+        audioSource.PlayOneShot(audioClip, volume);
+    }
 }

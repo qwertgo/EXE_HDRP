@@ -44,8 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd4ee2041908aa6479dbd0d92a32bc06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireflyPrefab: {fileID: 4778768712286833628, guid: 6a393e218d233fb43990a9627d340128,
-    type: 3}
-  ringCount: 4
   outerRadius: 336.4
   innerRadius: 40
+  fireflySpeed: 2
+  useOldMethod: 0
+  debugMode: 0
+  fireFlyCount: 40
+  ringCount: 4
+  dynamicFireflyPrefab: {fileID: 4778768712286833628, guid: 6a393e218d233fb43990a9627d340128,
+    type: 3}
+  staticFireflyPrefab: {fileID: 1343328379229845707, guid: 77bd62bed86cd7f47b093001167d46e9,
+    type: 3}

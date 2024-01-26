@@ -8,10 +8,10 @@ using Random = UnityEngine.Random;
 
 public class FireflyManager : MonoBehaviour
 {
+
+    public static FireflyManager instance;
     public static event Action<Vector2> updatePosition;
     
-    [SerializeField] FireflyDynamic dynamicFireflyPrefab;
-    [SerializeField] private FireflyStatic staticFireflyPrefab;
     [SerializeField] private float outerRadius;
     [SerializeField] private float innerRadius;
     [SerializeField] private float fireflySpeed = 2f;
@@ -23,6 +23,11 @@ public class FireflyManager : MonoBehaviour
     
     [Header("Old Method")]
     [SerializeField] private int ringCount;
+    
+    [Header("References")]
+    public AudioSource audioSource;
+    [SerializeField] FireflyDynamic dynamicFireflyPrefab;
+    [SerializeField] private FireflyStatic staticFireflyPrefab;
 
     private IEnumerator fireFlyCollectSound;
     private NavMeshQueryFilter  navMeshFilter;
@@ -40,6 +45,11 @@ public class FireflyManager : MonoBehaviour
 
     void Start()
     {
+        if(instance)
+            Destroy(gameObject);
+        else
+            instance = this;
+
         if(useOldMethod)
             OldSpawnMethod();
         else
@@ -121,7 +131,7 @@ public class FireflyManager : MonoBehaviour
         updatePosition?.Invoke(new Vector2(xPos, yPos));
     }
 
-    public static IEnumerator PlayStaticFireflySound(AudioSource audioSource, AudioClip audioClip)
+    public IEnumerator PlayStaticFireflySound(AudioClip audioClip)
     {
         if (firefliesCollectedInLastSecond == 0)
             pitchOffset = Random.Range(-.2f, .2f);
@@ -130,7 +140,7 @@ public class FireflyManager : MonoBehaviour
         firefliesCollectedInLastSecond++;
         int tmpCollectedFireflies = firefliesCollectedInLastSecond;
         
-        audioSource.PlayAudioPitched(audioClip, pitch);
+        audioSource.PlayOneShotPitched(audioClip, pitch);
         
         yield return new WaitForSeconds(2f);
 
