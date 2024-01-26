@@ -319,8 +319,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         playerLookAt.position = new Vector3(transform.position.x, 1.5f, transform.position.z) + playerVisuals.forward;
 
         float currentBoostAmount = boostForce * driftBoostPercentage;
-        boostCoroutines.Add(NewBoost(currentBoostAmount));
-        StartCoroutine(boostCoroutines.Last());
+        StartBoost(currentBoostAmount);
 
         ChangeParticleColor(defaultParticleColor);
 
@@ -439,7 +438,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         Quaternion wantedRotation;
 
-        if (isGrounded)
+        if (!isInAir)
         {
             //if first Raycast does not hit anything cast a second longer one straight down
             if (!Physics.Raycast(transform.position, -playerVisuals.up, out RaycastHit groundHit, sphereCollider.radius + .5f, groundLayer))
@@ -449,6 +448,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
             Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
             wantedRotation = Quaternion.LookRotation(forward, groundHit.normal);
+            
+            rb.velocity = Vector3.ProjectOnPlane(rb.velocity, groundHit.normal);
+
         }
         else
         {
@@ -489,6 +491,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         currentMaxSpeed += amount;
         rb.velocity = playerVisuals.forward * currentMaxSpeed;
+    }
+
+    private void StartBoost(float boostAmount)
+    {
+        boostCoroutines.Add(NewBoost(boostAmount));
+        StartCoroutine(boostCoroutines.Last());
     }
 
     IEnumerator NewBoost(float boostAmount)
@@ -536,7 +544,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     IEnumerator SlowMoBoost(EnemyMovement enemy)
     {
         Time.timeScale = .05f;
-        maxTurnSpeed *= 15;
+        maxTurnSpeed *= 30;
         rb.velocity = Vector3.zero;
         cinemachineTransposer.m_YawDamping = 0;
 
@@ -549,7 +557,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         yield return new WaitForSecondsRealtime(timeToWaitTillBoost);
         
         Time.timeScale = 1;
-        maxTurnSpeed /= 15;
+        maxTurnSpeed /= 30;
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
         lockDriftingSlowMoBoost = false;
         
@@ -608,13 +616,19 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #endregion
 
     #region Collider ------------------------------------------------------------------------------------------------------------------------------------
+    
     private void OnCollisionEnter(Collision other)
     {
         var collidedWithLayer = other.gameObject.layer;
-        if (obstacleLayer.IsInsideMask(collidedWithLayer))
+        
+        if (collidedWithLayer.IsInsideMask(obstacleLayer))
             BounceOfObstacle(other);
-        else if(groundLayer.IsInsideMask(collidedWithLayer))
-            RedirectVelocity();
+        else if (collidedWithLayer.IsInsideMask(groundLayer))
+        {
+            rb.velocity = storedVelocityMagnitude * playerVisuals.forward;
+            if (other.gameObject.tag.Equals("Schilf"))
+                StartBoost(boostForce);
+        }
     }
 
     private void BounceOfObstacle(Collision other)
@@ -641,11 +655,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = newForward * rb.velocity.magnitude;
         
         StartCoroutine(TurnPlayerInNewDirection(newForward, .1f));
-    }
-
-    private void RedirectVelocity()
-    {
-        rb.velocity = storedVelocityMagnitude * playerVisuals.forward;
     }
 
     IEnumerator TurnPlayerInNewDirection(Vector3 newForward, float timeToTurn)

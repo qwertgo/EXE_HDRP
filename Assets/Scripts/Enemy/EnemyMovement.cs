@@ -75,6 +75,12 @@ public class EnemyMovement : MonoBehaviour
         StartCoroutine(Idle());
     }
 
+    private void OnDisable()
+    {
+        EnemyManager.foundPlayer.RemoveListener(DiveUnderWater);
+        EnemyManager.lostPlayer.RemoveListener(SurfaceFromWater);
+    }
+
     #region idle
     private IEnumerator Idle()
     {

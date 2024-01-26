@@ -17,7 +17,12 @@ public static class MathHelper
     }
     #endregion
 
-    public static bool IsInsideMask(this LayerMask mask, int layer)
+    public static bool ContainsLayer(this LayerMask mask, int layer)
+    {
+        return (mask & (1 << layer)) != 0;
+    }
+
+    public static bool IsInsideMask(this int layer, LayerMask mask)
     {
         return (mask & (1 << layer)) != 0;
     }
