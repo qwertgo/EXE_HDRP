@@ -5326,7 +5326,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 3
   boostForce: 16
   boostSubtractPerSecond: 18
-  boostDuration: 1.5
+  boostDuration: 2
   boostLerpPerSecond: 0.25
   timeToGetBoost: 0.5
   boostCurve:
@@ -5382,7 +5382,6 @@ MonoBehaviour:
   tonguePitchVariation: {x: 0.9, y: 1.4}
   playerVisuals: {fileID: 1609444752658654278}
   tonguePoint: {fileID: 2633907542019158644}
-  tongueMaterial: {fileID: 2100000, guid: 70a0bec77d680a042b785f8f78772f89, type: 2}
   cameraLookAt: {fileID: 9105339177700952640}
   rotationReference: {fileID: 2145405288765843991}
   groundParticles: {fileID: 661022337883119139}

@@ -468,7 +468,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         tonguePoint.localScale = new Vector3(scale.x, scale.y, vecToDriftPoint.magnitude);
     }
     #endregion
-
+    #endregion
+    
     #region Acceleration ------------------------------------------------------------------------------------------------------------------------------------
     void Accelerate()
     {
@@ -478,9 +479,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         //limit max speed
         if (rb.velocity.magnitude > currentMaxSpeed)
-        {
             rb.velocity = rb.velocity.normalized * currentMaxSpeed;
-        }
     }
     void Boost(float amount)
     {
@@ -603,7 +602,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         boostCoroutines.Clear();
     }
     #endregion
-    #endregion
 
     #region Collider ------------------------------------------------------------------------------------------------------------------------------------
     private void OnCollisionEnter(Collision other)
@@ -614,8 +612,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (isDrifting)
             StopDrifting();
         
-        StopBoosting();
-        currentMaxSpeed = Mathf.Max(baseMaxSpeed,currentMaxSpeed / 1.5f);
+        // StopBoosting();
+        // currentMaxSpeed = Mathf.Max(baseMaxSpeed,currentMaxSpeed / 1.5f);
+        boostCoroutines.Add(NewBoost(boostForce));
+        StartCoroutine(boostCoroutines.Last());
+        
         
         //get vector to other collider rotate it 90 degrees and turn player in that direction
         Collider col = other.collider;
@@ -629,7 +630,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         Vector3 newForward = Quaternion.AngleAxis(rotation, playerVisuals.up) * vecToCollider.normalized;
         rb.velocity = newForward * rb.velocity.magnitude;
         
-        StartCoroutine(TurnPlayerInNewDirection(newForward, .2f));
+        StartCoroutine(TurnPlayerInNewDirection(newForward, .1f));
     }
 
     IEnumerator TurnPlayerInNewDirection(Vector3 newForward, float timeToTurn)

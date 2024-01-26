@@ -45,9 +45,9 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 220.62471
+  m_Intensity: 29.698713
   m_Range: 85
-  m_SpotAngle: 21.795933
+  m_SpotAngle: 60
   m_InnerSpotAngle: 4.1864305
   m_CookieSize: 10
   m_Shadows:
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Intensity: 25
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
-  m_InnerSpotPercent: 0
+  m_InnerSpotPercent: 100
   m_SpotIESCutoffPercent: 100
   m_LightDimmer: 1
   m_VolumetricDimmer: 1
@@ -126,13 +126,15 @@ MonoBehaviour:
   m_ShapeRadius: 0.025
   m_SoftnessScale: 1
   m_UseCustomSpotLightShadowCone: 0
-  m_CustomSpotLightShadowCone: 30
+  m_CustomSpotLightShadowCone: 5
   m_MaxSmoothness: 0.99
   m_ApplyRangeAttenuation: 1
   m_DisplayAreaLightEmissiveMesh: 0
   m_AreaLightCookie: {fileID: 0}
-  m_IESPoint: {fileID: 0}
-  m_IESSpot: {fileID: 0}
+  m_IESPoint: {fileID: 8462914550093448962, guid: 30b1b8f057c03594bbe6b610775e5e66,
+    type: 3}
+  m_IESSpot: {fileID: 8156907096719753404, guid: 30b1b8f057c03594bbe6b610775e5e66,
+    type: 3}
   m_IncludeForRayTracing: 1
   m_AreaLightShadowCone: 120
   m_UseScreenSpaceShadows: 0
@@ -737,12 +739,13 @@ MonoBehaviour:
   idleSpeed: 14
   followPlayerSpeed: 18
   directionLerpFactor: 0.1
-  lightIntensityCloseToPlayer: 9000
+  lightIntensityCloseToPlayer: 5000
   lightIntensityFarFromPlayer: 15208830
   groundObstacleLayer:
     serializedVersion: 2
     m_Bits: 520
   finishedAttack: 0
+  isStartEnemy: 0
   idleDestinationPoints:
   - {x: -3780.8066, y: 7.7e-43, z: 2.1649663e+23}
   - {x: 0.00000017248455, y: 1.074425e+10, z: 7.71e-43}
