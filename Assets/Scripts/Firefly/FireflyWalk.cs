@@ -70,8 +70,8 @@ public class FireflyDynamic : FireflyStatic
         {
             yield return null;
 
-            if (GameVariables.instance.isPaused)
-                continue;
+            // if (GameVariables.instance.isPaused)
+            //     continue;
 
             RotateAroundPoint(rotateAroundPosition);
         }
@@ -81,10 +81,12 @@ public class FireflyDynamic : FireflyStatic
     {
         destinationPoint.RotateAround(position, Vector3.up, destinationPointSpeed * Time.deltaTime);
             
-        if(NavMesh.SamplePosition(destinationPoint.position, out NavMeshHit hit, 8, navMeshFilter))
-            navMeshAgent.SetDestination(hit.position);
-        else
-            Debug.Log( gameObject.name + " could not find position to walk towards");
+        // if(NavMesh.SamplePosition(destinationPoint.position, out NavMeshHit hit, 8, navMeshFilter))
+        //     navMeshAgent.SetDestination(hit.position);
+        // else
+        //     Debug.Log( gameObject.name + " could not find position to walk towards");
+        
+        navMeshAgent.SetDestination(destinationPoint.position);
     }
 
     private void OnTriggerEnter(Collider other)

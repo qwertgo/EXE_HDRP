@@ -10,11 +10,13 @@ public class FireflyManager : MonoBehaviour
 {
     public static event Action<Vector2> updatePosition;
     
-    [SerializeField] FireflyDynamic fireflyPrefab;
+    [SerializeField] FireflyDynamic dynamicFireflyPrefab;
+    [SerializeField] private FireflyStatic staticFireflyPrefab;
     [SerializeField] private float outerRadius;
     [SerializeField] private float innerRadius;
     [SerializeField] private float fireflySpeed = 2f;
     [SerializeField] private bool useOldMethod;
+    [SerializeField] private bool debugMode;
     
     [Header("New Method")]
     [SerializeField] private float fireFlyCount = 126;
@@ -47,7 +49,7 @@ public class FireflyManager : MonoBehaviour
 
     private void NewSpawnMethod()
     {
-        NavMeshAgent fireflyAgent = fireflyPrefab.GetComponent<NavMeshAgent>();
+        NavMeshAgent fireflyAgent = dynamicFireflyPrefab.GetComponent<NavMeshAgent>();
         navMeshFilter.areaMask = fireflyAgent.areaMask;
         navMeshFilter.agentTypeID = fireflyAgent.agentTypeID;
 
@@ -56,10 +58,17 @@ public class FireflyManager : MonoBehaviour
         for (int i = 0; i < fireFlyCount; i++)
         {
             Vector3 position = GetRandomPosition();
-            FireflyDynamic currentFirefly = Instantiate(fireflyPrefab, position, Quaternion.identity, transform);
             
-            bool moveRight = i % 2 == 0;
-            currentFirefly.SetFireflyValues(10, moveRight, spawnedFireflies);
+            if (debugMode && i % 2 > 0)
+                Instantiate(staticFireflyPrefab, position, Quaternion.identity, transform);
+            else
+            {
+                bool moveRight = i % 2 == 0;
+
+                FireflyDynamic currentFirefly = Instantiate(dynamicFireflyPrefab, position, Quaternion.identity, transform);
+                currentFirefly.SetFireflyValues(10, moveRight, spawnedFireflies);
+            }
+            
             
             spawnedFireflies++;
         }
@@ -95,7 +104,7 @@ public class FireflyManager : MonoBehaviour
             {
                 float fireflyRotation = randomRotation + rotationPerFirefly * o;
                 Vector3 fireflyPosition = Quaternion.Euler(0, fireflyRotation, 0) * fireflyStartPosition;
-                FireflyDynamic currentFirefly = Instantiate(fireflyPrefab, fireflyPosition, Quaternion.identity, transform);
+                FireflyDynamic currentFirefly = Instantiate(dynamicFireflyPrefab, fireflyPosition, Quaternion.identity, transform);
 
                 bool moveRight = i % 2 == 0;
                 currentFirefly.SetFireflyValues(halfRingWidth * .3f, moveRight, spawnedFireflies);
