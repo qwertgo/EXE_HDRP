@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] protected DriftPointContainer leftDriftPointContainer;
     [SerializeField] private AudioSource walkAudioSource;
     [SerializeField] private Transform playerLookAt;
+    public AudioSource musicAudioSource;
 
     [Header("Animations")] 
     [SerializeField] private AnimationClip runningClip;
@@ -725,6 +726,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         controls.Enable();
         controls.P_Controls.SetCallbacks(this);
     }
+
     #endregion
 
     #region Input System ------------------------------------------------------------------------------------------------------------------------------------

@@ -157,6 +157,7 @@ public class EnemyMovement : MonoBehaviour
         
         musicAudioSource.volume = .35f;
         musicAudioSource.Play();
+        GameVariables.instance.player.musicAudioSource.volume = 0;
         navMeshAgent.SetDestination(playerTransform.position);
     }
 
@@ -173,8 +174,7 @@ public class EnemyMovement : MonoBehaviour
         Vector3 direction = (playerTransform.position - transform.position).normalized;
         transform.rotation = Quaternion.LookRotation(direction);
     }
-    
-    
+
 
     //tries to reach player as long as its inside the followPlayerRadius
     IEnumerator TryToReachPlayer()
@@ -235,6 +235,7 @@ public class EnemyMovement : MonoBehaviour
         mouthCollider.enabled = false;
         spotLight.enabled = false;
         musicAudioSource.Stop();
+        GameVariables.instance.player.musicAudioSource.volume = .5f;
         EnemyManager.lostPlayer.Invoke();
 
         if (isStartEnemy)
