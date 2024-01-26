@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool lockDriftingCooldown;
     
     [Header("Boost")]
-    [SerializeField] private float boostForce;
+    public float boostForce;
     [SerializeField] private float boostSubtractPerSecond;
     [SerializeField] private float boostDuration = 1f;
     [SerializeField] private float boostLerpPerSecond;

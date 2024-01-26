@@ -8,6 +8,7 @@ using UnityEngine.Serialization;
 
 public class SpeedOMeter : MonoBehaviour
 {
+    [SerializeField] private float lerpSpeed = .9f;
     [Header("Camera")] 
     [SerializeField] private float fovMin;
     [SerializeField] private float fovMax;
@@ -18,12 +19,13 @@ public class SpeedOMeter : MonoBehaviour
     [SerializeField] private Material waterVFXMaterial;
     [SerializeField] private Vector2 waterVfxHeight;
     [SerializeField] private Vector2 waterVfxStretch;
-
+    
     [Header("Audio")]
-    [SerializeField] private AudioSource windAudioSource;
+    [SerializeField] private AudioSource calmWindAudioSource;
+    [SerializeField] private AudioSource harshWindAudioSource;
     [SerializeField] private Vector2 windVolume;
 
-    private float lerpedSpeedT = 0;
+    private float lerpedT = 0;
     
     private PlayerController player => GameVariables.instance.player;
     private CinemachineVirtualCamera virtualCamera => GameVariables.instance.virtualCamera;
@@ -36,27 +38,29 @@ public class SpeedOMeter : MonoBehaviour
 
     private void Update()
     {
-        float speedT = player.rb.velocity.magnitude / player.baseMaxSpeed;
+        float t = Mathf.Max(player.rb.velocity.magnitude - player.baseMaxSpeed , 0) / (player.boostForce * .25f);
 
-        float k = 1f - Mathf.Pow(.25f, Time.deltaTime);
-        lerpedSpeedT = Mathf.Lerp(lerpedSpeedT, speedT, k);
+        float k = 1f - Mathf.Pow(lerpSpeed, Time.deltaTime);
+        lerpedT = Mathf.Lerp(lerpedT, t, k);
+        float lerpInvertedT = -lerpedT + 1;
         
         //camera
-        virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(fovMin, fovMax, speedT);
+        virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(fovMin, fovMax, lerpedT);
 
-        float currentZOffset = Mathf.Lerp(cameraZOffset.x, cameraZOffset.y, speedT);
-        float currentYOffset = Mathf.Lerp(cameraYOffset.x, cameraYOffset.y, speedT);
+        float currentZOffset = Mathf.Lerp(cameraZOffset.x, cameraZOffset.y, lerpedT);
+        float currentYOffset = Mathf.Lerp(cameraYOffset.x, cameraYOffset.y, lerpedT);
         cameraTransposer.m_FollowOffset = new Vector3(0, currentYOffset, currentZOffset);
 
         //waterVFX
-        float waterHeight = Mathf.Lerp(waterVfxHeight.x, waterVfxHeight.y, lerpedSpeedT);
+        float waterHeight = Mathf.Lerp(waterVfxHeight.x, waterVfxHeight.y, lerpedT);
         waterVFXMaterial.SetFloat("_Height", waterHeight);
 
-        float waterStretch = Mathf.Lerp(waterVfxStretch.x, waterVfxStretch.y, lerpedSpeedT);
+        float waterStretch = Mathf.Lerp(waterVfxStretch.x, waterVfxStretch.y, lerpedT);
         waterVFXMaterial.SetFloat("_Stretch", waterStretch);
         
         //Sound
-        windAudioSource.volume = Mathf.Lerp(windVolume.x, windVolume.y, speedT * speedT);
+        calmWindAudioSource.volume =  lerpInvertedT;
+        harshWindAudioSource.volume = lerpedT;
     }
 
     private void OnDestroy()

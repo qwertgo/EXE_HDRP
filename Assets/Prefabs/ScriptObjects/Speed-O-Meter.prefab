@@ -44,12 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59677ee2e618f7449ad79dc4e2abb3f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fovMin: 60
+  lerpSpeed: 0.3
+  fovMin: 65
   fovMax: 85
-  cameraZOffset: {x: -4, y: -5}
-  cameraYOffset: {x: 2.5, y: 1.5}
+  cameraZOffset: {x: -4.5, y: -5.5}
+  cameraYOffset: {x: 1.75, y: 1.55}
   waterVFXMaterial: {fileID: 2100000, guid: 7d69923e43a6136478a009305a4c9ada, type: 2}
   waterVfxHeight: {x: 0.5, y: 1}
   waterVfxStretch: {x: 0.25, y: 2}
-  windAudioSource: {fileID: 0}
+  calmWindAudioSource: {fileID: 0}
+  harshWindAudioSource: {fileID: 0}
   windVolume: {x: 0, y: 0.2}
