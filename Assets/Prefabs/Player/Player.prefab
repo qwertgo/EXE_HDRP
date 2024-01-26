@@ -5255,9 +5255,12 @@ MonoBehaviour:
   traction: 0.25
   adjustToGroundSlopeSpeed: 3
   animationSpeed: 0.05
-  ground:
+  groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 512
   jumpForce: 20
   gravitationMultiplier: 3
   driftTurnSpeed: 30

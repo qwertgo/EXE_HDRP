@@ -230,9 +230,12 @@ public class EnemyMovement : MonoBehaviour
         spotLight.enabled = false;
         musicAudioSource.Stop();
         EnemyManager.lostPlayer.Invoke();
-        
-        if(isStartEnemy)
+
+        if (isStartEnemy)
+        {
+            animator.enabled = false;
             gameObject.SetActive(false);
+        }
         
         yield return ReturnToSearchArea();
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -28,7 +29,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private float traction;
     [SerializeField] private float adjustToGroundSlopeSpeed = 3;
     [SerializeField] private float animationSpeed = .1f;
-    [SerializeField] private LayerMask ground;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask obstacleLayer;
 
     private float currentMaxSpeed;
 
@@ -127,7 +129,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private AudioClip[] landingAudioClips;
     private AudioClip[] tongueAudioClips;
     private AudioClip[] grassAudioClips;
-    
+
+    private float storedVelocityMagnitude;
     public Rigidbody rb { get; private set; }
     private Transform currentDriftPoint;
     private PlayerInput controls;
@@ -191,6 +194,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
         rb.velocity += (isFalling ? Physics.gravity * gravitationMultiplier : Physics.gravity) * Time.fixedDeltaTime;
         animator.SetFloat("runningSpeed", Mathf.Max(.5f, rb.velocity.magnitude * animationSpeed));
+        storedVelocityMagnitude = rb.velocity.magnitude;
     }
 
     private void Update()
@@ -438,9 +442,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (isGrounded)
         {
             //if first Raycast does not hit anything cast a second longer one straight down
-            if (!Physics.Raycast(transform.position, -playerVisuals.up, out RaycastHit groundHit, sphereCollider.radius + .5f, ground))
+            if (!Physics.Raycast(transform.position, -playerVisuals.up, out RaycastHit groundHit, sphereCollider.radius + .5f, groundLayer))
             {
-                Physics.Raycast(transform.position, Vector3.down, out groundHit, sphereCollider.radius + 2, ground);
+                Physics.Raycast(transform.position, Vector3.down, out groundHit, sphereCollider.radius + 2, groundLayer);
             }
 
             Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
@@ -606,9 +610,15 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region Collider ------------------------------------------------------------------------------------------------------------------------------------
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.layer != 9)
-            return;
-        
+        var collidedWithLayer = other.gameObject.layer;
+        if (obstacleLayer.IsInsideMask(collidedWithLayer))
+            BounceOfObstacle(other);
+        else if(groundLayer.IsInsideMask(collidedWithLayer))
+            RedirectVelocity();
+    }
+
+    private void BounceOfObstacle(Collision other)
+    {
         if (isDrifting)
             StopDrifting();
         
@@ -631,6 +641,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = newForward * rb.velocity.magnitude;
         
         StartCoroutine(TurnPlayerInNewDirection(newForward, .1f));
+    }
+
+    private void RedirectVelocity()
+    {
+        rb.velocity = storedVelocityMagnitude * playerVisuals.forward;
     }
 
     IEnumerator TurnPlayerInNewDirection(Vector3 newForward, float timeToTurn)
@@ -658,7 +673,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region Bools ------------------------------------------------------------------------------------------------------------------------------------
     bool IsGrounded()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, sphereCollider.radius + .01f, ground);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, sphereCollider.radius + .01f, groundLayer);
         return colliders.Length > 0;
     }
 
@@ -667,7 +682,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (currentState == PlayerState.Jumping || currentState == PlayerState.DriftJumping)
             return rb.velocity.y < -.5f;
 
-        bool hitGround = Physics.Raycast(transform.position, -playerVisuals.up, sphereCollider.radius + 1f, ground);
+        bool hitGround = Physics.Raycast(transform.position, -playerVisuals.up, sphereCollider.radius + 1f, groundLayer);
         return rb.velocity.y < -.5f || !hitGround;
 
     }

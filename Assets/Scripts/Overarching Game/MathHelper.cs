@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class MathHelper
 {
-    #region Math helper
+    #region Vector Rotation
     
     public static Vector3 RotateRight90Deg(this Vector3 v)
     {
@@ -16,7 +16,13 @@ public static class MathHelper
         return new Vector3(-v.z,0, v.x);
     }
     #endregion
+
+    public static bool IsInsideMask(this LayerMask mask, int layer)
+    {
+        return (mask & (1 << layer)) != 0;
+    }
     
+    #region Gradient Lerping
     public static Gradient Lerp(this Gradient a, Gradient b, float t) {
         return Lerp(a, b, t, false, false);
     }
@@ -77,4 +83,5 @@ public static class MathHelper
 
         return g;
     }
+    #endregion
 }
