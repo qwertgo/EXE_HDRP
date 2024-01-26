@@ -1014,6 +1014,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wurzel_F_3
       objectReference: {fileID: 0}
+    - target: {fileID: 1994348270441840194, guid: dc1859681d0decd46b0ec7e9626b0533,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 4878191787561613047, guid: dc1859681d0decd46b0ec7e9626b0533,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

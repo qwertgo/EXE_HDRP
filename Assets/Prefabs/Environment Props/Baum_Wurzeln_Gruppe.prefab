@@ -351,7 +351,7 @@ Transform:
   - {fileID: 8499810290843145046}
   - {fileID: 3075533459793734840}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1104700291789250962
 MonoBehaviour:
@@ -1657,6 +1657,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: "S\xE4ule_Begrenzung (3)"
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e937443780769564faa0f5b7af9e264d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2862,6 +2867,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: "S\xE4ule_Begrenzung"
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e937443780769564faa0f5b7af9e264d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3074,6 +3084,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Baum_Wurzel_V.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 55cf9fe2b2a8edc42b236b48ebbe39c3,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4611,6 +4626,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: "S\xE4ule_Begrenzung (2)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e937443780769564faa0f5b7af9e264d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6233,6 +6253,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: "S\xE4ule_Begrenzung (1)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e937443780769564faa0f5b7af9e264d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

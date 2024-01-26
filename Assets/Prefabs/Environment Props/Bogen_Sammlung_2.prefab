@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 514240163240220322}
   m_LocalRotation: {x: -0, y: -0, z: -0.11487644, w: 0.99337983}
-  m_LocalPosition: {x: -41.1, y: 5.25, z: -61.56}
+  m_LocalPosition: {x: -41.1, y: 5.25, z: -82.86}
   m_LocalScale: {x: 4.603734, y: 3.6255794, z: 3.9183588}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -80,7 +80,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 544155171760547831}
   m_LocalRotation: {x: -0.101467915, y: -0, z: -0, w: 0.99483883}
-  m_LocalPosition: {x: 12.1, y: 7.27, z: -52}
+  m_LocalPosition: {x: 12.1, y: 7.27, z: -73.3}
   m_LocalScale: {x: 4.4436626, y: 3.4995177, z: 3.7821171}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -171,7 +171,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3197883402224403402}
   m_LocalRotation: {x: -0.075613275, y: 0.0036193603, z: -0.04767481, w: 0.9959903}
-  m_LocalPosition: {x: -7.45, y: 2.8297381, z: 42.22}
+  m_LocalPosition: {x: -7.45, y: 2.8297381, z: 52.8}
   m_LocalScale: {x: 4.9332285, y: 3.8850653, z: 4.1987996}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -315,7 +315,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3701961377354115365}
   m_LocalRotation: {x: -0, y: -0, z: -0.08825345, w: 0.9960981}
-  m_LocalPosition: {x: 40.8, y: 5, z: -19.71}
+  m_LocalPosition: {x: 40.8, y: 5, z: -30.909996}
   m_LocalScale: {x: 5.597188, y: 4.4079533, z: 4.763913}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -480,7 +480,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4727755892148389380}
   m_LocalRotation: {x: -0.06704258, y: 0.008397996, z: -0.12400808, w: 0.98997813}
-  m_LocalPosition: {x: -30.9, y: 7.02, z: -19.3}
+  m_LocalPosition: {x: -30.9, y: 7.02, z: -30.5}
   m_LocalScale: {x: 5.134736, y: 4.0437593, z: 4.3703084}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -535,7 +535,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4912684065044262282}
   m_LocalRotation: {x: -0, y: -0, z: 0.062880255, w: 0.99802107}
-  m_LocalPosition: {x: -54.9, y: 2.8297381, z: 54.3}
+  m_LocalPosition: {x: -54.9, y: 2.8297381, z: 64.88}
   m_LocalScale: {x: 4.443662, y: 3.499518, z: 3.7821176}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -590,7 +590,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6015712936152304433}
   m_LocalRotation: {x: -0, y: -0, z: -0.073881745, w: 0.997267}
-  m_LocalPosition: {x: -31.64, y: 5.61, z: 74.56}
+  m_LocalPosition: {x: -31.64, y: 5.61, z: 90}
   m_LocalScale: {x: 4.863229, y: 3.8299384, z: 4.139221}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -973,6 +973,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wurzel_F_1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1994348270441840194, guid: 501b3f84d88a46d4a9d4978a238b9875,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4878191787561613047, guid: 501b3f84d88a46d4a9d4978a238b9875,
         type: 3}
@@ -1604,6 +1609,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bogen_Wurzeln_V.2.2
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bba02799b7c09134bb2792fa8a91a8a9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1956,6 +1966,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bogen_Wurzel_V.2.1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 931e6ff85d2065346bca236dca0027e9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 5759524944910114472, guid: 931e6ff85d2065346bca236dca0027e9,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -2154,6 +2169,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wurzel_F_1
       objectReference: {fileID: 0}
+    - target: {fileID: 1994348270441840194, guid: 501b3f84d88a46d4a9d4978a238b9875,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 4878191787561613047, guid: 501b3f84d88a46d4a9d4978a238b9875,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -2257,6 +2277,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wurzel_F_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1994348270441840194, guid: dc1859681d0decd46b0ec7e9626b0533,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4878191787561613047, guid: dc1859681d0decd46b0ec7e9626b0533,
         type: 3}
