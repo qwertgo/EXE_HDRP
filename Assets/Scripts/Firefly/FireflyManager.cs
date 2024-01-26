@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
@@ -10,14 +11,20 @@ public class FireflyManager : MonoBehaviour
     public static event Action<Vector2> updatePosition;
     
     [SerializeField] FireflyDynamic fireflyPrefab;
-    [SerializeField] int ringCount;
-    [SerializeField] float outerRadius;
-    [SerializeField] float innerRadius;
-
+    [SerializeField] private float outerRadius;
+    [SerializeField] private float innerRadius;
     [SerializeField] private float fireflySpeed = 2f;
+    [SerializeField] private bool useOldMethod;
+    
+    [Header("New Method")]
+    [SerializeField] private float fireFlyCount = 126;
+    
+    [Header("Old Method")]
+    [SerializeField] private int ringCount;
 
     private IEnumerator fireFlyCollectSound;
-    private static int lastCollectedFireflies;
+    private NavMeshQueryFilter  navMeshFilter;
+    private static int firefliesCollectedInLastSecond;
     private static float pitchOffset;
 
     private void OnDrawGizmosSelected()
@@ -31,6 +38,45 @@ public class FireflyManager : MonoBehaviour
 
     void Start()
     {
+        if(useOldMethod)
+            OldSpawnMethod();
+        else
+            NewSpawnMethod();
+
+    }
+
+    private void NewSpawnMethod()
+    {
+        NavMeshAgent fireflyAgent = fireflyPrefab.GetComponent<NavMeshAgent>();
+        navMeshFilter.areaMask = fireflyAgent.areaMask;
+        navMeshFilter.agentTypeID = fireflyAgent.agentTypeID;
+
+        int spawnedFireflies = 0;
+
+        for (int i = 0; i < fireFlyCount; i++)
+        {
+            Vector3 position = GetRandomPosition();
+            FireflyDynamic currentFirefly = Instantiate(fireflyPrefab, position, Quaternion.identity, transform);
+            
+            bool moveRight = i % 2 == 0;
+            currentFirefly.SetFireflyValues(10, moveRight, spawnedFireflies);
+            
+            spawnedFireflies++;
+        }
+    }
+
+    private Vector3 GetRandomPosition()
+    {
+        float randomRotation = Random.Range(0, 360);
+        float randomScale = Random.Range(innerRadius, outerRadius);
+
+        Vector3 position = Quaternion.Euler(0, randomRotation, 0) * Vector3.right * randomScale;
+        NavMesh.SamplePosition(position, out NavMeshHit hit, 20, navMeshFilter);
+
+        return hit.hit ? hit.position : Vector3.zero;
+    }
+    
+    private void OldSpawnMethod(){
         float halfRingWidth = (outerRadius - innerRadius) / ringCount / 2;
         int spawnedFireflies = 0;
 
@@ -49,17 +95,14 @@ public class FireflyManager : MonoBehaviour
             {
                 float fireflyRotation = randomRotation + rotationPerFirefly * o;
                 Vector3 fireflyPosition = Quaternion.Euler(0, fireflyRotation, 0) * fireflyStartPosition;
-                FireflyDynamic currentFirefly = Instantiate(fireflyPrefab, fireflyPosition, Quaternion.identity);
+                FireflyDynamic currentFirefly = Instantiate(fireflyPrefab, fireflyPosition, Quaternion.identity, transform);
 
                 bool moveRight = i % 2 == 0;
                 currentFirefly.SetFireflyValues(halfRingWidth * .3f, moveRight, spawnedFireflies);
-                currentFirefly.transform.parent = transform;
 
                 spawnedFireflies++;
             }
         }
-
-        // fireFlyCollectSound = CollectSoundPingPong();
     }
     void Update()
     {
@@ -71,18 +114,18 @@ public class FireflyManager : MonoBehaviour
 
     public static IEnumerator PlayStaticFireflySound(AudioSource audioSource, AudioClip audioClip)
     {
-        if (lastCollectedFireflies == 0)
+        if (firefliesCollectedInLastSecond == 0)
             pitchOffset = Random.Range(-.2f, .2f);
 
-        float pitch = 1 + pitchOffset + lastCollectedFireflies / 10f;
-        lastCollectedFireflies++;
-        int tmpCollectedFireflies = lastCollectedFireflies;
+        float pitch = 1 + pitchOffset + firefliesCollectedInLastSecond / 10f;
+        firefliesCollectedInLastSecond++;
+        int tmpCollectedFireflies = firefliesCollectedInLastSecond;
         
         audioSource.PlayAudioPitched(audioClip, pitch);
         
         yield return new WaitForSeconds(2f);
 
-        if (tmpCollectedFireflies == lastCollectedFireflies)
-            lastCollectedFireflies = 0;
+        if (tmpCollectedFireflies == firefliesCollectedInLastSecond)
+            firefliesCollectedInLastSecond = 0;
     }
 }

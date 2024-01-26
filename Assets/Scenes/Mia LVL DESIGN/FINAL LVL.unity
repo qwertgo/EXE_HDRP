@@ -46039,10 +46039,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireflyPrefab: {fileID: 4778768712286833628, guid: 6a393e218d233fb43990a9627d340128,
     type: 3}
-  ringCount: 4
   outerRadius: 336.4
   innerRadius: 40
   fireflySpeed: 2
+  useOldMethod: 0
+  fireFlyCount: 40
+  ringCount: 4
 --- !u!4 &1513723620
 Transform:
   m_ObjectHideFlags: 0
@@ -55425,19 +55427,14 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IESSpot
       value: 
-      objectReference: {fileID: -8664590808978361412, guid: 0d5e7826e0a934841a052b25b0ddc1d4,
+      objectReference: {fileID: 7085373622920385917, guid: 3eaf294d2ffd49140a0978bdf18e7284,
         type: 3}
     - target: {fileID: 7477637777492135369, guid: a2b54be69bf311a4cb88b3bf95751e3f,
         type: 3}
       propertyPath: m_IESPoint
       value: 
-      objectReference: {fileID: -6020354459585058403, guid: 0d5e7826e0a934841a052b25b0ddc1d4,
+      objectReference: {fileID: 385090197505180594, guid: 3eaf294d2ffd49140a0978bdf18e7284,
         type: 3}
-    - target: {fileID: 7477637777492135369, guid: a2b54be69bf311a4cb88b3bf95751e3f,
-        type: 3}
-      propertyPath: m_InnerSpotPercent
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 9175560092848308192, guid: a2b54be69bf311a4cb88b3bf95751e3f,
         type: 3}
       propertyPath: m_Name
