@@ -4,67 +4,55 @@ using UnityEngine;
 
 public static class AudioHandler 
 {
-    public static void PlayRandomOneShot(this AudioSource audioSource, AudioClip[] audioClips, float volume = 1)
+    public static void PlayRandomOneShot(this AudioSource audioSource, AudioClipDataMultiple data)
     {
-        int i = Random.Range(0, audioClips.Length);
-        audioSource.PlayOneShot(audioClips[i], volume);
+        if(data.hasPitchVariation)
+            audioSource.PlayRandomOneShotVariation(data);
+        else
+            audioSource.PlayRandomOneShotNormal(data);
+    }   
+    
+    private static void PlayRandomOneShotNormal(this AudioSource audioSource, AudioClipDataMultiple data)
+    {
+        int i = Random.Range(0, data.audioClips.Length);
+        audioSource.PlayOneShot(data.audioClips[i], data.volume);
     }
 
-    public static void PlayRandomOneShotVariation(this AudioSource audioSource, AudioClip[] audioClips, Vector2 volumeRange,
-        Vector2 pitchRange)
+    private static void PlayRandomOneShotVariation(this AudioSource audioSource, AudioClipDataMultiple data)
     {
-        int i = Random.Range(0, audioClips.Length);
-        float volume = Random.Range(volumeRange.x, volumeRange.y);
-        audioSource.pitch = Random.Range(pitchRange.x, pitchRange.y);
-        audioSource.PlayOneShot(audioClips[i], volume);
+        int i = Random.Range(0, data.audioClips.Length);
+        float volume = Random.Range(data.volumeVariation.x, data.volumeVariation.y);
+        audioSource.pitch = Random.Range(data.pitchVariation.x, data.pitchVariation.y);
+        audioSource.PlayOneShot(data.audioClips[i], volume);
     }
 
-    public static void PlayOneShotVariation(this AudioSource audioSource,AudioClip clip, Vector2 volumeRange, Vector2 pitchRange)
+    public static void PlayOneShotVariation(this AudioSource audioSource, AudioClipDataSingle data)
     {
-        audioSource.pitch = Random.Range(pitchRange.x, pitchRange.y);
-        float volume = Random.Range(volumeRange.x, volumeRange.y);
-        audioSource.PlayOneShot(clip, volume);
+        float volume = Random.Range(data.volumeVariation.x, data.volumeVariation.y);
+        audioSource.pitch = Random.Range(data.pitchVariation.x, data.pitchVariation.y);
+        audioSource.PlayOneShot(data.audioClip, volume);
+    }
+    
+    public static void PlayOneShotPitched(this AudioSource audioSource, AudioClipDataSingle data)
+    {
+        audioSource.pitch = data.pitch;
+        audioSource.PlayOneShot(data.audioClip, data.volume);
     }
 
-    public static void PlayRandomAudio(this AudioSource audioSource, AudioClip[] audioClips, float volume = 1, bool playReverse = false)
+    public static void PlayRandomAudioVariation(this AudioSource audioSource, AudioClipDataMultiple data, bool playReverse = false)
     {
-        int i = Random.Range(0, audioClips.Length);
-        audioSource.pitch = playReverse ? -1 : 1;
-        audioSource.time = playReverse ? audioClips[i].length - .01f : 0;
-        audioSource.volume = volume;
-        audioSource.clip = audioClips[i];
-        audioSource.Play();
-    }
-
-    public static void PlayRandomAudioVariation(this AudioSource audioSource, AudioClip[] audioClips, Vector2 volumeRange,
-        Vector2 pitchRange, bool playReverse = false)
-    {
-        int i = Random.Range(0, audioClips.Length);
-        audioSource.clip = audioClips[i];
+        int i = Random.Range(0, data.audioClips.Length);
+        audioSource.clip = data.audioClips[i];
         
-        audioSource.time = playReverse ? audioClips[i].length - .01f : 0;
-        audioSource.volume = Random.Range(volumeRange.x, volumeRange.y);
+        audioSource.time = playReverse ? data.audioClips[i].length - .01f : 0;
+        audioSource.volume = Random.Range(data.volumeVariation.x, data.volumeVariation.y);
         
-        audioSource.pitch = Random.Range(pitchRange.x, pitchRange.y);
+        audioSource.pitch = Random.Range(data.pitchVariation.x, data.pitchVariation.y);
         float tmpPitch = audioSource.pitch;
         audioSource.pitch = playReverse ? -tmpPitch : tmpPitch;
         
         audioSource.Play();
     }
 
-    public static void PlayAudioPitched(this AudioSource audioSource, AudioClip audioClip, float pitch,
-        float volume = 1)
-    {
-        audioSource.volume = volume;
-        audioSource.pitch = pitch;
-        audioSource.clip = audioClip;
-        audioSource.Play();
-    }
-
-    public static void PlayOneShotPitched(this AudioSource audioSource, AudioClip audioClip, float pitch,
-        float volume = 1)
-    {
-        audioSource.pitch = pitch;
-        audioSource.PlayOneShot(audioClip, volume);
-    }
+    
 }

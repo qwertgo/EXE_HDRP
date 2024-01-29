@@ -121,23 +121,18 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AudioSource walkingAudioSource;
     public AudioSource musicAudioSource;
 
-    [Header("Audio Source Paths")]
-    [SerializeField] private string landingAudioPath;
-    [SerializeField] private string tonguePath;
-    [SerializeField] private string grassAudioPath;
-    [SerializeField] private string crashAgainstObstacleAudioPath;
+    [Header("AudioClipData Multiple")] 
+    [SerializeField] private AudioClipDataMultiple landingAudioData;
+    [SerializeField] private AudioClipDataMultiple tongueAudioData;
+    [SerializeField] private AudioClipDataMultiple grassAudioData;
+    [SerializeField] private AudioClipDataMultiple obstacleCrashAudioData;
+    
     
     [Header("Audioclips")]
     [SerializeField] private AudioClip walkingOnWaterClip;
     [SerializeField] private AudioClip walkingOnGrassClip;
-    [SerializeField] private AudioClip slowMowClip;
     [SerializeField] private AudioClip winClip;
-
-
-    private AudioClip[] landingAudioClips;
-    private AudioClip[] tongueAudioClips;
-    private AudioClip[] grassAudioClips;
-    private AudioClip[] crashAgainstObstacleClips;
+    
 
     private float storedVelocityMagnitude;
     public Rigidbody rb { get; private set; }
@@ -179,10 +174,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         gameVariables.onPause.AddListener(PauseMe);
         
         //Load Audio Clips
-        landingAudioClips = Resources.LoadAll<AudioClip>(landingAudioPath);
-        tongueAudioClips = Resources.LoadAll<AudioClip>(tonguePath);
-        grassAudioClips = Resources.LoadAll<AudioClip>(grassAudioPath);
-        crashAgainstObstacleClips = Resources.LoadAll<AudioClip>(crashAgainstObstacleAudioPath);
+        landingAudioData.LoadClips();
+        tongueAudioData.LoadClips();
+        grassAudioData.LoadClips();
+        obstacleCrashAudioData.LoadClips();
     }
 
     private void OnDestroy()
@@ -242,7 +237,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             waterVFX.SetActive(true);
             animator.CrossFade(runningClip.name, .5f);
-            mainAudioSource.PlayRandomOneShot( landingAudioClips);
+            mainAudioSource.PlayRandomOneShot(landingAudioData);
             isInAir = false;
         }
 
@@ -297,7 +292,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         tongueAnimator.CrossFade(tongueShoot.name, 0f);
-        tongueAudioSource.PlayRandomAudioVariation(tongueAudioClips,tongueVolumeVariation, tonguePitchVariation);
+        tongueAudioSource.PlayRandomAudioVariation(tongueAudioData);
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
 
@@ -319,7 +314,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         arrivedAtDriftPeak = false;
         
         tongueAnimator.CrossFade(tongueReturn.name, 0f);
-        tongueAudioSource.PlayRandomAudioVariation(tongueAudioClips, tongueVolumeVariation, tonguePitchVariation, true);
+        tongueAudioSource.PlayRandomAudioVariation(tongueAudioData, true);
         
         driftHorizontal = 0;
         horizontal = 0;
@@ -592,7 +587,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     public void SlowDown()
     {
-        mainAudioSource.PlayRandomOneShot(grassAudioClips);
+        mainAudioSource.PlayRandomOneShot(grassAudioData);
         StartCoroutine(SlowDownCoroutine());
     }
     private IEnumerator SlowDownCoroutine()
@@ -664,7 +659,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         boostCoroutines.Add(NewBoost(boostForce));
         StartCoroutine(boostCoroutines.Last());
         
-        mainAudioSource.PlayRandomOneShotVariation(crashAgainstObstacleClips, new Vector2(.9f, 1), new Vector2(.9f, 1.1f));
+        mainAudioSource.PlayRandomOneShot(obstacleCrashAudioData);
         
         
         //get vector to other collider rotate it 90 degrees and turn player in that direction
