@@ -131,7 +131,7 @@ public class FireflyManager : MonoBehaviour
         updatePosition?.Invoke(new Vector2(xPos, yPos));
     }
 
-    public IEnumerator PlayStaticFireflySound(AudioClip audioClip)
+    public IEnumerator PlayStaticFireflySound(AudioClipDataSingle data)
     {
         if (firefliesCollectedInLastSecond == 0)
             pitchOffset = Random.Range(-.2f, .2f);
@@ -140,7 +140,7 @@ public class FireflyManager : MonoBehaviour
         firefliesCollectedInLastSecond++;
         int tmpCollectedFireflies = firefliesCollectedInLastSecond;
         
-        audioSource.PlayOneShotPitched(audioClip, pitch);
+        audioSource.PlayOneShotPitched(data);
         
         yield return new WaitForSeconds(2f);
 

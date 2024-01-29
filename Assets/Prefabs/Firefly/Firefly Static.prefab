@@ -73,6 +73,7 @@ MonoBehaviour:
   visualsYOffset: 1.25
   visuals: {fileID: 672368394706826093}
   collectedClip: {fileID: 8300000, guid: 727977e9444e60246aa5aa2dcfcdbc9b, type: 3}
+  collectedClipData: {fileID: 11400000, guid: dec0a11966a2baf49bde5a57a0409455, type: 2}
 --- !u!1001 &2267442523387335959
 PrefabInstance:
   m_ObjectHideFlags: 0
