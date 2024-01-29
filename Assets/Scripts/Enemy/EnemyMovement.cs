@@ -43,6 +43,7 @@ public class EnemyMovement : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private string growlAudioPath;
+    [SerializeField] private AudioClip waterSplash;
     [SerializeField] private AudioSource mainAudioSource;
     [SerializeField] private AudioSource musicAudioSource;
 
@@ -116,6 +117,7 @@ public class EnemyMovement : MonoBehaviour
     #region attack
     private IEnumerator Attack()
     {
+        //If there is no clear sight to Player try to reach him
         if (!HasClearSightToPlayer())
         {
             if(reachPlayerCoroutine != null)
@@ -154,6 +156,7 @@ public class EnemyMovement : MonoBehaviour
         attackPlayerCollider.enabled = false;
 
         mainAudioSource.PlayRandomOneShot(growlAudioClips);
+        mainAudioSource.PlayOneShot(waterSplash, 1);
         
         musicAudioSource.volume = .35f;
         musicAudioSource.Play();
@@ -219,8 +222,7 @@ public class EnemyMovement : MonoBehaviour
         {
             navMeshAgent.SetDestination(playerTransform.position);
             navMeshAgent.velocity = Vector3.Lerp(transform.forward, navMeshAgent.desiredVelocity.normalized, directionLerpFactor) * navMeshAgent.desiredVelocity.magnitude;
-            
-            
+
             spotLight.transform.LookAt(playerTransform);
 
             float distancePercentage = distanceToPlayer / followPlayerRadius;

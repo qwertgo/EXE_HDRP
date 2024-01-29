@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool isFalling;
     private bool isDrifting;
     private bool isBreaking;
-    private bool isInAir;
+    private bool isInAir = true;
     private bool justStartedJumping;
     private bool isDriftingRight;
     private bool arrivedAtDriftPeak;
@@ -106,9 +106,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private Material material;
     [SerializeField] protected DriftPointContainer rightDriftPointContainer;
     [SerializeField] protected DriftPointContainer leftDriftPointContainer;
-    [SerializeField] private AudioSource walkAudioSource;
     [SerializeField] private Transform playerLookAt;
-    public AudioSource musicAudioSource;
 
     [Header("Animations")] 
     [SerializeField] private AnimationClip runningClip;
@@ -120,16 +118,26 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [Header("Audio Sources")] 
     [SerializeField] private AudioSource mainAudioSource;
     [SerializeField] private AudioSource tongueAudioSource;
+    [SerializeField] private AudioSource walkingAudioSource;
+    public AudioSource musicAudioSource;
 
     [Header("Audio Source Paths")]
     [SerializeField] private string landingAudioPath;
     [SerializeField] private string tonguePath;
     [SerializeField] private string grassAudioPath;
+    [SerializeField] private string crashAgainstObstacleAudioPath;
+    
+    [Header("Audioclips")]
+    [SerializeField] private AudioClip walkingOnWaterClip;
+    [SerializeField] private AudioClip walkingOnGrassClip;
+    [SerializeField] private AudioClip slowMowClip;
+    [SerializeField] private AudioClip winClip;
 
 
     private AudioClip[] landingAudioClips;
     private AudioClip[] tongueAudioClips;
     private AudioClip[] grassAudioClips;
+    private AudioClip[] crashAgainstObstacleClips;
 
     private float storedVelocityMagnitude;
     public Rigidbody rb { get; private set; }
@@ -174,6 +182,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         landingAudioClips = Resources.LoadAll<AudioClip>(landingAudioPath);
         tongueAudioClips = Resources.LoadAll<AudioClip>(tonguePath);
         grassAudioClips = Resources.LoadAll<AudioClip>(grassAudioPath);
+        crashAgainstObstacleClips = Resources.LoadAll<AudioClip>(crashAgainstObstacleAudioPath);
     }
 
     private void OnDestroy()
@@ -224,6 +233,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             currentState = isDrifting? PlayerState.DriftFalling : PlayerState.Falling;
             animator.CrossFade(inAirClip.name, .4f);
+            walkingAudioSource.Stop();
             waterVFX.SetActive(false);
             isInAir = true;
         }
@@ -309,7 +319,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         arrivedAtDriftPeak = false;
         
         tongueAnimator.CrossFade(tongueReturn.name, 0f);
-        AudioHandler.PlayRandomAudioVariation(tongueAudioSource, tongueAudioClips, tongueVolumeVariation, tonguePitchVariation, true);
+        tongueAudioSource.PlayRandomAudioVariation(tongueAudioClips, tongueVolumeVariation, tonguePitchVariation, true);
         
         driftHorizontal = 0;
         horizontal = 0;
@@ -544,6 +554,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
     IEnumerator SlowMoBoost(EnemyMovement enemy)
     {
+        // mainAudioSource.PlayOneShot(slowMowClip, 1);
         Time.timeScale = .05f;
         maxTurnSpeed *= 30;
         rb.velocity = Vector3.zero;
@@ -628,7 +639,18 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             rb.velocity = storedVelocityMagnitude * playerVisuals.forward;
             if (other.gameObject.tag.Equals("Schilf"))
-                StartBoost(boostForce);
+            {
+                StartBoost(boostForce * .65f);
+                walkingAudioSource.clip = walkingOnGrassClip;
+                walkingAudioSource.volume = .75f;
+                walkingAudioSource.Play();
+            }
+            else
+            {
+                walkingAudioSource.clip = walkingOnWaterClip;
+                walkingAudioSource.volume = .25f;
+                walkingAudioSource.Play();
+            }
         }
     }
 
@@ -641,6 +663,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         // currentMaxSpeed = Mathf.Max(baseMaxSpeed,currentMaxSpeed / 1.5f);
         boostCoroutines.Add(NewBoost(boostForce));
         StartCoroutine(boostCoroutines.Last());
+        
+        mainAudioSource.PlayRandomOneShotVariation(crashAgainstObstacleClips, new Vector2(.9f, 1), new Vector2(.9f, 1.1f));
         
         
         //get vector to other collider rotate it 90 degrees and turn player in that direction
@@ -702,6 +726,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     public void Die()
     {
         rb.isKinematic = true;
+        mainAudioSource.PlayOneShot(winClip, 1);
         enabled = false;
     }
 
@@ -748,6 +773,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             isInAir = true;
             waterVFX.SetActive(false);
             animator.CrossFade(jumpingUpClip.name, .2f);
+            walkingAudioSource.Stop();
         }
     }
 
