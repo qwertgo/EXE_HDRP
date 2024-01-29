@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d18c6209bfa575645811648525ec250a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeForSunToSet: 10
+  timeForSunToSet: 20
   sunDestinationRotation: 200
   moonDestinationRotation: 120
   moonColorStart: {r: 0.5453453, g: 0.75929713, b: 0.8962264, a: 0}

@@ -16,7 +16,7 @@ public class FireflyStatic : MonoBehaviour
     
     [Header("References")]
     [SerializeField] protected Transform visuals;
-    [SerializeField] private AudioClip collectedClip;
+    [SerializeField] private AudioClipDataSingle collectedClipData;
 
 
     private MeshRenderer meshRenderer;
@@ -61,9 +61,12 @@ public class FireflyStatic : MonoBehaviour
         FireflyManager fireflyManager = FireflyManager.instance;
 
         if (this is FireflyDynamic)
-            fireflyManager.audioSource.PlayOneShotVariation(collectedClip, new Vector2(.8f, 1.2f), new Vector2(.85f, 1.15f));
+        {
+            // fireflyManager.audioSource.PlayOneShotVariation(collectedClip, new Vector2(.8f, 1.2f), new Vector2(.85f, 1.15f));
+            fireflyManager.audioSource.PlayOneShotVariation(collectedClipData);
+        }
         else
-            StartCoroutine(fireflyManager.PlayStaticFireflySound(collectedClip));
+            StartCoroutine(fireflyManager.PlayStaticFireflySound(collectedClipData));
             
         
 
