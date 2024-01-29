@@ -17,14 +17,20 @@ public class GameTimer : MonoBehaviour
     [SerializeField] private Color sliderColorSpecial;
 
     private IEnumerator update;
+    private AudioSource audioSource;
+
+    private bool playTickingSound;
 
     private void Start()
     {
         remainingTime = gameTime;
-        update = UpdateCoroutine();
-        StartCoroutine(update);
         sliderLeft.image.color = sliderColorBase;
         sliderRight.image.color = sliderColorBase;
+
+        audioSource = GetComponent<AudioSource>();
+
+        update = UpdateCoroutine();
+        StartCoroutine(update);
     }
 
     IEnumerator UpdateCoroutine()
@@ -34,7 +40,10 @@ public class GameTimer : MonoBehaviour
             remainingTime -= Time.deltaTime;
             DisplayTimer();
 
-            if (remainingTime < 0)
+
+            if (remainingTime / gameTime < .1f && !playTickingSound)
+                StartCoroutine(PlayTickingSound());
+            else if (remainingTime < 0)
                 EndGame();
 
             yield return null;
@@ -42,9 +51,25 @@ public class GameTimer : MonoBehaviour
         
     }
 
+    IEnumerator PlayTickingSound()
+    {
+        playTickingSound = true;
+        audioSource.Play();
+        
+        while (playTickingSound)
+        {
+            float volume = -(remainingTime / gameTime * 10) + 1;
+            audioSource.volume = volume;
+            yield return null;
+        }
+        
+        audioSource.Stop();
+    }
+
     void EndGame()
     {
         StopCoroutine(update);
+        playTickingSound = false;
         GameManager.instance.StopGame();
     }
 

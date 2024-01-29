@@ -762,6 +762,7 @@ MonoBehaviour:
   surfaceFromWaterClip: {fileID: 7400000, guid: 4d42d710b76f6d748866a4bf3f8c505b,
     type: 2}
   growlAudioPath: Sounds/Enemy/Growl/
+  waterSplash: {fileID: 8300000, guid: c4f7b1b22ec90774bb7d365ff98bbb81, type: 3}
   mainAudioSource: {fileID: 7462533235220018964}
   musicAudioSource: {fileID: 2621441737515876820}
 --- !u!195 &2803009006950078493
