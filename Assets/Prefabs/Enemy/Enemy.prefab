@@ -739,8 +739,8 @@ MonoBehaviour:
   idleSpeed: 14
   followPlayerSpeed: 18
   directionLerpFactor: 0.1
-  lightIntensityCloseToPlayer: 5000
-  lightIntensityFarFromPlayer: 15208830
+  lightIntensityCloseToPlayer: 500000
+  lightIntensityFarFromPlayer: 9000000
   groundObstacleLayer:
     serializedVersion: 2
     m_Bits: 520

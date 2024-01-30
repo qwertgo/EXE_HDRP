@@ -115,6 +115,11 @@ public class EnemyMovement : MonoBehaviour
     #region attack
     private IEnumerator Attack()
     {
+        //the startEnemy invokes the foundPlayer Event before other enemies have a chance 
+        //assign themselves to the event, Wait a frame to avoid this case
+        if(isStartEnemy)
+            yield return null;
+        
         //If there is no clear sight to Player try to reach him
         if (!HasClearSightToPlayer())
         {
@@ -125,11 +130,7 @@ public class EnemyMovement : MonoBehaviour
             StartCoroutine(reachPlayerCoroutine);
             yield break;
         }
-        
-        //the startEnemy invokes the foundPlayer Event before other enemies have a chance 
-        //assign themselves to the event, Wait a frame to avoid this case
-        yield return null;
-        
+
         AttackPreparation();
 
         while (!finishedAttack)
@@ -225,6 +226,7 @@ public class EnemyMovement : MonoBehaviour
 
             float distancePercentage = distanceToPlayer / followPlayerRadius;
             spotLight.intensity = Mathf.Lerp(lightIntensityCloseToPlayer, lightIntensityFarFromPlayer, distancePercentage);
+            Debug.Log(spotLight.intensity);
             musicAudioSource.volume = distancePercentage * -1 + 1;
             
             yield return null;

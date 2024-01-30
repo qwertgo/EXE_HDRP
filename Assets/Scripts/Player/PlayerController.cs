@@ -654,10 +654,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (isDrifting)
             StopDrifting();
         
-        // StopBoosting();
-        // currentMaxSpeed = Mathf.Max(baseMaxSpeed,currentMaxSpeed / 1.5f);
-        boostCoroutines.Add(NewBoost(boostForce));
-        StartCoroutine(boostCoroutines.Last());
+        // boostCoroutines.Add(NewBoost(boostForce));
+        // StartCoroutine(boostCoroutines.Last());
         
         mainAudioSource.PlayRandomOneShot(obstacleCrashAudioData);
         
@@ -672,7 +670,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         float rotation = signedAngle > 0 ? -90 : 90;
         Vector3 newForward = Quaternion.AngleAxis(rotation, playerVisuals.up) * vecToCollider.normalized;
-        rb.velocity = newForward * rb.velocity.magnitude;
+        rb.velocity = newForward * storedVelocityMagnitude;
         
         StartCoroutine(TurnPlayerInNewDirection(newForward, .1f));
     }
