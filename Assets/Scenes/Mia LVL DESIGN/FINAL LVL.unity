@@ -31750,7 +31750,7 @@ MonoBehaviour:
   gameIsPaused: 0
   playerName: Wow Echstrem
   startWithStartScreen: 1
-  spawnStartEnemy: 0
+  spawnStartEnemy: 1
   pauseMenu: {fileID: 1830724653}
   continueButton: {fileID: 1830724652}
   highScoreTable: {fileID: 1830724654}
