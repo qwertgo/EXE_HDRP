@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: Landing Audio Data
   m_EditorClassIdentifier: Assembly-CSharp::AudioClipDataMultiple
-  volume: 1
+  volume: 0.5
   pitch: 1
+  hasPitchVariation: 0
   volumeVariation: {x: 0.8, y: 1}
   pitchVariation: {x: 0.9, y: 1.1}
-  path: 
+  path: Sounds/Player/Landing/

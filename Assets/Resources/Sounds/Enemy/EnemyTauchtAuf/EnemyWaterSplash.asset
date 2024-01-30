@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: EnemyWaterSplash
   m_EditorClassIdentifier: Assembly-CSharp::AudioClipDataSingle
   volume: 1
-  pitch: 1
+  pitch: 1.25
   hasPitchVariation: 0
-  volumeVariation: {x: 0.8, y: 1}
-  pitchVariation: {x: 0.9, y: 1.1}
-  audioClip: {fileID: 0}
+  volumeVariation: {x: 1, y: 1}
+  pitchVariation: {x: 1, y: 1}
+  audioClip: {fileID: 8300000, guid: c4f7b1b22ec90774bb7d365ff98bbb81, type: 3}

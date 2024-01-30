@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [HideInInspector] public bool gameIsPaused;
     public string playerName = "Wow Echstrem";
 
+    private bool stoppedGame;
+
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject continueButton;
     [SerializeField] private HighScoreTable highScoreTable;
@@ -19,6 +21,8 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     private PlayerInput controls;
     private GameVariables gameVariables;
     private EventSystem eventSystem;
+    
+    
 
     private void Start()
     {
@@ -64,6 +68,11 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
     public void StopGame()
     {
+        if(stoppedGame)
+            return;
+
+        stoppedGame = true;
+        
         Time.timeScale = 0;
         GameVariables.instance.player.Die();
         

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioClipDataSingle
   volume: 1
   pitch: 1
-  hasPitchVariation: 0
+  hasPitchVariation: 1
   volumeVariation: {x: 0.8, y: 1}
-  pitchVariation: {x: 0.9, y: 1.1}
-  audioClip: {fileID: 0}
+  pitchVariation: {x: 0.85, y: 1.15}
+  audioClip: {fileID: 8300000, guid: d2541074f1a36f84089e10e6ff5c8588, type: 3}

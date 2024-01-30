@@ -285,7 +285,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 54800035c87481342a17c330bf8813ec, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.25
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -5530,10 +5530,6 @@ MonoBehaviour:
   tongueAudioSource: {fileID: 3322682882765054135}
   walkingAudioSource: {fileID: 2795884714206764542}
   musicAudioSource: {fileID: 715649104791894502}
-  landingAudioPath: Sounds/Player/Landing/
-  tonguePath: Sounds/Player/Tongue/
-  grassAudioPath: Sounds/Player/Grass/
-  crashAgainstObstacleAudioPath: Sounds/Player/ObstacleCrash/
   landingAudioData: {fileID: 11400000, guid: 537d47a8080185247b35709bd07ee389, type: 2}
   tongueAudioData: {fileID: 11400000, guid: f0cf2ce8759b55641ac391a38f5dc5e9, type: 2}
   grassAudioData: {fileID: 11400000, guid: 34a68e135bdec6141aa3fad30d7ae527, type: 2}
@@ -5541,7 +5537,6 @@ MonoBehaviour:
     type: 2}
   walkingOnWaterClip: {fileID: 8300000, guid: 54800035c87481342a17c330bf8813ec, type: 3}
   walkingOnGrassClip: {fileID: 8300000, guid: 051d90924a50e4247aeb356e479be18b, type: 3}
-  slowMowClip: {fileID: 8300000, guid: ded2482953378b845a89e1ffce5f77ae, type: 3}
   winClip: {fileID: 8300000, guid: cbd3602d2773e1447a31d3cdf03a49ef, type: 3}
 --- !u!54 &4525183451630538490
 Rigidbody:

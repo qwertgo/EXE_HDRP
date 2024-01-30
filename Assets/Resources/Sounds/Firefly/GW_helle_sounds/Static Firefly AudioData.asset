@@ -15,6 +15,6 @@ MonoBehaviour:
   volume: 1
   pitch: 1
   hasPitchVariation: 0
-  volumeVariation: {x: 0.8, y: 1}
-  pitchVariation: {x: 0.9, y: 1.1}
-  audioClip: {fileID: 0}
+  volumeVariation: {x: 1, y: 1}
+  pitchVariation: {x: 1, y: 1}
+  audioClip: {fileID: 8300000, guid: 727977e9444e60246aa5aa2dcfcdbc9b, type: 3}

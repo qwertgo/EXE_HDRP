@@ -637,13 +637,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             {
                 StartBoost(boostForce * .65f);
                 walkingAudioSource.clip = walkingOnGrassClip;
-                walkingAudioSource.volume = .75f;
+                walkingAudioSource.volume = .5f;
                 walkingAudioSource.Play();
             }
             else
             {
                 walkingAudioSource.clip = walkingOnWaterClip;
-                walkingAudioSource.volume = .25f;
+                walkingAudioSource.volume = .1f;
                 walkingAudioSource.Play();
             }
         }
