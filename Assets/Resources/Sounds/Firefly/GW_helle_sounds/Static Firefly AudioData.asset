@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Static Firefly AudioData
+  m_EditorClassIdentifier: Assembly-CSharp::AudioClipDataSingle
+  volume: 1
+  pitch: 1
+  hasPitchVariation: 0
+  volumeVariation: {x: 1, y: 1}
+  pitchVariation: {x: 1, y: 1}
+  audioClip: {fileID: 8300000, guid: 727977e9444e60246aa5aa2dcfcdbc9b, type: 3}

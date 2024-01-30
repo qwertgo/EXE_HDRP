@@ -739,8 +739,8 @@ MonoBehaviour:
   idleSpeed: 14
   followPlayerSpeed: 18
   directionLerpFactor: 0.1
-  lightIntensityCloseToPlayer: 5000
-  lightIntensityFarFromPlayer: 15208830
+  lightIntensityCloseToPlayer: 500000
+  lightIntensityFarFromPlayer: 9000000
   groundObstacleLayer:
     serializedVersion: 2
     m_Bits: 520
@@ -761,8 +761,9 @@ MonoBehaviour:
   diveIntoWaterClip: {fileID: 7400000, guid: 24cb9f4d7b6b08447923a5f0be7afe21, type: 2}
   surfaceFromWaterClip: {fileID: 7400000, guid: 4d42d710b76f6d748866a4bf3f8c505b,
     type: 2}
-  growlAudioPath: Sounds/Enemy/Growl/
-  waterSplash: {fileID: 8300000, guid: c4f7b1b22ec90774bb7d365ff98bbb81, type: 3}
+  growlAudioData: {fileID: 11400000, guid: ec52851a6bd17ef48a176ca3a35cc4f4, type: 2}
+  waterSplashClipData: {fileID: 11400000, guid: 1cb8dff8c2e6b4849adb9c4b2918b04a,
+    type: 2}
   mainAudioSource: {fileID: 7462533235220018964}
   musicAudioSource: {fileID: 2621441737515876820}
 --- !u!195 &2803009006950078493

@@ -42,12 +42,10 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private AnimationClip surfaceFromWaterClip;
 
     [Header("Audio")]
-    [SerializeField] private string growlAudioPath;
-    [SerializeField] private AudioClip waterSplash;
+    [SerializeField] private AudioClipDataMultiple growlAudioData;
+    [SerializeField] private AudioClipDataSingle waterSplashClipData;
     [SerializeField] private AudioSource mainAudioSource;
     [SerializeField] private AudioSource musicAudioSource;
-
-    private AudioClip[] growlAudioClips;
 
     private Transform playerTransform;
     private NavMeshAgent navMeshAgent;
@@ -68,10 +66,10 @@ public class EnemyMovement : MonoBehaviour
 
         GameVariables.instance.onPause.AddListener(PauseMe);
 
-        growlAudioClips = Resources.LoadAll<AudioClip>(growlAudioPath);
-        
         EnemyManager.foundPlayer.AddListener(DiveUnderWater);
         EnemyManager.lostPlayer.AddListener(SurfaceFromWater);
+        
+        growlAudioData.LoadClips();
 
         StartCoroutine(Idle());
     }
@@ -117,6 +115,11 @@ public class EnemyMovement : MonoBehaviour
     #region attack
     private IEnumerator Attack()
     {
+        //the startEnemy invokes the foundPlayer Event before other enemies have a chance 
+        //assign themselves to the event, Wait a frame to avoid this case
+        if(isStartEnemy)
+            yield return null;
+        
         //If there is no clear sight to Player try to reach him
         if (!HasClearSightToPlayer())
         {
@@ -127,11 +130,7 @@ public class EnemyMovement : MonoBehaviour
             StartCoroutine(reachPlayerCoroutine);
             yield break;
         }
-        
-        //the startEnemy invokes the foundPlayer Event before other enemies have a chance 
-        //assign themselves to the event, Wait a frame to avoid this case
-        yield return null;
-        
+
         AttackPreparation();
 
         while (!finishedAttack)
@@ -155,9 +154,9 @@ public class EnemyMovement : MonoBehaviour
         mouthCollider.enabled = true;
         attackPlayerCollider.enabled = false;
 
-        mainAudioSource.PlayRandomOneShot(growlAudioClips);
-        mainAudioSource.PlayOneShot(waterSplash, 1);
-        
+        mainAudioSource.PlayRandomOneShot(growlAudioData);
+        mainAudioSource.PlayOneShotPitched(waterSplashClipData);
+
         musicAudioSource.volume = .35f;
         musicAudioSource.Play();
         GameVariables.instance.player.musicAudioSource.volume = 0;
@@ -227,6 +226,7 @@ public class EnemyMovement : MonoBehaviour
 
             float distancePercentage = distanceToPlayer / followPlayerRadius;
             spotLight.intensity = Mathf.Lerp(lightIntensityCloseToPlayer, lightIntensityFarFromPlayer, distancePercentage);
+            Debug.Log(spotLight.intensity);
             musicAudioSource.volume = distancePercentage * -1 + 1;
             
             yield return null;
