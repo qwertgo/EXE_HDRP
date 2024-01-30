@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject continueButton;
     [SerializeField] private HighScoreTable highScoreTable;
+    [SerializeField] private GameObject highScoreRestartButton; 
     [SerializeField] private EnemyMovement startEnemy;
     [SerializeField] private GameObject startMenu;
     [SerializeField] private GameObject startMenuPlayButton;
@@ -56,9 +57,6 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         {
             startEnemy.gameObject.SetActive(true);
         }
-
-
-        
     }
 
     public void StartGame(string playerName)
@@ -117,6 +115,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         
         HighScoreEntry newEntry = new HighScoreEntry(playerName, Time.time);
         highScoreTable.CreateHighScoreVisuals(newEntry);
+        
+        eventSystem.SetSelectedGameObject(null);
+        eventSystem.SetSelectedGameObject(highScoreRestartButton);
     }
 
     public void OnPauseGame(InputAction.CallbackContext context)
