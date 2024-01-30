@@ -71,11 +71,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [Header("EnemyAttack / Slo Mo Boost")] 
     [SerializeField] private float turnToEnemyTime = 10;
     [SerializeField] private float timeToWaitTillBoost = 1.5f;
-    
-    [Header("Audio")]
-    [SerializeField] private Vector2 tongueVolumeVariation;
-    [SerializeField] private Vector2 tonguePitchVariation;
-    
+
     private float horizontal;
     private float driftHorizontal;
     private float horizontalLerpTo;
@@ -110,7 +106,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     [Header("Animations")] 
     [SerializeField] private AnimationClip runningClip;
-    [SerializeField] private AnimationClip jumpingUpClip;
+    // [SerializeField] private AnimationClip jumpingUpClip;
     [SerializeField] private AnimationClip inAirClip;
     [SerializeField] private AnimationClip tongueShoot;
     [SerializeField] private AnimationClip tongueReturn;
@@ -236,7 +232,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
             waterVFX.SetActive(true);
-            animator.CrossFade(runningClip.name, .5f);
+            animator.CrossFade(runningClip.name, .1f);
             mainAudioSource.PlayRandomOneShot(landingAudioData);
             isInAir = false;
         }
@@ -765,7 +761,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             justStartedJumping = true;
             isInAir = true;
             waterVFX.SetActive(false);
-            animator.CrossFade(jumpingUpClip.name, .2f);
+            animator.CrossFade(inAirClip.name, .2f);
             walkingAudioSource.Stop();
         }
     }
