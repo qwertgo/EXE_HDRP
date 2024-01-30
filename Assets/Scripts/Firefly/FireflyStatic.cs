@@ -29,6 +29,11 @@ public class FireflyStatic : MonoBehaviour
         collectSpeed = 1 / timeToCollect;
     }
 
+    private void OnDestroy()
+    {
+        FireflyManager.updatePosition -= UpdateVisualsPosition;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!other.tag.Equals("FireflyCollector"))

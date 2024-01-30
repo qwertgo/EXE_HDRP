@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: 1dfaa1e318b787e459be89faf2258a33
+<<<<<<<< HEAD:Assets/Models/Player/EXE.GameAnimation_RunCycle_1.6.fbx.meta
+guid: ed42a7ee9363b004e8fdf14cf448c5b9
+========
+guid: db1cd2d6cc2ddd240bbcca6816b46e15
+>>>>>>>> 5dccde2fbbdea6970edc43fc57cb280358f27a47:Assets/Models/HalfpipeNewHi.fbx.meta
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
