@@ -28,8 +28,6 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     private PlayerInput controls;
     private GameVariables gameVariables;
     private EventSystem eventSystem;
-    
-    
 
     private void Start()
     {
@@ -58,6 +56,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         {
             startEnemy.gameObject.SetActive(true);
         }
+
+
+        
     }
 
     public void StartGame(string playerName)
@@ -137,4 +138,5 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+    
 }
