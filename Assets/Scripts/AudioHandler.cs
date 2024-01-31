@@ -38,6 +38,12 @@ public static class AudioHandler
         audioSource.pitch = data.pitch;
         audioSource.PlayOneShot(data.audioClip, data.volume);
     }
+    
+    public static void PlayOneShotPitched(this AudioSource audioSource, AudioClipDataSingle data, float pitch)
+    {
+        audioSource.pitch = pitch;
+        audioSource.PlayOneShot(data.audioClip, data.volume);
+    }
 
     public static void PlayRandomAudioVariation(this AudioSource audioSource, AudioClipDataMultiple data, bool playReverse = false)
     {
