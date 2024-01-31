@@ -70,7 +70,7 @@ Material:
     - _DstBlend: 10
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
-    - _Length: 3.53
+    - _Length: 2.35
     - _MainTex_Speed: 3
     - _NoiseSacle: 35
     - _OpaqueCullMode: 2
@@ -101,14 +101,14 @@ Material:
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
     - _UseShadowThreshold: 0
-    - _Width: 0.207
+    - _Width: 1
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 3
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - _Color1: {r: 0.21568629, g: 0.36862746, b: 0.28235295, a: 1}
-    - _Color2: {r: 0.2784314, g: 0.5137255, b: 0.35686275, a: 1}
+    - _Color1: {r: 0.1476504, g: 0.3962264, b: 0.20288955, a: 1}
+    - _Color2: {r: 0.366574, g: 1.2335505, b: 0.6611915, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
