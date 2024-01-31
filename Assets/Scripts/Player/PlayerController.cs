@@ -79,8 +79,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private float maxSpeedOriginal;
     private float timeUntilNextWalkSound;
 
-    public int fireflyCount { get; private set; }
-    
     private bool isGrounded;
     private bool isFalling;
     private bool isDrifting;
@@ -89,6 +87,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool justStartedJumping;
     private bool isDriftingRight;
     private bool arrivedAtDriftPeak;
+    private bool stayAtCurrentVelocity;
+    private bool getSchilfBoost;
 
     private bool lockSteering;
 
@@ -631,7 +631,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             rb.velocity = storedVelocityMagnitude * playerVisuals.forward;
             if (other.gameObject.tag.Equals("Schilf"))
             {
-                StartBoost(boostForce * .65f);
+                StartCoroutine(StayAtVelocity());
+
                 walkingAudioSource.clip = walkingOnGrassClip;
                 walkingAudioSource.volume = .5f;
                 walkingAudioSource.Play();
@@ -643,6 +644,32 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
                 walkingAudioSource.Play();
             }
         }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        GameObject go = other.gameObject;
+        if (go.layer.IsInsideMask(groundLayer) && go.tag.Equals("Schilf"))
+        {
+            stayAtCurrentVelocity = false;
+        }
+    }
+
+    IEnumerator StayAtVelocity()
+    {
+        if(getSchilfBoost)
+            StartBoost(boostForce);
+        
+        stayAtCurrentVelocity = true;
+        getSchilfBoost = false;
+        while (stayAtCurrentVelocity)
+        {
+            rb.velocity = rb.velocity.normalized * storedVelocityMagnitude;
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1f);
+        getSchilfBoost = true;
     }
 
     private void BounceOfObstacle(Collision other)

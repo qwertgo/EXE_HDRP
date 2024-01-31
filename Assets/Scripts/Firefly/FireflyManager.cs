@@ -136,13 +136,13 @@ public class FireflyManager : MonoBehaviour
         if (firefliesCollectedInLastSecond == 0)
             pitchOffset = Random.Range(-.2f, .2f);
 
-        float pitch = 1 + pitchOffset + firefliesCollectedInLastSecond / 10f;
+        float pitch = .6f + pitchOffset + firefliesCollectedInLastSecond / 10f;
         firefliesCollectedInLastSecond++;
         int tmpCollectedFireflies = firefliesCollectedInLastSecond;
         
-        audioSource.PlayOneShotPitched(data);
+        audioSource.PlayOneShotPitched(data, pitch);
         
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         if (tmpCollectedFireflies == firefliesCollectedInLastSecond)
             firefliesCollectedInLastSecond = 0;
