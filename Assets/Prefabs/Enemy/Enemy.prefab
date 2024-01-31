@@ -113,7 +113,7 @@ MonoBehaviour:
   m_InnerSpotPercent: 100
   m_SpotIESCutoffPercent: 100
   m_LightDimmer: 1
-  m_VolumetricDimmer: 1
+  m_VolumetricDimmer: 0.6
   m_LightUnit: 0
   m_FadeDistance: 10000
   m_VolumetricFadeDistance: 10000
@@ -739,7 +739,7 @@ MonoBehaviour:
   idleSpeed: 14
   followPlayerSpeed: 18
   directionLerpFactor: 0.1
-  lightIntensityCloseToPlayer: 500000
+  lightIntensityCloseToPlayer: 50000
   lightIntensityFarFromPlayer: 9000000
   groundObstacleLayer:
     serializedVersion: 2

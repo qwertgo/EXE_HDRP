@@ -224,7 +224,7 @@ public class EnemyMovement : MonoBehaviour
 
             spotLight.transform.LookAt(playerTransform);
 
-            float distancePercentage = distanceToPlayer / followPlayerRadius;
+            float distancePercentage = Mathf.Clamp01((distanceToPlayer - 30) / followPlayerRadius);
             spotLight.intensity = Mathf.Lerp(lightIntensityCloseToPlayer, lightIntensityFarFromPlayer, distancePercentage);
             musicAudioSource.volume = distancePercentage * -1 + 1;
             
