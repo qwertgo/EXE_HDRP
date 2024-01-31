@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class CopyPosition : MonoBehaviour
 {
-    [SerializeField] private Transform transformToCopyPositionFrom;
+    [SerializeField] float yOffset = 0;
+    public Transform transformToCopyPositionFrom;
 
     private void Update()
     {
-        transform.position = transformToCopyPositionFrom.position;
+        transform.position = transformToCopyPositionFrom.position + new Vector3(0, yOffset, 0);
     }
 }

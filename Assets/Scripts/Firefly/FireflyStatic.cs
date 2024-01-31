@@ -17,17 +17,23 @@ public class FireflyStatic : MonoBehaviour
     [Header("References")]
     [SerializeField] protected Transform visuals;
     [SerializeField] private AudioClipDataSingle collectedClipData;
+    [SerializeField] private GameObject collectedParticleSystem;
 
 
     private MeshRenderer meshRenderer;
     private LODGroup lodGroup;
+    [SerializeField] private CopyPosition particleCopyPosition;
 
     protected void Start()
     {
         FireflyManager.updatePosition += UpdateVisualsPosition;
 
         collectSpeed = 1 / timeToCollect;
+        //particleCopyPosition = GetComponentInChildren<CopyPosition>();
+        
     }
+
+
 
     private void OnDestroy()
     {
@@ -72,10 +78,16 @@ public class FireflyStatic : MonoBehaviour
         }
         else
             StartCoroutine(fireflyManager.PlayStaticFireflySound(collectedClipData));
-            
-        
+
+        collectedParticleSystem.SetActive(true);
+        Transform playerTransform = GameVariables.instance.player.transform;
+        collectedParticleSystem.transform.position = playerTransform.position;
+        particleCopyPosition.transformToCopyPositionFrom = GameVariables.instance.player.transform;
 
         StartCoroutine(waitTillRespawn);
+
+        yield return new WaitForSeconds(10f);
+        collectedParticleSystem.SetActive(false);
     }
     
     private IEnumerator WaitTillRespawnStatic()
