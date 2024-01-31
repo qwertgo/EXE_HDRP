@@ -20,23 +20,17 @@ public static class SaveSystem
    
    public static List<HighScoreEntry> LoadHighScore()
    {
-      if (File.Exists(dataPath))
-      {
-         BinaryFormatter formatter = new BinaryFormatter();
-         FileStream stream = new FileStream(dataPath, FileMode.Open);
+      if(!File.Exists(dataPath))
+         return new List<HighScoreEntry>();
 
-         List<HighScoreEntry> list = formatter.Deserialize(stream) as List<HighScoreEntry>;
-         stream.Close();
 
-         return list;
-      }
-      else
-      {
-         List<HighScoreEntry> list = new List<HighScoreEntry>();
-         list.Add(new HighScoreEntry("SAMU", 1200));
-         
-         return list;
-      }
+      BinaryFormatter formatter = new BinaryFormatter();
+      FileStream stream = new FileStream(dataPath, FileMode.Open);
+
+      List<HighScoreEntry> list = formatter.Deserialize(stream) as List<HighScoreEntry>;
+      stream.Close();
+
+      return list;
    }
    
 }

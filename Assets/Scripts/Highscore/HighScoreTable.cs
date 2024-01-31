@@ -29,7 +29,7 @@ public class HighScoreTable : MonoBehaviour
 
         highScoreEntries = BubbleSort();
 
-        //change scale to match size of entries
+        //change panelScale to match size of entries
         Vector2 sizeDelta = highScorePanel.sizeDelta;
         highScorePanel.sizeDelta = new Vector2(sizeDelta.x, highScoreEntries.Count * 100);
 
@@ -39,6 +39,8 @@ public class HighScoreTable : MonoBehaviour
         }
 
         highscoreTable.SetActive(true);
+        
+        SaveSystem.SaveHighscore(highScoreEntries);
     }
     
     //Creates Visuals for given HighscoreEntry
