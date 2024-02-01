@@ -3300,8 +3300,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6688c5303653e4c46b6f98e8c9bce10a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedColor: {r: 0.5562478, g: 0.9433962, b: 0.677474, a: 1}
-  notSelectedColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  selectedColor: {r: 0.9245283, g: 0.74612224, b: 0.23985407, a: 0.8}
+  notSelectedColor1: {r: 0.25941178, g: 0.15205587, b: 0.6320754, a: 0.6862745}
+  notSelectedColor2: {r: 0.78318834, g: 0.7000712, b: 0.8679245, a: 0.6862745}
   highscoreTable: {fileID: 5983657081899220101}
   highScoreEntryVisualsPrefab: {fileID: 8860678366190918513, guid: caa5f22b567c8ff4aa4d22453d66d4b7,
     type: 3}
