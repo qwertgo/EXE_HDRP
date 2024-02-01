@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private bool startWithStartScreen;
     [SerializeField] private bool spawnStartEnemy;
 
+    private int restartButtonsPressed;
     private bool stoppedGame;
 
     [SerializeField] private GameObject pauseMenu;
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     private PlayerInput controls;
     private GameVariables gameVariables;
     private EventSystem eventSystem;
+    private IEnumerator restartCoroutine;
 
     private void Start()
     {
@@ -139,5 +141,60 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+    
+    #region restart
+    public void OnRestart_1(InputAction.CallbackContext context)
+    {
+        RestartButtonAction(context);
+    }
+
+    public void OnRestart_2(InputAction.CallbackContext context)
+    {
+        RestartButtonAction(context);
+    }
+
+    public void OnRestart_3(InputAction.CallbackContext context)
+    {
+        RestartButtonAction(context);
+    }
+
+    public void OnRestart_4(InputAction.CallbackContext context)
+    {
+        RestartButtonAction(context);
+    }
+
+    private void RestartButtonAction(InputAction.CallbackContext context)
+    {
+        if (context.canceled)
+        {
+            restartButtonsPressed--;
+            return;
+        }
+        if (!context.started)
+            return;
+        
+        restartButtonsPressed++;
+        
+        if (restartCoroutine != null)
+            return;
+        
+        restartCoroutine = CheckForAllRestartButtons();
+        StartCoroutine(restartCoroutine);
+    }
+
+    IEnumerator CheckForAllRestartButtons()
+    {
+        while (restartButtonsPressed > 0)
+        {
+            if(restartButtonsPressed >= 4)
+                RestartLevel();
+
+            yield return null;
+        }
+
+        restartCoroutine = null;
+    }
+    
+    #endregion
     
 }
