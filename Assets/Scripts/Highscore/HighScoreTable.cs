@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class HighScoreTable : MonoBehaviour
 {
     [SerializeField] private Color selectedColor;
-    [SerializeField] private Color notSelectedColor;
+    [SerializeField] private Color notSelectedColor1;
+    [SerializeField] private Color notSelectedColor2;
     
     [SerializeField] private GameObject highscoreTable;
     [SerializeField] private GameObject highScoreEntryVisualsPrefab;
@@ -17,8 +19,6 @@ public class HighScoreTable : MonoBehaviour
 
     private List<HighScoreEntry> highScoreEntries = new();
 
-    
-    
 
     //makes HighScoreTable visible, Adds New Entry, and creates visuals for all HighScoreEntries
     public void CreateHighScoreVisuals(HighScoreEntry newEntry)
@@ -61,9 +61,7 @@ public class HighScoreTable : MonoBehaviour
         if (i + 1 == place)
             image.color = selectedColor;
         else
-            image.color = new Color(notSelectedColor.r, notSelectedColor.g, notSelectedColor.b,
-                place % 2 < 1 ? .75f : 1);
-
+            image.color = i % 2 == 0 ? notSelectedColor1 : notSelectedColor2;
     }
     
     private List<HighScoreEntry> BubbleSort()
