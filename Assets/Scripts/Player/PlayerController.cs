@@ -193,6 +193,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private void OnDestroy()
     {
         material.SetFloat("_fireflyCount", 0);
+        controls.Disable();
     }
     #endregion
 

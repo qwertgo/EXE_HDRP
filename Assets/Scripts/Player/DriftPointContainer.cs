@@ -93,4 +93,12 @@ public class DriftPointContainer : MonoBehaviour
     {
         return driftPoints.Count > 0 ? driftPoints.First() : coyoteDriftPoint;
     }
+
+    private void OnDestroy()
+    {
+        driftPoints.Clear();
+        visibleDriftPoint = null;
+        coyoteDriftPoint = null;
+        
+    }
 }
