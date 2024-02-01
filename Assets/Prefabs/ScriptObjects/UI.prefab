@@ -3137,7 +3137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -3303,10 +3303,10 @@ MonoBehaviour:
   selectedColor: {r: 0.9245283, g: 0.74612224, b: 0.23985407, a: 0.8}
   notSelectedColor1: {r: 0.25941178, g: 0.15205587, b: 0.6320754, a: 0.6862745}
   notSelectedColor2: {r: 0.78318834, g: 0.7000712, b: 0.8679245, a: 0.6862745}
-  highscoreTable: {fileID: 5983657081899220101}
+  highScoreTable: {fileID: 5983657081899220101}
+  highScorePanel: {fileID: 327863756454420942}
   highScoreEntryVisualsPrefab: {fileID: 8860678366190918513, guid: caa5f22b567c8ff4aa4d22453d66d4b7,
     type: 3}
-  highScorePanel: {fileID: 327863756454420942}
 --- !u!1 &4454812033958697475
 GameObject:
   m_ObjectHideFlags: 0
@@ -3580,18 +3580,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 4105362213306300492}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_NormalColor: {r: 0.54509807, g: 0.33333334, b: 0, a: 1}
+    m_HighlightedColor: {r: 0.8941177, g: 0.54901963, b: 0, a: 1}
+    m_PressedColor: {r: 0.8431373, g: 0.5176471, b: 0, a: 0.5529412}
+    m_SelectedColor: {r: 0.8941177, g: 0.54901963, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -3607,7 +3607,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 8006665634703114556}
+  m_TargetGraphic: {fileID: 3744222106570497120}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -3699,8 +3699,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281241809
-  m_fontColor: {r: 0.8196079, g: 0.5647059, b: 0.18039216, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5639,8 +5639,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281110994
-  m_fontColor: {r: 0.8235295, g: 0.5686275, b: 0.17254902, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5760,7 +5760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 1}
+  m_Color: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5790,18 +5790,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnDown: {fileID: 4105362213306300492}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0.5529412}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.1764706}
-    m_SelectedColor: {r: 1, g: 0.2688679, b: 0.2688679, a: 1}
+    m_NormalColor: {r: 0.54509807, g: 0.33333334, b: 0, a: 1}
+    m_HighlightedColor: {r: 0.97647065, g: 0.59607846, b: 0, a: 1}
+    m_PressedColor: {r: 0.9686275, g: 0.5921569, b: 0, a: 0.5529412}
+    m_SelectedColor: {r: 0.9686275, g: 0.5921569, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -5817,7 +5817,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 6389441859849136225}
+  m_TargetGraphic: {fileID: 2347383835639137921}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -6547,8 +6547,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4280979666
-  m_fontColor: {r: 0.8235295, g: 0.5647059, b: 0.16470589, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7424,18 +7424,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 6787373953270547821}
+    m_SelectOnDown: {fileID: 5005506865948170641}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_NormalColor: {r: 0.54509807, g: 0.33333334, b: 0, a: 1}
+    m_HighlightedColor: {r: 0.9725491, g: 0.59607846, b: 0, a: 1}
+    m_PressedColor: {r: 0.909804, g: 0.5568628, b: 0, a: 0.5529412}
+    m_SelectedColor: {r: 0.854902, g: 0.5254902, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -7451,7 +7451,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 3375501047440903841}
+  m_TargetGraphic: {fileID: 5520244952503041314}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -7597,7 +7597,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
