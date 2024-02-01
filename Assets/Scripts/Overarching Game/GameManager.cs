@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
@@ -22,10 +23,20 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private HighScoreTable highScoreTable;
     [SerializeField] private GameObject highScoreRestartButton; 
     [SerializeField] private EnemyMovement startEnemy;
+    
+    [Header("Start Menu")]
     [SerializeField] private GameObject startMenu;
     [SerializeField] private GameObject startMenuPlayButton;
     [SerializeField] private GameObject startMenuMain;
-    [SerializeField] private GameObject startMenuName;
+    [FormerlySerializedAs("startMenuName")] [SerializeField] private GameObject nameSelection;
+
+    [Header("Controls Menu")] 
+    [SerializeField] private GameObject controlsMenu;
+    [SerializeField] private GameObject controlsBackButton;
+
+    [Header("Credits Menu")]
+    [SerializeField] private GameObject creditsMenu;
+    [SerializeField] private GameObject creditsBackButton;
 
     private PlayerInput controls;
     private GameVariables gameVariables;
@@ -61,6 +72,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         }
     }
 
+    #region menu
     public void StartGame(string playerName)
     {
         this.playerName = playerName;
@@ -76,10 +88,42 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     public void EnterNameSelection()
     {
         startMenuMain.SetActive(false);
-        startMenuName.SetActive(true);
-        eventSystem.SetSelectedGameObject(null);
-        eventSystem.SetSelectedGameObject(startMenuName);
+        nameSelection.SetActive(true);
+        SelectUI(nameSelection);
     }
+
+    public void EnterControlsMenu()
+    {
+        startMenuMain.SetActive(false);
+        controlsMenu.SetActive(true);
+        
+        SelectUI(controlsBackButton);
+    }
+
+    public void EnterCreditsMenu()
+    {
+        startMenuMain.SetActive(false);
+        creditsMenu.SetActive(true);
+        
+        SelectUI(creditsBackButton);
+    }
+
+    public void EnterMainMenu()
+    {
+        creditsMenu.SetActive(false);
+        controlsMenu.SetActive(false);
+        startMenuMain.SetActive(true);
+        
+        SelectUI(startMenuPlayButton);
+    }
+
+    private void SelectUI(GameObject o)
+    {
+        eventSystem.SetSelectedGameObject(null);
+        eventSystem.SetSelectedGameObject(o);
+    }
+    
+    #endregion
 
     public void TooglePause()
     {
@@ -104,6 +148,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         }
         
     }
+    
 
     public void StopGame()
     {
