@@ -203,7 +203,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         
         Time.timeScale = 0;
         GameVariables.instance.player.Die();
-        
+
         HighScoreEntry newEntry = new HighScoreEntry(playerName, Time.time);
         highScoreTable.CreateHighScoreVisuals(newEntry);
         
