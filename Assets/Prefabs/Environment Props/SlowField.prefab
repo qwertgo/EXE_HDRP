@@ -195,7 +195,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 24787bea8ac79314c9464cff3f00fdb4,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 125
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -275,7 +275,7 @@ Transform:
   - {fileID: 4491833683596030119}
   - {fileID: 1139289643906615028}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1104700291789250962
 MonoBehaviour:
@@ -1682,6 +1682,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -2517,6 +2522,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -2887,6 +2897,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -3817,6 +3832,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -4053,6 +4073,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (20)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -7503,6 +7528,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (17)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -8737,7 +8767,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e937443780769564faa0f5b7af9e264d,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 18
+      value: 22
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9518,7 +9548,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 55cf9fe2b2a8edc42b236b48ebbe39c3,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 18
+      value: 22
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10285,6 +10315,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (18)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -11006,6 +11041,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (19)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -13267,6 +13307,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -13503,6 +13548,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -15184,6 +15234,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -17613,6 +17668,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (21)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -17770,6 +17830,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -18111,6 +18176,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -19604,6 +19674,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -22099,6 +22174,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -23923,6 +24003,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -24081,6 +24166,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -24238,6 +24328,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -24663,7 +24758,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e937443780769564faa0f5b7af9e264d,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 18
+      value: 22
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -24941,6 +25036,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treibholz (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
       propertyPath: m_RootOrder
@@ -25019,6 +25119,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}
@@ -26294,6 +26399,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Treibholz (14)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411187381323284540, guid: 91b46bd6797cf334c8ee77ae388fffac,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7401600981148584949, guid: 91b46bd6797cf334c8ee77ae388fffac,
         type: 3}

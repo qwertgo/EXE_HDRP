@@ -18,7 +18,8 @@ public class DriftPointContainer : MonoBehaviour
 
     private void Start()
     {
-        playerTransform = transform.parent.parent;
+        // playerTransform = transform.parent.parent;
+        playerTransform = GameVariables.instance.player.transform;
     }
 
     public void SetRightContainer()
@@ -69,6 +70,10 @@ public class DriftPointContainer : MonoBehaviour
     {
         for (int i = driftPoints.Count - 1; i > 0; i--)
         {
+            // Debug.Log(driftPoints);
+            // Debug.Log(driftPoints[i]);
+            // Debug.Log(playerTransform);
+            
             float indexDistance = Vector3.Distance(driftPoints[i].transform.position,playerTransform.position);
             float nextIndexDistance = Vector3.Distance(driftPoints[i - 1].transform.position, playerTransform.position);
             if (indexDistance < nextIndexDistance)

@@ -179,6 +179,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: "S\xE4ule-GrasHalm"
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8739073c99dfdbb429b523f889405be9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -277,6 +282,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: "S\xE4ule-GrasHalm (5)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8739073c99dfdbb429b523f889405be9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -377,6 +387,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: "S\xE4ule-GrasHalm (4)"
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8739073c99dfdbb429b523f889405be9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -475,6 +490,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: "S\xE4ule-GrasHalm (7)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8739073c99dfdbb429b523f889405be9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -575,6 +595,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: "S\xE4ule-GrasHalm (1)"
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8739073c99dfdbb429b523f889405be9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -673,6 +698,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: "S\xE4ule-GrasHalm (2)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8739073c99dfdbb429b523f889405be9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -773,6 +803,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: "S\xE4ule-GrasHalm (3)"
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8739073c99dfdbb429b523f889405be9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -871,6 +906,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: "S\xE4ule-GrasHalm (6)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8739073c99dfdbb429b523f889405be9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

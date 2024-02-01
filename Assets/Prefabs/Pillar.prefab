@@ -154,7 +154,7 @@ Transform:
   - {fileID: 7075941181672674073}
   - {fileID: 7902781472368067503}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6967304023717275165
 MonoBehaviour:
@@ -699,6 +699,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Piller_Zahn
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1460dd8fa007ce340a8db7c7d2db0abb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3644448432177937167, guid: 1460dd8fa007ce340a8db7c7d2db0abb,
         type: 3}

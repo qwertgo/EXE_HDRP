@@ -725,7 +725,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: bba02799b7c09134bb2792fa8a91a8a9,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 16
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2243,10 +2243,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wurzel_F_3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dc1859681d0decd46b0ec7e9626b0533,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 1994348270441840194, guid: dc1859681d0decd46b0ec7e9626b0533,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 16
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4878191787561613047, guid: dc1859681d0decd46b0ec7e9626b0533,
         type: 3}
