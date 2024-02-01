@@ -5,6 +5,7 @@ using System.Linq;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -111,6 +112,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AnimationClip jumpingOpenMouthClip;
     [SerializeField] private AnimationClip tongueShoot;
     [SerializeField] private AnimationClip tongueReturn;
+    [SerializeField] private MultiAimConstraint headRotationConstraint;
     
     [Header("Audio Sources")] 
     [SerializeField] private AudioSource mainAudioSource;
@@ -157,7 +159,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         cinemachineTransposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         currentMaxSpeed = baseMaxSpeed;
         boostPercentagePerSecond = 1 / timeToGetBoost;
-        
+
         if (controls == null)
         {
             controls = new PlayerInput();
@@ -283,7 +285,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private void StartDrifting()
     {
         isDrifting = true;
-
+        headRotationConstraint.weight = 1;
+        rotationAtDriftStart = playerVisuals.rotation;
+        currentTraction = tractionWhileDrifting;
+        driftBoostPercentage = 0;
+        driftHorizontal = isDriftingRight ? .5f : -.5f;
+        
         switch (currentState)
         {
             case PlayerState.Jumping:
@@ -299,19 +306,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
                 animator.CrossFade(runningOpenMouthClip.name, .1f);
                 break;
         }
-        
-        
-        
+
         tongueAnimator.CrossFade(tongueShoot.name, 0f);
         tongueAudioSource.PlayRandomAudioVariation(tongueAudioData);
 
         outerDriftRadius = Vector3.Distance(currentDriftPoint.position, transform.position);
 
-        rotationAtDriftStart = playerVisuals.rotation;
-        currentTraction = tractionWhileDrifting;
-        driftBoostPercentage = 0;
-        driftHorizontal = isDriftingRight ? .5f : -.5f;
-        
         //change how fast the camera copies the rotation of the player
         cinemachineTransposer.m_YawDamping = cameraDriftYawDamping;
 
@@ -330,6 +330,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         driftHorizontal = 0;
         horizontal = 0;
         currentDriftRotation = 0;
+        headRotationConstraint.weight = 0;
         currentTraction = traction;
         
         switch (currentState)
@@ -665,7 +666,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
                 StartCoroutine(StayAtVelocity());
 
                 walkingAudioSource.clip = walkingOnGrassClip;
-                walkingAudioSource.volume = .5f;
+                walkingAudioSource.volume = .1f;
                 walkingAudioSource.Play();
             }
             else
