@@ -6510,9 +6510,9 @@ MonoBehaviour:
     m_Offset: {x: 0, y: 0, z: 0}
     m_MinLimit: -180
     m_MaxLimit: 180
-    m_AimAxis: 1
-    m_UpAxis: 2
-    m_WorldUpType: 0
+    m_AimAxis: 2
+    m_UpAxis: 1
+    m_WorldUpType: 1
     m_WorldUpObject: {fileID: 0}
     m_WorldUpAxis: 2
     m_MaintainOffset: 0
@@ -11960,7 +11960,7 @@ Transform:
   - {fileID: 2440283806234537626}
   - {fileID: 1609444752658654278}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5107119683635567647
 MonoBehaviour:
