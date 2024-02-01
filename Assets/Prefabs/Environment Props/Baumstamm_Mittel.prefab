@@ -67,7 +67,7 @@ Transform:
   - {fileID: 3626990337427467418}
   - {fileID: 3810007054267217347}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4246249060380977473
 MonoBehaviour:
@@ -82,12 +82,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_OverrideArea: 1
-  m_Area: 0
+  m_Area: 1
   m_OverrideGenerateLinks: 0
   m_GenerateLinks: 0
-  m_IgnoreFromBuild: 1
+  m_IgnoreFromBuild: 0
   m_ApplyToChildren: 1
-  m_AffectedAgents: f2652fae
+  m_AffectedAgents: ffffffff
 --- !u!1 &2365375657449559646
 GameObject:
   m_ObjectHideFlags: 0
