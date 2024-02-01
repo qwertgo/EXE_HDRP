@@ -38,7 +38,7 @@ public class HighScoreTable : MonoBehaviour
             AddHighScoreEntryVisuals(highScoreEntries[i], i);
         }
 
-        highScorePanel.anchoredPosition = new Vector2(0, place * 100);
+        highScorePanel.anchoredPosition = new Vector2(0, (place -1) * 100);
         highScoreTable.gameObject.SetActive(true);
         
         SaveSystem.SaveHighscore(highScoreEntries);

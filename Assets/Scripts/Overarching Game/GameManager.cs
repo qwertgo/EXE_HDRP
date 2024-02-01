@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private GameObject timeSlider;
     [SerializeField] private DayNightCycleController dayNightCycleController;
     [SerializeField] private GameObject playerWaterVFX;
+    [SerializeField] private GameTimer gameTimer;
     
 
     private PlayerInput controls;
@@ -128,6 +129,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         gameVariables.player.enabled = true;
         dayNightCycleController.enabled = true;
         speedOMeter.enabled = true;
+        gameTimer.enabled = true;
         
         timeSlider.SetActive(true);
         playerWaterVFX.SetActive(false);
@@ -192,7 +194,6 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         }
         
     }
-    
 
     public void StopGame()
     {
@@ -206,6 +207,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
         HighScoreEntry newEntry = new HighScoreEntry(playerName, Time.time);
         highScoreTable.CreateHighScoreVisuals(newEntry);
+        SelectUI(highScoreRestartButton);
         
         eventSystem.SetSelectedGameObject(null);
         eventSystem.SetSelectedGameObject(highScoreRestartButton);

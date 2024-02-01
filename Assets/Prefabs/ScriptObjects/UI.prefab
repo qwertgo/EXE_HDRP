@@ -175,8 +175,8 @@ RectTransform:
   m_Father: {fileID: 3388398153915013293}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.013000011, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -309,7 +309,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6812655879730098053
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1033,8 +1033,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 421.76083, y: -40}
-  m_SizeDelta: {x: 843.52167, y: 80}
+  m_AnchoredPosition: {x: 400, y: -40}
+  m_SizeDelta: {x: 800, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1262645661235619847
 CanvasRenderer:
@@ -2596,10 +2596,10 @@ RectTransform:
   m_Father: {fileID: 5168214221639310221}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 403.52167, y: -312.37112}
-  m_SizeDelta: {x: 707.04333, y: 141.58075}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 360, y: -347.5}
+  m_SizeDelta: {x: 620, y: 165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1702941464438563971
 CanvasRenderer:
@@ -3300,9 +3300,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6688c5303653e4c46b6f98e8c9bce10a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedColor: {r: 0.9245283, g: 0.74612224, b: 0.23985407, a: 0.8}
-  notSelectedColor1: {r: 0.25941178, g: 0.15205587, b: 0.6320754, a: 0.6862745}
-  notSelectedColor2: {r: 0.78318834, g: 0.7000712, b: 0.8679245, a: 0.6862745}
+  selectedColor: {r: 1, g: 0.6117647, b: 0, a: 1}
+  notSelectedColor1: {r: 0.21176471, g: 0.3254902, b: 0.23921569, a: 0.6862745}
+  notSelectedColor2: {r: 0.6666667, g: 0.70980394, b: 0.61960787, a: 0.6862745}
   highScoreTable: {fileID: 5983657081899220101}
   highScorePanel: {fileID: 327863756454420942}
   highScoreEntryVisualsPrefab: {fileID: 8860678366190918513, guid: caa5f22b567c8ff4aa4d22453d66d4b7,
@@ -3342,8 +3342,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1265.2825, y: -40}
-  m_SizeDelta: {x: 843.52167, y: 80}
+  m_AnchoredPosition: {x: 1200, y: -40}
+  m_SizeDelta: {x: 800, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5048479173982185871
 CanvasRenderer:
@@ -4163,7 +4163,7 @@ RectTransform:
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4753,7 +4753,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 25
   m_Viewport: {fileID: 7821143980222284468}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
@@ -5319,7 +5319,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.5411765, g: 0.32941177, b: 0, a: 1}
     m_HighlightedColor: {r: 0.98039216, g: 0.6, b: 0, a: 1}
     m_PressedColor: {r: 0.98039216, g: 0.6, b: 0, a: 0.4509804}
-    m_SelectedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_SelectedColor: {r: 0.9803922, g: 0.6, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -6915,10 +6915,10 @@ RectTransform:
   m_Father: {fileID: 5168214221639310221}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 403.52167, y: -120.790375}
-  m_SizeDelta: {x: 707.04333, y: 141.58075}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 360, y: -132.5}
+  m_SizeDelta: {x: 620, y: 165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8534188839405343605
 CanvasRenderer:
