@@ -11,9 +11,9 @@ public class HighScoreTable : MonoBehaviour
     [SerializeField] private Color notSelectedColor1;
     [SerializeField] private Color notSelectedColor2;
     
-    [SerializeField] private GameObject highscoreTable;
-    [SerializeField] private GameObject highScoreEntryVisualsPrefab;
+    [SerializeField] private GameObject highScoreTable;
     [SerializeField] private RectTransform highScorePanel;
+    [SerializeField] private GameObject highScoreEntryVisualsPrefab;
 
     private int place;
 
@@ -38,7 +38,8 @@ public class HighScoreTable : MonoBehaviour
             AddHighScoreEntryVisuals(highScoreEntries[i], i);
         }
 
-        highscoreTable.SetActive(true);
+        highScorePanel.anchoredPosition = new Vector2(0, place * 100);
+        highScoreTable.gameObject.SetActive(true);
         
         SaveSystem.SaveHighscore(highScoreEntries);
     }
