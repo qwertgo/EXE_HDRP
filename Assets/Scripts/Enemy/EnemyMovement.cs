@@ -286,8 +286,11 @@ public class EnemyMovement : MonoBehaviour
 
         if(currentState == enemyState.Idle)
             StartCoroutine(Attack());
-        else if(currentState > 0)
+        else if (currentState > 0)
+        {
+            musicAudioSource.Stop();
             GameManager.instance.StopGame();
+        }
     }
     #endregion
 

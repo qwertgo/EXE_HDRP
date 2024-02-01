@@ -773,9 +773,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region Various Methods ------------------------------------------------------------------------------------------------------------------------------------
     public void Die()
     {
-        rb.isKinematic = true;
         mainAudioSource.PlayOneShot(winClip, 1);
+        walkingAudioSource.Stop();
+        musicAudioSource.Play();
         enabled = false;
+        rb.isKinematic = true;
     }
 
     void PauseMe()

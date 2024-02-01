@@ -15,6 +15,7 @@ public class GameTimer : MonoBehaviour
     [SerializeField] private Slider sliderLeft;
     [SerializeField] private Color sliderColorBase;
     [SerializeField] private Color sliderColorSpecial;
+    [SerializeField] private Material echsenMaterial;
 
     private IEnumerator update;
     private AudioSource audioSource;
@@ -104,8 +105,15 @@ public class GameTimer : MonoBehaviour
         float seconds = Mathf.FloorToInt(remainingTime % 60);
         remainingTimeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
-        float remaingTimeInPercentage = remainingTime / gameTime;
-        sliderLeft.value = remaingTimeInPercentage;
-        sliderRight.value = remaingTimeInPercentage;
+        float remainingTimeInPercentage = remainingTime / gameTime;
+        sliderLeft.value = remainingTimeInPercentage;
+        sliderRight.value = remainingTimeInPercentage;
+        
+        echsenMaterial.SetFloat("_Percentage", remainingTimeInPercentage);
+    }
+
+    private void OnDestroy()
+    {
+        echsenMaterial.SetFloat("_Percentage", 1);
     }
 }
