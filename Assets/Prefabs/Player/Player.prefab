@@ -5588,7 +5588,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1270336248979310233}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc8af08a3d6b96d459ad8801637983a2, type: 3}
   m_Name: 
@@ -5744,6 +5744,7 @@ MonoBehaviour:
     type: 2}
   tongueShoot: {fileID: 7400000, guid: 1112e510eed472f43908d0b89538a916, type: 2}
   tongueReturn: {fileID: 7400000, guid: 22bf19b4b1b728a4ba612597a16d6546, type: 2}
+  headRotationConstraint: {fileID: 1045949004015999972}
   mainAudioSource: {fileID: 5817656850918792502}
   tongueAudioSource: {fileID: 3322682882765054135}
   walkingAudioSource: {fileID: 2795884714206764542}
@@ -5754,7 +5755,7 @@ MonoBehaviour:
   obstacleCrashAudioData: {fileID: 11400000, guid: cfad75f37773f0e4ba064c1548e4d517,
     type: 2}
   walkingOnWaterClip: {fileID: 8300000, guid: 54800035c87481342a17c330bf8813ec, type: 3}
-  walkingOnGrassClip: {fileID: 8300000, guid: 051d90924a50e4247aeb356e479be18b, type: 3}
+  walkingOnGrassClip: {fileID: 8300000, guid: 094a4041d0754fa43a5a64f163e1afe0, type: 3}
   winClip: {fileID: 8300000, guid: cbd3602d2773e1447a31d3cdf03a49ef, type: 3}
 --- !u!54 &4525183451630538490
 Rigidbody:
@@ -6478,7 +6479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Data:
     m_ConstrainedObject: {fileID: 7888347157179050484}
     m_SourceObjects:
@@ -11960,7 +11961,7 @@ Transform:
   - {fileID: 2440283806234537626}
   - {fileID: 1609444752658654278}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5107119683635567647
 MonoBehaviour:
