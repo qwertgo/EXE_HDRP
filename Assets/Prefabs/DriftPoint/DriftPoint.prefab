@@ -35,7 +35,7 @@ Transform:
   - {fileID: 1170670226754830151}
   - {fileID: 6850259307868121513}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &408026566128915616
 SphereCollider:
@@ -72,7 +72,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rightMat: {fileID: 2100000, guid: 836cee62b3b118b4497b347987631b93, type: 2}
   leftMat: {fileID: 2100000, guid: b72b5e93b8f414b44a22d53e0eec144c, type: 2}
-  defaultMat: {fileID: 2100000, guid: 67ad24467ef472949b2eb01fa2b041ce, type: 2}
+  defaultMat: {fileID: 2100000, guid: 0a58b27680bbb21468e22f95f49441e2, type: 2}
   meshRenderers:
   - {fileID: 0}
 --- !u!1001 &1564999437499088542
