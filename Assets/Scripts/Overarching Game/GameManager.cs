@@ -38,6 +38,15 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private GameObject creditsMenu;
     [SerializeField] private GameObject creditsBackButton;
 
+    [Header("Activate At Game Start")] 
+    [SerializeField] private Transform cameraLookAt;
+    [SerializeField] private AudioSource playerWalkingAudioSource;
+    [SerializeField] private SpeedOMeter speedOMeter;
+    [SerializeField] private GameObject timeSlider;
+    [SerializeField] private DayNightCycleController dayNightCycleController;
+    [SerializeField] private GameObject playerWaterVFX;
+    
+
     private PlayerInput controls;
     private GameVariables gameVariables;
     private EventSystem eventSystem;
@@ -60,19 +69,28 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         gameVariables = GameVariables.instance;
         eventSystem = EventSystem.current;
 
-        if (startWithStartScreen)
+
+        if (!startWithStartScreen)
         {
-            Time.timeScale = 0;
-            startMenu.SetActive(true);
-            eventSystem.SetSelectedGameObject(startMenuPlayButton);
+            ActivateObjectsToStartGame();
+            if(spawnStartEnemy)
+                startEnemy.gameObject.SetActive(true);
+            
+            return;
         }
-        else if(spawnStartEnemy)
-        {
-            startEnemy.gameObject.SetActive(true);
-        }
+        
+        startMenu.SetActive(true);
+        eventSystem.SetSelectedGameObject(startMenuPlayButton);
     }
 
     #region menu
+    public void EnterNameSelection()
+    {
+        startMenuMain.SetActive(false);
+        nameSelection.SetActive(true);
+        SelectUI(nameSelection);
+    }
+    
     public void StartGame(string playerName)
     {
         this.playerName = playerName;
@@ -80,16 +98,42 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         Time.timeScale = 1;
         startMenu.SetActive(false);
         eventSystem.SetSelectedGameObject(null);
+
+        StartCoroutine(WaitAndStartRound());
+    }
+
+    IEnumerator WaitAndStartRound()
+    {
+        float t = 0;
+        float speed = 1f / 2;
+        Vector3 startPosition = cameraLookAt.position;
+        Vector3 endPosition = new Vector3(0, .4f, 0);
+
+        while (t <= 1)
+        {
+            t += Time.deltaTime * speed;
+            cameraLookAt.position = Vector3.Lerp(startPosition, endPosition, Mathf.SmoothStep(0, 1, t));
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(.5f);
+        ActivateObjectsToStartGame();
         
         if(spawnStartEnemy)
             startEnemy.gameObject.SetActive(true);
     }
 
-    public void EnterNameSelection()
+    private void ActivateObjectsToStartGame()
     {
-        startMenuMain.SetActive(false);
-        nameSelection.SetActive(true);
-        SelectUI(nameSelection);
+        gameVariables.player.enabled = true;
+        dayNightCycleController.enabled = true;
+        speedOMeter.enabled = true;
+        
+        timeSlider.SetActive(true);
+        playerWaterVFX.SetActive(false);
+        
+        playerWalkingAudioSource.Play();
+        cameraLookAt.position = new Vector3(0, .4f, 0);
     }
 
     public void EnterControlsMenu()
