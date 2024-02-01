@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
@@ -22,10 +23,29 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private HighScoreTable highScoreTable;
     [SerializeField] private GameObject highScoreRestartButton; 
     [SerializeField] private EnemyMovement startEnemy;
+    
+    [Header("Start Menu")]
     [SerializeField] private GameObject startMenu;
     [SerializeField] private GameObject startMenuPlayButton;
     [SerializeField] private GameObject startMenuMain;
-    [SerializeField] private GameObject startMenuName;
+    [FormerlySerializedAs("startMenuName")] [SerializeField] private GameObject nameSelection;
+
+    [Header("Controls Menu")] 
+    [SerializeField] private GameObject controlsMenu;
+    [SerializeField] private GameObject controlsBackButton;
+
+    [Header("Credits Menu")]
+    [SerializeField] private GameObject creditsMenu;
+    [SerializeField] private GameObject creditsBackButton;
+
+    [Header("Activate At Game Start")] 
+    [SerializeField] private Transform cameraLookAt;
+    [SerializeField] private AudioSource playerWalkingAudioSource;
+    [SerializeField] private SpeedOMeter speedOMeter;
+    [SerializeField] private GameObject timeSlider;
+    [SerializeField] private DayNightCycleController dayNightCycleController;
+    [SerializeField] private GameObject playerWaterVFX;
+    
 
     private PlayerInput controls;
     private GameVariables gameVariables;
@@ -49,18 +69,28 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         gameVariables = GameVariables.instance;
         eventSystem = EventSystem.current;
 
-        if (startWithStartScreen)
+
+        if (!startWithStartScreen)
         {
-            Time.timeScale = 0;
-            startMenu.SetActive(true);
-            eventSystem.SetSelectedGameObject(startMenuPlayButton);
+            ActivateObjectsToStartGame();
+            if(spawnStartEnemy)
+                startEnemy.gameObject.SetActive(true);
+            
+            return;
         }
-        else if(spawnStartEnemy)
-        {
-            startEnemy.gameObject.SetActive(true);
-        }
+        
+        startMenu.SetActive(true);
+        eventSystem.SetSelectedGameObject(startMenuPlayButton);
     }
 
+    #region menu
+    public void EnterNameSelection()
+    {
+        startMenuMain.SetActive(false);
+        nameSelection.SetActive(true);
+        SelectUI(nameSelection);
+    }
+    
     public void StartGame(string playerName)
     {
         this.playerName = playerName;
@@ -68,18 +98,76 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         Time.timeScale = 1;
         startMenu.SetActive(false);
         eventSystem.SetSelectedGameObject(null);
+
+        StartCoroutine(WaitAndStartRound());
+    }
+
+    IEnumerator WaitAndStartRound()
+    {
+        float t = 0;
+        float speed = 1f / 2;
+        Vector3 startPosition = cameraLookAt.position;
+        Vector3 endPosition = new Vector3(0, .4f, 0);
+
+        while (t <= 1)
+        {
+            t += Time.deltaTime * speed;
+            cameraLookAt.position = Vector3.Lerp(startPosition, endPosition, Mathf.SmoothStep(0, 1, t));
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(.5f);
+        ActivateObjectsToStartGame();
         
         if(spawnStartEnemy)
             startEnemy.gameObject.SetActive(true);
     }
 
-    public void EnterNameSelection()
+    private void ActivateObjectsToStartGame()
+    {
+        gameVariables.player.enabled = true;
+        dayNightCycleController.enabled = true;
+        speedOMeter.enabled = true;
+        
+        timeSlider.SetActive(true);
+        playerWaterVFX.SetActive(false);
+        
+        playerWalkingAudioSource.Play();
+        cameraLookAt.position = new Vector3(0, .4f, 0);
+    }
+
+    public void EnterControlsMenu()
     {
         startMenuMain.SetActive(false);
-        startMenuName.SetActive(true);
-        eventSystem.SetSelectedGameObject(null);
-        eventSystem.SetSelectedGameObject(startMenuName);
+        controlsMenu.SetActive(true);
+        
+        SelectUI(controlsBackButton);
     }
+
+    public void EnterCreditsMenu()
+    {
+        startMenuMain.SetActive(false);
+        creditsMenu.SetActive(true);
+        
+        SelectUI(creditsBackButton);
+    }
+
+    public void EnterMainMenu()
+    {
+        creditsMenu.SetActive(false);
+        controlsMenu.SetActive(false);
+        startMenuMain.SetActive(true);
+        
+        SelectUI(startMenuPlayButton);
+    }
+
+    private void SelectUI(GameObject o)
+    {
+        eventSystem.SetSelectedGameObject(null);
+        eventSystem.SetSelectedGameObject(o);
+    }
+    
+    #endregion
 
     public void TooglePause()
     {
@@ -104,6 +192,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         }
         
     }
+    
 
     public void StopGame()
     {

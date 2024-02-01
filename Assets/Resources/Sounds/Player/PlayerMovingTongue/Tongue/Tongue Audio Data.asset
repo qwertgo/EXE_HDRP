@@ -17,4 +17,4 @@ MonoBehaviour:
   hasPitchVariation: 1
   volumeVariation: {x: 0.25, y: 0.5}
   pitchVariation: {x: 0.9, y: 1.4}
-  path: Sounds/Player/Tongue/
+  path: Sounds/Player/PlayerMovingTongue/Tongue/

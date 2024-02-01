@@ -107,7 +107,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [Header("Animations")] 
     [SerializeField] private AnimationClip runningClip;
     [SerializeField] private AnimationClip runningOpenMouthClip;
-    // [SerializeField] private AnimationClip jumpingUpClip;
     [SerializeField] private AnimationClip jumpingClip;
     [SerializeField] private AnimationClip jumpingOpenMouthClip;
     [SerializeField] private AnimationClip tongueShoot;

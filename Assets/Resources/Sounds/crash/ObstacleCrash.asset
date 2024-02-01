@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: ObstacleCrash
   m_EditorClassIdentifier: Assembly-CSharp::AudioClipDataMultiple
-  volume: 1
+  volume: 0.3
   pitch: 1
   hasPitchVariation: 0
   volumeVariation: {x: 0.8, y: 1}
