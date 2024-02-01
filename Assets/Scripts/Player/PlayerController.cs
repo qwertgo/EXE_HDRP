@@ -119,14 +119,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] private AudioSource tongueAudioSource;
     [SerializeField] private AudioSource walkingAudioSource;
     public AudioSource musicAudioSource;
+    [SerializeField] private AudioSource playerAudioSource;
 
     [Header("AudioClipData Multiple")] 
     [SerializeField] private AudioClipDataMultiple landingAudioData;
     [SerializeField] private AudioClipDataMultiple tongueAudioData;
     [SerializeField] private AudioClipDataMultiple grassAudioData;
     [SerializeField] private AudioClipDataMultiple obstacleCrashAudioData;
-    
-    
+    [SerializeField] private AudioClipDataMultiple playerBoostAudioData;
+    [SerializeField] private AudioClipDataMultiple playerJumpAudioData;
+    [SerializeField] private AudioClipDataMultiple playerDeathAudioData;
+    [SerializeField] private AudioClipDataMultiple playerCrashAuaAudioData;
+    [SerializeField] private AudioClipDataMultiple playerFoundEnemyAudioData;
+
+
     [Header("Audioclips")]
     [SerializeField] private AudioClip walkingOnWaterClip;
     [SerializeField] private AudioClip walkingOnGrassClip;
@@ -177,6 +183,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         tongueAudioData.LoadClips();
         grassAudioData.LoadClips();
         obstacleCrashAudioData.LoadClips();
+        playerBoostAudioData.LoadClips();
+        playerJumpAudioData.LoadClips();
+        playerDeathAudioData.LoadClips();
+        playerCrashAuaAudioData.LoadClips();
+        playerFoundEnemyAudioData.LoadClips();
     }
 
     private void OnDestroy()
@@ -529,6 +540,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     private void StartBoost(float boostAmount)
     {
+        if(boostAmount >= boostForce && Random.Range(0f, 1f) < .4f)
+            playerAudioSource.PlayRandomOneShot(playerBoostAudioData);
+        
         boostCoroutines.Add(NewBoost(boostAmount));
         StartCoroutine(boostCoroutines.Last());
     }
@@ -573,6 +587,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             StopDrifting();
         
         lockDriftingSlowMoBoost = true;
+        playerAudioSource.PlayRandomOneShot(playerFoundEnemyAudioData);
         StartCoroutine(SlowMoBoost(enemy));
     }
     IEnumerator SlowMoBoost(EnemyMovement enemy)
@@ -713,6 +728,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         // StartCoroutine(boostCoroutines.Last());
         
         mainAudioSource.PlayRandomOneShot(obstacleCrashAudioData);
+        if(Random.Range(0f, 1f) < .3f)
+        playerAudioSource.PlayRandomOneShot(playerCrashAuaAudioData);
         
         
         //get vector to other collider rotate it 90 degrees and turn player in that direction
@@ -773,11 +790,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region Various Methods ------------------------------------------------------------------------------------------------------------------------------------
     public void Die()
     {
-        mainAudioSource.PlayOneShot(winClip, 1);
+        // mainAudioSource.PlayOneShot(winClip, 1);
         walkingAudioSource.Stop();
         musicAudioSource.Play();
         enabled = false;
         rb.isKinematic = true;
+    }
+
+    public void PlayDeathSound()
+    {
+        playerAudioSource.PlayRandomOneShot(playerDeathAudioData);
     }
 
     void PauseMe()
@@ -825,6 +847,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             AnimationClip tmpJumpCLip = isDrifting ? jumpingOpenMouthClip : jumpingClip;
             animator.CrossFade(tmpJumpCLip.name, .2f);
             walkingAudioSource.Stop();
+            
+            if(Random.Range(0f, 1f) < .5f)
+                playerAudioSource.PlayRandomOneShot(playerJumpAudioData);
         }
     }
 
