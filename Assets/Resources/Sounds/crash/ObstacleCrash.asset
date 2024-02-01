@@ -17,4 +17,4 @@ MonoBehaviour:
   hasPitchVariation: 0
   volumeVariation: {x: 0.8, y: 1}
   pitchVariation: {x: 0.9, y: 1.1}
-  path: 
+  path: Sounds/crash/

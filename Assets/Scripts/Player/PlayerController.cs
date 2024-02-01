@@ -106,8 +106,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     [Header("Animations")] 
     [SerializeField] private AnimationClip runningClip;
+    [SerializeField] private AnimationClip runningOpenMouthClip;
     // [SerializeField] private AnimationClip jumpingUpClip;
-    [SerializeField] private AnimationClip inAirClip;
+    [SerializeField] private AnimationClip jumpingClip;
+    [SerializeField] private AnimationClip jumpingOpenMouthClip;
     [SerializeField] private AnimationClip tongueShoot;
     [SerializeField] private AnimationClip tongueReturn;
     
@@ -223,16 +225,25 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (!isGrounded && isFalling && !wasFallingLastFrame)
         {
             currentState = isDrifting? PlayerState.DriftFalling : PlayerState.Falling;
-            animator.CrossFade(inAirClip.name, .4f);
+            animator.CrossFade(jumpingClip.name, .4f);
             walkingAudioSource.Stop();
             waterVFX.SetActive(false);
             isInAir = true;
         }
         else if (isInAir && !justStartedJumping && isGrounded)  //just landed
         {
-            currentState = currentState == PlayerState.DriftFalling ? PlayerState.Drifting : PlayerState.Running;
+            if (isDrifting)
+            {
+                currentState = PlayerState.Drifting;
+                animator.CrossFade(runningOpenMouthClip.name, .1f);
+            }
+            else
+            {
+                currentState = PlayerState.Running;
+                animator.CrossFade(runningClip.name, .1f);
+            }
+            
             waterVFX.SetActive(true);
-            animator.CrossFade(runningClip.name, .1f);
             mainAudioSource.PlayRandomOneShot(landingAudioData);
             isInAir = false;
         }
@@ -278,15 +289,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         {
             case PlayerState.Jumping:
                 currentState = PlayerState.DriftJumping;
+                animator.CrossFade(jumpingOpenMouthClip.name, .1f);
                 break;
             case PlayerState.Falling:
                 currentState = PlayerState.DriftFalling;
+                animator.CrossFade(jumpingOpenMouthClip.name, .1f);
                 break;
             default:
                 currentState = PlayerState.Drifting;
+                animator.CrossFade(runningOpenMouthClip.name, .1f);
                 break;
         }
-
+        
+        
+        
         tongueAnimator.CrossFade(tongueShoot.name, 0f);
         tongueAudioSource.PlayRandomAudioVariation(tongueAudioData);
 
@@ -317,7 +333,23 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         currentDriftRotation = 0;
         currentTraction = traction;
         
-        currentState = currentState == PlayerState.DriftJumping ? PlayerState.Jumping : PlayerState.Running;
+        switch (currentState)
+        {
+            case PlayerState.DriftJumping :
+                currentState = PlayerState.Jumping;
+                animator.CrossFade(jumpingClip.name, .1f);
+                break;
+            case PlayerState.DriftFalling:
+                currentState = PlayerState.Falling;
+                animator.CrossFade(jumpingClip.name, .1f);
+                break;
+            default:
+                currentState = PlayerState.Running;
+                animator.CrossFade(runningClip.name, .1f);
+                break;
+        }
+        
+        
         playerLookAt.position = new Vector3(transform.position.x, 1.5f, transform.position.z) + playerVisuals.forward;
 
         float currentBoostAmount = boostForce * driftBoostPercentage;
@@ -788,7 +820,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             justStartedJumping = true;
             isInAir = true;
             waterVFX.SetActive(false);
-            animator.CrossFade(inAirClip.name, .2f);
+            AnimationClip tmpJumpCLip = isDrifting ? jumpingOpenMouthClip : jumpingClip;
+            animator.CrossFade(tmpJumpCLip.name, .2f);
             walkingAudioSource.Stop();
         }
     }
