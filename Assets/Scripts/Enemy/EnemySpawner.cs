@@ -65,7 +65,7 @@ public class EnemyManager : MonoBehaviour
         float distanceFromCenter = Random.Range(startRadius, outerSpawnRadius);
         Vector3 position = Quaternion.AngleAxis(positionAngle, Vector3.up) * Vector3.forward * distanceFromCenter;
             
-        if(NavMesh.SamplePosition(position, out NavMeshHit hit, 30f, filter))
+        if(NavMesh.SamplePosition(position, out NavMeshHit hit, 100f, filter))
             position = hit.position;
         else
         {

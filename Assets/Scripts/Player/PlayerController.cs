@@ -542,9 +542,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     private void StartBoost(float boostAmount)
     {
-        if(boostAmount >= boostForce && Random.Range(0f, 1f) < .4f)
+        if (boostAmount >= boostForce && Random.Range(0f, 1f) < .4f)
             playerAudioSource.PlayRandomOneShot(playerBoostAudioData);
-        
+
+        GameManager instance = GameManager.instance;
+        if (instance.stoppedGame || instance.gameIsPaused)
+            return;
+
         boostCoroutines.Add(NewBoost(boostAmount));
         StartCoroutine(boostCoroutines.Last());
     }
@@ -795,6 +799,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         // mainAudioSource.PlayOneShot(winClip, 1);
         walkingAudioSource.Stop();
         musicAudioSource.Play();
+        StopAllCoroutines();
         enabled = false;
         rb.isKinematic = true;
     }

@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private bool spawnStartEnemy;
 
     private int restartButtonsPressed;
-    private bool stoppedGame;
+    public bool stoppedGame;
 
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject continueButton;
@@ -163,6 +163,13 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         SelectUI(startMenuPlayButton);
     }
 
+    public void EnterHighScore()
+    {
+        startMenuMain.SetActive(false);
+        highScoreTable.CreateHighScoreVisuals();
+        SelectUI(highScoreRestartButton);
+    }
+
     private void SelectUI(GameObject o)
     {
         eventSystem.SetSelectedGameObject(null);
@@ -205,7 +212,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         Time.timeScale = 0;
         GameVariables.instance.player.Die();
 
-        HighScoreEntry newEntry = new HighScoreEntry(playerName, Time.time);
+        HighScoreEntry newEntry = new HighScoreEntry(playerName, instance.gameTimer.timeElapsed);
         highScoreTable.CreateHighScoreVisuals(newEntry);
         SelectUI(highScoreRestartButton);
         
@@ -262,30 +269,42 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
             return;
         }
         if (!context.started)
-            return;
-        
-        restartButtonsPressed++;
-        
-        if (restartCoroutine != null)
-            return;
-        
-        restartCoroutine = CheckForAllRestartButtons();
-        StartCoroutine(restartCoroutine);
+        {
+            if (restartCoroutine == null)
+            {
+                restartCoroutine = CheckForAllRestartButtons();
+                StartCoroutine(restartCoroutine);
+            }
+            else
+            {
+                restartButtonsPressed++;
+            }
+        }
     }
 
     IEnumerator CheckForAllRestartButtons()
     {
+        restartButtonsPressed++;
         while (restartButtonsPressed > 0)
         {
-            if(restartButtonsPressed >= 4)
-                RestartLevel();
+            if (restartButtonsPressed >= 4)
+            {
+                yield return new WaitForSeconds(1f);
+                if(restartButtonsPressed >=4)
+                    RestartLevel();
+            }
 
             yield return null;
         }
-
+        
         restartCoroutine = null;
     }
-    
+
+    private void OnDestroy()
+    {
+        restartCoroutine = null;
+    }
+
     #endregion
     
 }

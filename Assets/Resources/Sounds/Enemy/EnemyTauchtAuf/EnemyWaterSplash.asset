@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 124677308ac06504f8184abd939b9b5d, type: 3}
   m_Name: EnemyWaterSplash
   m_EditorClassIdentifier: Assembly-CSharp::AudioClipDataSingle
   volume: 1
-  pitch: 1.25
+  pitch: 1
   hasPitchVariation: 0
-  volumeVariation: {x: 1, y: 1}
-  pitchVariation: {x: 1, y: 1}
+  volumeVariation: {x: 0.8, y: 1}
+  pitchVariation: {x: 0.9, y: 1.1}
   audioClip: {fileID: 8300000, guid: c4f7b1b22ec90774bb7d365ff98bbb81, type: 3}

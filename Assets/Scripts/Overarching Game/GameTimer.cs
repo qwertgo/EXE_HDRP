@@ -10,6 +10,7 @@ public class GameTimer : MonoBehaviour
 {
     [SerializeField] private float gameTime;
     private float remainingTime;
+    public float timeElapsed;
     [SerializeField] private TextMeshProUGUI remainingTimeText;
     [SerializeField] private Slider sliderRight;
     [SerializeField] private Slider sliderLeft;
@@ -34,11 +35,13 @@ public class GameTimer : MonoBehaviour
         StartCoroutine(update);
     }
 
+
     IEnumerator UpdateCoroutine()
     {
-        while (enabled)
+        while (!GameManager.instance.stoppedGame)
         {
             remainingTime -= Time.deltaTime;
+            timeElapsed += Time.deltaTime;
             DisplayTimer();
 
 
@@ -115,5 +118,6 @@ public class GameTimer : MonoBehaviour
     private void OnDestroy()
     {
         echsenMaterial.SetFloat("_Percentage", 1);
+        remainingTime = 0;
     }
 }

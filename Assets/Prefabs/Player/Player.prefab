@@ -5753,7 +5753,7 @@ MonoBehaviour:
   landingAudioData: {fileID: 11400000, guid: 537d47a8080185247b35709bd07ee389, type: 2}
   tongueAudioData: {fileID: 11400000, guid: f0cf2ce8759b55641ac391a38f5dc5e9, type: 2}
   grassAudioData: {fileID: 11400000, guid: 34a68e135bdec6141aa3fad30d7ae527, type: 2}
-  obstacleCrashAudioData: {fileID: 11400000, guid: cfad75f37773f0e4ba064c1548e4d517,
+  obstacleCrashAudioData: {fileID: 11400000, guid: 57982d35b28ef9945ba7d04f31546d6e,
     type: 2}
   playerBoostAudioData: {fileID: 11400000, guid: 7fb1eb48f0b49354ab310f7ae9828ea3,
     type: 2}
