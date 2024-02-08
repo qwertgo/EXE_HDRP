@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 9188452968715423062, guid: a2b54be69bf311a4cb88b3bf95751e3f,
     type: 3}
-  enemyAgent: {fileID: 2803009006950078493, guid: a2b54be69bf311a4cb88b3bf95751e3f,
+  enemyAgent: {fileID: 1550870398008216510, guid: a2b54be69bf311a4cb88b3bf95751e3f,
     type: 3}
   innerSpawnRadius: 200
   outerSpawnRadius: 330
+  numberOfEnemies: 4

@@ -21,13 +21,18 @@ public class HighScoreTable : MonoBehaviour
 
 
     //makes HighScoreTable visible, Adds New Entry, and creates visuals for all HighScoreEntries
-    public void CreateHighScoreVisuals(HighScoreEntry newEntry)
+    public void CreateHighScoreVisuals(HighScoreEntry newEntry = null)
     {
         //load existing HighScore, Add Entry and sort the Highscorelist
         highScoreEntries = SaveSystem.LoadHighScore();
-        highScoreEntries.Add(newEntry);
 
-        highScoreEntries = BubbleSort();
+        if (newEntry != null)
+        {
+            highScoreEntries.Add(newEntry);
+            highScoreEntries = BubbleSort();
+        }
+        else
+            place = 1;
 
         //change panelScale to match size of entries
         Vector2 sizeDelta = highScorePanel.sizeDelta;
@@ -38,24 +43,28 @@ public class HighScoreTable : MonoBehaviour
             AddHighScoreEntryVisuals(highScoreEntries[i], i);
         }
 
-        highScorePanel.anchoredPosition = new Vector2(0, (place -1) * 100);
-        highScoreTable.gameObject.SetActive(true);
+        if (newEntry != null)
+        {
+            highScorePanel.anchoredPosition = new Vector2(0, (place - 3) * 100);
+        }
         
+        highScoreTable.gameObject.SetActive(true);
         SaveSystem.SaveHighscore(highScoreEntries);
     }
-    
+
     //Creates Visuals for given HighscoreEntry
     private void AddHighScoreEntryVisuals(HighScoreEntry entry, int i)
     {
         GameObject entryGameObject = Instantiate(highScoreEntryVisualsPrefab, Vector3.zero, Quaternion.identity, highScorePanel);
 
         TextMeshProUGUI[] entryTexts = entryGameObject.GetComponentsInChildren<TextMeshProUGUI>();
-        entryTexts[0].text = entry.name;
+        entryTexts[0].text = (i + 1).ToString();
+        entryTexts[1].text = entry.name;
         
         float survivedMinutes = Mathf.FloorToInt(entry.timeSurvived / 60);
         float survivedSeconds = Mathf.RoundToInt(entry.timeSurvived % 60);
         
-        entryTexts[1].text = string.Format("{0:00}:{1:00}", survivedMinutes, survivedSeconds);
+        entryTexts[2].text = string.Format("{0:00}:{1:00}", survivedMinutes, survivedSeconds);
 
         Image image = entryGameObject.GetComponent<Image>();
 

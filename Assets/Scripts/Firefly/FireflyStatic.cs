@@ -18,6 +18,7 @@ public class FireflyStatic : MonoBehaviour
     [SerializeField] protected Transform visuals;
     [SerializeField] private AudioClipDataSingle collectedClipData;
     [SerializeField] private GameObject collectedParticleSystem;
+    private Collider sphereCol;
 
 
     private MeshRenderer meshRenderer;
@@ -29,8 +30,9 @@ public class FireflyStatic : MonoBehaviour
         FireflyManager.updatePosition += UpdateVisualsPosition;
 
         collectSpeed = 1 / timeToCollect;
+        sphereCol = GetComponent<SphereCollider>();
         //particleCopyPosition = GetComponentInChildren<CopyPosition>();
-        
+
     }
 
 
@@ -54,7 +56,6 @@ public class FireflyStatic : MonoBehaviour
         Camera cam = GameVariables.instance.cam;
         Vector3 startPos = visuals.position;
         float t = 0;
-        
 
         while (t < 1)
         {
@@ -93,11 +94,13 @@ public class FireflyStatic : MonoBehaviour
     private IEnumerator WaitTillRespawnStatic()
     {
         visuals.gameObject.SetActive(false);
+        sphereCol.enabled = false;
         FireflyManager.updatePosition -= UpdateVisualsPosition;
         
         yield return new WaitForSeconds(timeToRespawn);
         
         visuals.gameObject.SetActive(true);
+        sphereCol.enabled = true;
         FireflyManager.updatePosition += UpdateVisualsPosition;
     }
 

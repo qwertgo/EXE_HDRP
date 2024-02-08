@@ -289,6 +289,8 @@ public class EnemyMovement : MonoBehaviour
         else if (currentState > 0)
         {
             musicAudioSource.Stop();
+            enabled = false;
+            StopAllCoroutines();
             GameVariables.instance.player.PlayDeathSound();
             GameManager.instance.StopGame();
         }
