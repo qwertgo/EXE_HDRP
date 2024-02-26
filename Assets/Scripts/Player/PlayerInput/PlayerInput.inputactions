@@ -155,6 +155,17 @@
                 },
                 {
                     "name": "",
+                    "id": "b4b4b89a-7d4b-4106-ab54-f5516ced7b54",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftDrift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "d28d64de-7871-4255-a7a6-2578f783ef30",
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
@@ -168,6 +179,17 @@
                     "name": "",
                     "id": "caf53e54-ff29-4de7-88e3-fb775d1291d5",
                     "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightDrift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "58dca65e-958d-4fc4-8e46-898f03302e24",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

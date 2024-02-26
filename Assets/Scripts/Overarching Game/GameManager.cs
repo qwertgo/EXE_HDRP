@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using TMPro;
 
-public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
+public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     [HideInInspector] public bool gameIsPaused;
@@ -65,13 +65,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
             Destroy(this);
         else
             instance = this;
-
-        if (controls == null)
-        {
-            controls = new PlayerInput();
-            controls.Enable();
-            controls.GameManager.SetCallbacks(this);
-        }
+        
 
         gameVariables = GameVariables.instance;
         eventSystem = EventSystem.current;
