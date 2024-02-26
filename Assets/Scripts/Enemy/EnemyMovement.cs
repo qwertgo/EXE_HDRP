@@ -117,7 +117,7 @@ public class EnemyMovement : MonoBehaviour
     {
         //the startEnemy invokes the foundPlayer Event before other enemies have a chance 
         //assign themselves to the event, Wait a frame to avoid this case
-        if(isStartEnemy)
+        if (isStartEnemy)
             yield return null;
         
         //If there is no clear sight to Player try to reach him
@@ -291,7 +291,6 @@ public class EnemyMovement : MonoBehaviour
             musicAudioSource.Stop();
             enabled = false;
             StopAllCoroutines();
-            GameVariables.instance.player.PlayDeathSound();
             GameManager.instance.StopGame();
         }
     }

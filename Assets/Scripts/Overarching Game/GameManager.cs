@@ -70,10 +70,10 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         gameVariables = GameVariables.instance;
         eventSystem = EventSystem.current;
 
-
         if (!startWithStartScreen)
         {
             ActivateObjectsToStartGame();
+            Cursor.visible = false;
             if(spawnStartEnemy)
                 startEnemy.gameObject.SetActive(true);
             
@@ -105,6 +105,8 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
     IEnumerator WaitAndStartRound()
     {
+        Cursor.visible = false;
+        
         float t = 0;
         float speed = 1f / 2;
         Vector3 startPosition = cameraLookAt.position;
@@ -188,6 +190,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
             gameVariables.isPaused = false;
             gameVariables.onUnpause.Invoke();
             eventSystem.SetSelectedGameObject(null);
+            Cursor.visible = false;
         }
         else
         {
@@ -198,6 +201,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
             gameVariables.onPause.Invoke();
             eventSystem.SetSelectedGameObject(null);
             eventSystem.SetSelectedGameObject(continueButton);
+            Cursor.visible = true;
         }
         
     }
@@ -209,8 +213,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
         stoppedGame = true;
         
-        Time.timeScale = 0;
         GameVariables.instance.player.Die();
+        Cursor.visible = true;
+        Time.timeScale = 0;
 
         HighScoreEntry newEntry = new HighScoreEntry(playerName, instance.gameTimer.timeElapsed);
         highScoreTable.CreateHighScoreVisuals(newEntry);

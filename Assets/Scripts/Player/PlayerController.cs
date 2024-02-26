@@ -498,7 +498,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             wantedRotation = Quaternion.LookRotation(forward, groundHit.normal);
             
             rb.velocity = Vector3.ProjectOnPlane(rb.velocity, groundHit.normal);
-
         }
         else
         {
@@ -801,6 +800,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     public void Die()
     {
         // mainAudioSource.PlayOneShot(winClip, 1);
+        PlayDeathSound();
         walkingAudioSource.Stop();
         musicAudioSource.Play();
         StopAllCoroutines();
