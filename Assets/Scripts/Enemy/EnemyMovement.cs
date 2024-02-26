@@ -281,8 +281,8 @@ public class EnemyMovement : MonoBehaviour
 
     private void TwoMinutesPassed()
     {
-        followPlayerSpeed *= 1.5f;
-        directionLerpFactor *= 1.5f;
+        followPlayerSpeed *= 1.35f;
+        directionLerpFactor *= 1.35f;
     }
 
     #region Collision
