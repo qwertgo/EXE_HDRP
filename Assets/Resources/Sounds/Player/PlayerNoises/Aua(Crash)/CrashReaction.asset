@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8614e3273cdecd143989ebe5048c94e8, type: 3}
-  m_Name: AudioClipMultiple
+  m_Name: CrashReaction
   m_EditorClassIdentifier: Assembly-CSharp::AudioClipDataMultiple
   volume: 0.4
   pitch: 1
