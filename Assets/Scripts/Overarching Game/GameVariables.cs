@@ -27,11 +27,13 @@ public class GameVariables : MonoBehaviour
     public bool isPaused;
     private void Awake()
     {
-        if (instance)
-            Destroy(this);
-        else
-            instance = this;
+        instance = this;
         
         cam = Camera.main;
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
     }
 }

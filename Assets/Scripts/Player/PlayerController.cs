@@ -199,8 +199,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private void OnDestroy()
     {
         material.SetFloat("_fireflyCount", 0);
-        if(controls != null)
-            controls.Disable();
+
+        controls.Disable();
+        controls.P_Controls.RemoveCallbacks(this);
+
     }
     #endregion
 
@@ -831,7 +833,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     IEnumerator WhilePaused()
     {
-        controls = null;
+        controls.Disable();
+        controls.P_Controls.RemoveCallbacks(this);
+        
         Vector3 velocity = rb.velocity;
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;

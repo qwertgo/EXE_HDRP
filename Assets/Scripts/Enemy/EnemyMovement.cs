@@ -311,7 +311,8 @@ public class EnemyMovement : MonoBehaviour
 
     private void PauseMe()
     {
-        StartCoroutine(WhilePaused());
+        if(enabled)
+            StartCoroutine(WhilePaused());
     }
 
     IEnumerator WhilePaused()

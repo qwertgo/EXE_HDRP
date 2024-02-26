@@ -8,9 +8,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
     public static GameManager instance;
+    private static bool restartWithStartScreen = true;
     [HideInInspector] public bool gameIsPaused;
     public string playerName = "Wow Echstrem";
     [SerializeField] private bool startWithStartScreen;
@@ -61,16 +62,19 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (instance)
-            Destroy(this);
-        else
-            instance = this;
-        
+        instance = this;
+
+        if (controls == null)
+        {
+            controls = new PlayerInput();
+            controls.Enable();
+            controls.GameManager.SetCallbacks(this);
+        }
 
         gameVariables = GameVariables.instance;
         eventSystem = EventSystem.current;
 
-        if (!startWithStartScreen)
+        if (!(startWithStartScreen && restartWithStartScreen))
         {
             ActivateObjectsToStartGame();
             Cursor.visible = false;
@@ -83,7 +87,7 @@ public class GameManager : MonoBehaviour
         startMenu.SetActive(true);
         eventSystem.SetSelectedGameObject(startMenuPlayButton);
     }
-
+    
     #region menu
     public void EnterNameSelection()
     {
@@ -193,6 +197,7 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1;
             gameIsPaused = false;
             pauseMenu.SetActive(false);
+            gameVariables.player.enabled = true;
             gameVariables.isPaused = false;
             gameVariables.onUnpause.Invoke();
             eventSystem.SetSelectedGameObject(null);
@@ -205,8 +210,8 @@ public class GameManager : MonoBehaviour
             pauseMenu.SetActive(true);
             gameVariables.isPaused = true;
             gameVariables.onPause.Invoke();
-            eventSystem.SetSelectedGameObject(null);
-            eventSystem.SetSelectedGameObject(continueButton);
+            gameVariables.player.enabled = false;
+            SelectUI(continueButton);
             Cursor.visible = true;
         }
         
@@ -245,8 +250,9 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void RestartLevel()
+    public void RestartLevel(bool completeRestart)
     {
+        restartWithStartScreen = completeRestart;
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -302,7 +308,7 @@ public class GameManager : MonoBehaviour
             {
                 yield return new WaitForSeconds(1f);
                 if(restartButtonsPressed >=4)
-                    RestartLevel();
+                    RestartLevel(false);
             }
 
             yield return null;
@@ -314,6 +320,9 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         restartCoroutine = null;
+        instance = null;
+        controls.Disable();
+        controls.GameManager.RemoveCallbacks(this);
     }
 
     #endregion
