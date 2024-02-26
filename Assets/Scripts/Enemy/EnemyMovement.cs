@@ -311,7 +311,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void PauseMe()
     {
-        if(enabled)
+        if(gameObject.activeInHierarchy)
             StartCoroutine(WhilePaused());
     }
 

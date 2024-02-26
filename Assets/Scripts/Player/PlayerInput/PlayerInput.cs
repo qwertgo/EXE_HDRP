@@ -233,6 +233,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Enter"",
+                    ""type"": ""Button"",
+                    ""id"": ""d8285bc3-82cb-4670-be84-fc8dce319c0b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -257,6 +266,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Pause Game"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bfee4a4e-923e-4b2e-bff4-fbc81d8ff04f"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Enter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -272,6 +292,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // GameManager
         m_GameManager = asset.FindActionMap("GameManager", throwIfNotFound: true);
         m_GameManager_PauseGame = m_GameManager.FindAction("Pause Game", throwIfNotFound: true);
+        m_GameManager_Enter = m_GameManager.FindAction("Enter", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -404,11 +425,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_GameManager;
     private List<IGameManagerActions> m_GameManagerActionsCallbackInterfaces = new List<IGameManagerActions>();
     private readonly InputAction m_GameManager_PauseGame;
+    private readonly InputAction m_GameManager_Enter;
     public struct GameManagerActions
     {
         private @PlayerInput m_Wrapper;
         public GameManagerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @PauseGame => m_Wrapper.m_GameManager_PauseGame;
+        public InputAction @Enter => m_Wrapper.m_GameManager_Enter;
         public InputActionMap Get() { return m_Wrapper.m_GameManager; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -421,6 +444,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @PauseGame.started += instance.OnPauseGame;
             @PauseGame.performed += instance.OnPauseGame;
             @PauseGame.canceled += instance.OnPauseGame;
+            @Enter.started += instance.OnEnter;
+            @Enter.performed += instance.OnEnter;
+            @Enter.canceled += instance.OnEnter;
         }
 
         private void UnregisterCallbacks(IGameManagerActions instance)
@@ -428,6 +454,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @PauseGame.started -= instance.OnPauseGame;
             @PauseGame.performed -= instance.OnPauseGame;
             @PauseGame.canceled -= instance.OnPauseGame;
+            @Enter.started -= instance.OnEnter;
+            @Enter.performed -= instance.OnEnter;
+            @Enter.canceled -= instance.OnEnter;
         }
 
         public void RemoveCallbacks(IGameManagerActions instance)
@@ -455,5 +484,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     public interface IGameManagerActions
     {
         void OnPauseGame(InputAction.CallbackContext context);
+        void OnEnter(InputAction.CallbackContext context);
     }
 }

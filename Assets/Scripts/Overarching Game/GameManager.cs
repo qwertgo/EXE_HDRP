@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
     private int restartButtonsPressed;
     [HideInInspector] public bool stoppedGame;
+    private bool isInNameSelection;
 
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject continueButton;
@@ -94,11 +95,13 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         startMenuMain.SetActive(false);
         nameSelection.SetActive(true);
         SelectUI(nameSelection);
+        isInNameSelection = true;
     }
     
     public void StartGame(string playerName)
     {
         this.playerName = playerName;
+        isInNameSelection = false;
 
         Time.timeScale = 1;
         startMenu.SetActive(false);
@@ -171,6 +174,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         creditsMenu.SetActive(false);
         controlsMenu.SetActive(false);
         nameSelection.SetActive(false);
+        isInNameSelection = false;
         
         SelectUI(startMenuPlayButton);
     }
@@ -240,6 +244,14 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     {
         if (context.started)
             TooglePause();
+    }
+
+    public void OnEnter(InputAction.CallbackContext context)
+    {
+        if (isInNameSelection && context.started)
+        {
+            StartGameViaButton();
+        }
     }
 
     public void QuitGame()

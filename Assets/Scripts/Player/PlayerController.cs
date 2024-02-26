@@ -200,8 +200,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     {
         material.SetFloat("_fireflyCount", 0);
 
-        controls.Disable();
-        controls.P_Controls.RemoveCallbacks(this);
+        if (controls != null)
+        {
+            controls.Disable();
+            controls.P_Controls.RemoveCallbacks(this);
+        }
 
     }
     #endregion
