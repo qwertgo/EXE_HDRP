@@ -33,6 +33,7 @@ public class GameTimer : MonoBehaviour
 
         update = UpdateCoroutine();
         StartCoroutine(update);
+        StartCoroutine(WaitForTimeToPass(120f));
     }
 
 
@@ -40,10 +41,10 @@ public class GameTimer : MonoBehaviour
     {
         while (!GameManager.instance.stoppedGame)
         {
-            remainingTime -= Time.deltaTime;
-            timeElapsed += Time.deltaTime;
+            float scaledDeltaTime = Time.deltaTime * Time.timeScale;
+            remainingTime -= scaledDeltaTime;
+            timeElapsed += scaledDeltaTime;
             DisplayTimer();
-
 
             if (remainingTime / gameTime < .1f && !playTickingSound)
                 StartCoroutine(PlayTickingSound());
@@ -53,6 +54,12 @@ public class GameTimer : MonoBehaviour
             yield return null;
         }
         
+    }
+
+    IEnumerator WaitForTimeToPass(float timeToPass)
+    {
+        yield return new WaitUntil(() => timeElapsed >= timeToPass);
+        GameVariables.instance.twoMinutesPassed.Invoke();
     }
 
     IEnumerator PlayTickingSound()

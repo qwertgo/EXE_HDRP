@@ -19,6 +19,7 @@ public class GameVariables : MonoBehaviour
 
     [HideInInspector] public UnityEvent onPause;
     [HideInInspector] public UnityEvent onUnpause;
+    [HideInInspector] public UnityEvent twoMinutesPassed = new();
     [HideInInspector] public Camera cam;
     
     private Transform debugSphereTransform;

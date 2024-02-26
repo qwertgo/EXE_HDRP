@@ -178,8 +178,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         rightDriftPointContainer.SetRightContainer();
         gameVariables.onPause.AddListener(PauseMe);
+        gameVariables.twoMinutesPassed.AddListener(ShortenSlowMoBoost);
         
-        //Load Audio Clips
+        LoadAllAudioCLips();
+    }
+
+    private void LoadAllAudioCLips()
+    {
         landingAudioData.LoadClips();
         tongueAudioData.LoadClips();
         grassAudioData.LoadClips();
@@ -808,9 +813,15 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.isKinematic = true;
     }
 
-    public void PlayDeathSound()
+    private void PlayDeathSound()
     {
         playerAudioSource.PlayRandomOneShot(playerDeathAudioData);
+    }
+
+    private void ShortenSlowMoBoost()
+    {
+        timeToWaitTillBoost *= .6f;
+        turnToEnemyTime *= .6f;
     }
 
     void PauseMe()

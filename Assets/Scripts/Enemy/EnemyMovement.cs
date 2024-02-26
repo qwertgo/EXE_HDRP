@@ -68,6 +68,7 @@ public class EnemyMovement : MonoBehaviour
 
         EnemyManager.foundPlayer.AddListener(DiveUnderWater);
         EnemyManager.lostPlayer.AddListener(SurfaceFromWater);
+        GameVariables.instance.twoMinutesPassed.AddListener(TwoMinutesPassed);
         
         growlAudioData.LoadClips();
 
@@ -276,6 +277,12 @@ public class EnemyMovement : MonoBehaviour
         // Debug.Log(name + " got enabled");
         animator.CrossFade(surfaceFromWaterClip.name, 0);
         attackPlayerCollider.enabled = true;
+    }
+
+    private void TwoMinutesPassed()
+    {
+        followPlayerSpeed *= 1.5f;
+        directionLerpFactor *= 1.5f;
     }
 
     #region Collision
