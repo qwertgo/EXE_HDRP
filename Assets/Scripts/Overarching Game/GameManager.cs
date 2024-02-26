@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private bool spawnStartEnemy;
 
     private int restartButtonsPressed;
-    public bool stoppedGame;
+    [HideInInspector] public bool stoppedGame;
 
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject continueButton;

@@ -5736,6 +5736,7 @@ MonoBehaviour:
   rightDriftPointContainer: {fileID: 1582747289892162416}
   leftDriftPointContainer: {fileID: 7041608628081519611}
   playerLookAt: {fileID: 6449924374179777447}
+  waterTrail: {fileID: 5316109750190480379}
   runningClip: {fileID: 7400000, guid: e30e56e7da1ef1b4ea8fc0bf6d94de5d, type: 2}
   runningOpenMouthClip: {fileID: 7400000, guid: 0571233cc970da64c893ebb8bd6ba300,
     type: 2}
@@ -6291,7 +6292,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7aaa6050d64f83c429fbc4b425df404f, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -17227,7 +17228,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 6f668df20f33a7b41acb7302f1e41c67, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.25
+  m_Volume: 0.35
   m_Pitch: 1
   Loop: 1
   Mute: 0

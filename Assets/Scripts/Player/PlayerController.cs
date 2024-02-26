@@ -104,6 +104,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] protected DriftPointContainer rightDriftPointContainer;
     [SerializeField] protected DriftPointContainer leftDriftPointContainer;
     [SerializeField] private Transform playerLookAt;
+    [SerializeField] private GameObject waterTrail;
 
     [Header("Animations")] 
     [SerializeField] private AnimationClip runningClip;
@@ -542,7 +543,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     private void StartBoost(float boostAmount)
     {
-        if (boostAmount >= boostForce && Random.Range(0f, 1f) < .4f)
+        if (boostAmount >= boostForce && Random.Range(0f, 1f) < .15f)
             playerAudioSource.PlayRandomOneShot(playerBoostAudioData);
 
         GameManager instance = GameManager.instance;
@@ -689,6 +690,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
                 walkingAudioSource.clip = walkingOnGrassClip;
                 walkingAudioSource.volume = .1f;
                 walkingAudioSource.Play();
+                
+                waterTrail.SetActive(false);
             }
             else
             {
@@ -705,6 +708,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         if (go.layer.IsInsideMask(groundLayer) && go.tag.Equals("Schilf"))
         {
             stayAtCurrentVelocity = false;
+            waterTrail.SetActive(true);
         }
     }
 
@@ -735,7 +739,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         
         mainAudioSource.PlayRandomOneShot(obstacleCrashAudioData);
         if(Random.Range(0f, 1f) < .3f)
-        playerAudioSource.PlayRandomOneShot(playerCrashAuaAudioData);
+            playerAudioSource.PlayRandomOneShot(playerCrashAuaAudioData);
         
         
         //get vector to other collider rotate it 90 degrees and turn player in that direction
@@ -855,7 +859,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             animator.CrossFade(tmpJumpCLip.name, .2f);
             walkingAudioSource.Stop();
             
-            if(Random.Range(0f, 1f) < .5f)
+            if(Random.Range(0f, 1f) < .2f)
                 playerAudioSource.PlayRandomOneShot(playerJumpAudioData);
         }
     }

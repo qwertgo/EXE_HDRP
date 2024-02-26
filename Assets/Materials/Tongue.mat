@@ -49,7 +49,7 @@ Material:
     - _AlphaCutoffEnable: 0
     - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
-    - _Back_Mask: 0.118
+    - _Back_Mask: 0.124
     - _BlendMode: 0
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
@@ -61,8 +61,8 @@ Material:
     - _DstBlend: 0
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
-    - _Frequency: 0
-    - _Height: 0
+    - _Frequency: 10.2
+    - _Height: 0.74
     - _OpaqueCullMode: 2
     - _RayTracing: 0
     - _ReceivesSSR: 1
