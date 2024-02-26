@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using TMPro;
 
 public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private GameObject startMenuPlayButton;
     [SerializeField] private GameObject startMenuMain;
     [FormerlySerializedAs("startMenuName")] [SerializeField] private GameObject nameSelection;
+    
 
     [Header("Controls Menu")] 
     [SerializeField] private GameObject controlsMenu;
@@ -37,6 +39,10 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [Header("Credits Menu")]
     [SerializeField] private GameObject creditsMenu;
     [SerializeField] private GameObject creditsBackButton;
+
+    [Header("Name Selection Menu")] 
+    [SerializeField] private GameObject nameSelectionStartButton;
+    [SerializeField] private TMP_InputField nameSelectionInputField;
 
     [Header("Activate At Game Start")] 
     [SerializeField] private Transform cameraLookAt;
@@ -98,9 +104,13 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
         Time.timeScale = 1;
         startMenu.SetActive(false);
-        eventSystem.SetSelectedGameObject(null);
 
         StartCoroutine(WaitAndStartRound());
+    }
+
+    public void StartGameViaButton()
+    {
+        StartGame(nameSelectionInputField.text);
     }
 
     IEnumerator WaitAndStartRound()
@@ -121,6 +131,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
         yield return new WaitForSeconds(.5f);
         ActivateObjectsToStartGame();
+        eventSystem.SetSelectedGameObject(null);
         
         if(spawnStartEnemy)
             startEnemy.gameObject.SetActive(true);
@@ -158,9 +169,10 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
     public void EnterMainMenu()
     {
+        startMenuMain.SetActive(true);
         creditsMenu.SetActive(false);
         controlsMenu.SetActive(false);
-        startMenuMain.SetActive(true);
+        nameSelection.SetActive(false);
         
         SelectUI(startMenuPlayButton);
     }
