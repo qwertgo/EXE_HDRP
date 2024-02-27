@@ -10,16 +10,17 @@ using TMPro;
 
 public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
-    public static GameManager instance;
     private static bool restartWithStartScreen = true;
-    [HideInInspector] public bool gameIsPaused;
-    public static string playerName = "";
     [SerializeField] private bool startWithStartScreen;
     [SerializeField] private bool spawnStartEnemy;
+    [HideInInspector] public static string playerName = "";
+    [HideInInspector] public bool gameIsPaused;
+    [HideInInspector] public bool stoppedGame;
+    public static GameManager instance;
 
     private int restartButtonsPressed;
-    [HideInInspector] public bool stoppedGame;
     private bool isInNameSelection;
+    private bool canPauseGame = false;
 
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject continueButton;
@@ -161,6 +162,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         
         playerWalkingAudioSource.Play();
         cameraLookAt.position = new Vector3(0, .4f, 0);
+        canPauseGame = true;
     }
 
     public void EnterControlsMenu()
@@ -240,6 +242,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         stoppedGame = true;
         
         GameVariables.instance.player.Die();
+        canPauseGame = false;
         Cursor.visible = true;
         Time.timeScale = 0;
 
@@ -253,7 +256,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
     public void OnPauseGame(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && canPauseGame)
             TooglePause();
     }
 
