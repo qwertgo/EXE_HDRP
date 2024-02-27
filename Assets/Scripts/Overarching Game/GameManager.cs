@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     public static GameManager instance;
     private static bool restartWithStartScreen = true;
     [HideInInspector] public bool gameIsPaused;
-    public string playerName = "Wow Echstrem";
+    public static string playerName = "";
     [SerializeField] private bool startWithStartScreen;
     [SerializeField] private bool spawnStartEnemy;
 
@@ -63,6 +63,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
     private void Start()
     {
+        if (playerName.Equals(""))
+            playerName = "Wow Echstrem";
+            
         instance = this;
 
         if (controls == null)
@@ -89,6 +92,14 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         eventSystem.SetSelectedGameObject(startMenuPlayButton);
     }
     
+    private void OnDestroy()
+    {
+        restartCoroutine = null;
+        instance = null;
+        controls.Disable();
+        controls.GameManager.RemoveCallbacks(this);
+    }
+    
     #region menu
     public void EnterNameSelection()
     {
@@ -100,7 +111,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     
     public void StartGame(string playerName)
     {
-        this.playerName = playerName;
+        GameManager.playerName = playerName;
         isInNameSelection = false;
 
         Time.timeScale = 1;
@@ -265,6 +276,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     public void RestartLevel(bool completeRestart)
     {
         restartWithStartScreen = completeRestart;
+
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -329,13 +341,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         restartCoroutine = null;
     }
 
-    private void OnDestroy()
-    {
-        restartCoroutine = null;
-        instance = null;
-        controls.Disable();
-        controls.GameManager.RemoveCallbacks(this);
-    }
+    
 
     #endregion
     

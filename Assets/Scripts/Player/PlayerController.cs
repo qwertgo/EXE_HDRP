@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -54,7 +52,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     
     [Header("Boost")]
     public float boostForce;
-    [SerializeField] private float boostSubtractPerSecond;
+    // [SerializeField] private float boostSubtractPerSecond;
     [SerializeField] private float boostDuration = 1f;
     [SerializeField] private float boostLerpPerSecond;
     [SerializeField] private float timeToGetBoost;
