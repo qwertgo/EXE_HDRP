@@ -38,6 +38,9 @@ public static class SaveSystem
 [System.Serializable]
 public class HighScoreEntry
 {
+   public string name { get; private set; }
+   public float timeSurvived { get; private set; }
+
    public HighScoreEntry(string name, float timeSurvived)
    {
       this.name = name;
@@ -49,6 +52,5 @@ public class HighScoreEntry
       return $"name: {name}, timeSurvived: {timeSurvived}";
    }
    
-   public string name { get; private set; }
-   public float timeSurvived { get; private set; }
+   
 }

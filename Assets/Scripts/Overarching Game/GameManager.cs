@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
     private PlayerInput controls;
     private GameVariables gameVariables;
+    private HighScoreCounter highScoreCounter;
     private EventSystem eventSystem;
     private IEnumerator restartCoroutine;
 
@@ -77,6 +78,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         }
 
         gameVariables = GameVariables.instance;
+        highScoreCounter = gameVariables.highScoreCounter;
         eventSystem = EventSystem.current;
 
         if (!(startWithStartScreen && restartWithStartScreen))
@@ -246,7 +248,8 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         Cursor.visible = true;
         Time.timeScale = 0;
 
-        HighScoreEntry newEntry = new HighScoreEntry(playerName, instance.gameTimer.timeElapsed);
+        
+        HighScoreEntry newEntry = new HighScoreEntry(playerName, instance.highScoreCounter.GetTotalHighscore());
         highScoreTable.CreateHighScoreVisuals(newEntry);
         SelectUI(highScoreRestartButton);
         

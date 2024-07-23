@@ -13,6 +13,7 @@ public class GameVariables : MonoBehaviour
     public PlayerController player;
     public CinemachineVirtualCamera virtualCamera;
     public GameTimer gameTimer;
+    public HighScoreCounter highScoreCounter;
     public RectTransform timeSlider;
     public int fireflyCount;
     // public float globalVolume = 1;

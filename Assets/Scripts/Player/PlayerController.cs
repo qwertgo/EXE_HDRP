@@ -150,6 +150,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private PlayerState currentState = PlayerState.Running;
     private Quaternion rotationAtDriftStart;
     private GameVariables gameVariables => GameVariables.instance;
+    private HighScoreCounter highScoreCounter => gameVariables.highScoreCounter;
 
     private List<IEnumerator> boostCoroutines = new();
 
@@ -313,6 +314,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         driftBoostPercentage = 0;
         driftHorizontal = isDriftingRight ? .5f : -.5f;
         
+        
         switch (currentState)
         {
             case PlayerState.Jumping:
@@ -376,6 +378,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         float currentBoostAmount = boostForce * driftBoostPercentage;
         StartBoost(currentBoostAmount);
+
+        if(driftBoostPercentage >= 1)
+        {
+            Debug.Log("Added DriftBoost Highscore");
+            highScoreCounter.AddToHighscore(HighScoreCounter.ScoreType.DriftDash);
+        }
 
         ChangeParticleColor(defaultParticleColor);
 

@@ -26,7 +26,7 @@ public class HighScoreTable : MonoBehaviour
         //load existing HighScore, Add Entry and sort the Highscorelist
         highScoreEntries = SaveSystem.LoadHighScore();
 
-        if (newEntry != null)
+        if (newEntry is not null)
         {
             highScoreEntries.Add(newEntry);
             highScoreEntries = BubbleSort();

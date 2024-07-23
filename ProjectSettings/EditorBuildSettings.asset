@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Mia LVL DESIGN/FINAL LVL.unity
+    path: Assets/Scenes/FINAL LVL.unity
     guid: a8b987fd5d38ff64b900cba7346b19cc
   m_configObjects: {}

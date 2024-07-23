@@ -22,6 +22,7 @@ public class CameraColliderGenerator : MonoBehaviour
     [SerializeField] private Material farMat;
     private Camera cam;
     
+    //points
     Vector3[] p = new Vector3[12];
     
     void Start()
@@ -52,12 +53,12 @@ public class CameraColliderGenerator : MonoBehaviour
         //calculate collider corner points
         Vector3[] frustumCorners = new Vector3[4];
         cam.CalculateFrustumCorners(new Rect(0, 0, 1, 1), cam.farClipPlane, Camera.MonoOrStereoscopicEye.Mono, frustumCorners);
+        Vector3 camPosition = cam.transform.position;
 
         for(int i = 0; i < frustumCorners.Length; i++)
         {
             Vector3 worldSpaceCorner = cam.transform.TransformVector(frustumCorners[i]);
-            Vector3 camPos = cam.transform.position;
-            Vector3 camToCorner = worldSpaceCorner - camPos;
+            Vector3 camToCorner = worldSpaceCorner - camPosition;
             camToCorner.Normalize();
             
             p[i] = camToCorner * nearClippingPlane;
@@ -71,13 +72,14 @@ public class CameraColliderGenerator : MonoBehaviour
         p[10] = p[9] + (p[6] - p[9]) * .5f;
         p[11] = p[8] + (p[7] - p[8]) * .5f;
 
-        //scale all points to center
+        //scale all points to center of near plane
         Vector3 nearMiddlePoint = p[4] + (p[5] - p[4]) * .5f;
         for (int i = 0; i < 6; i++)
         {
             p[i] = nearMiddlePoint + (p[i] - nearMiddlePoint) * scaleToCenterFactor;
         }
 
+        //scale all points to center of far plane
         Vector3 farMiddlePoint = p[10] + (p[11] - p[10]) * .5f;
         for (int i = 6; i < 12; i++)
         {
