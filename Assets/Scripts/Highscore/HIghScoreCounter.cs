@@ -14,7 +14,10 @@ public class HighScoreCounter : MonoBehaviour
     [SerializeField] private int multipleFirefliesScore;
 
     [SerializeField] private float timeInAirToGetScore;
+    [SerializeField] private float inAirScorePerSecond;
+    [HideInInspector] public bool playerIsInAir;
     private int additionalHighScore;
+    private float inAirScoreTimeToWait;
 
 
     [Header("References")]
@@ -34,6 +37,7 @@ public class HighScoreCounter : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         gameTimer = GameVariables.instance.gameTimer;
+        inAirScoreTimeToWait = 1 / inAirScorePerSecond;
     }
 
     private void OnDestroy()
@@ -41,7 +45,7 @@ public class HighScoreCounter : MonoBehaviour
         instance = null;
     }
 
-    public void AddToHighscore(ScoreType scoreType, float scaleFactor = 1)
+    public void AddToScore(ScoreType scoreType, float scaleFactor = 1)
     {
         int addedScore = GetScoreFromType(scoreType, scaleFactor);
         Debug.Log($"Highscoretype: {scoreType}, Amount: {addedScore}");
@@ -50,6 +54,43 @@ public class HighScoreCounter : MonoBehaviour
         additionalScoreGUI.text = additionalHighScore.ToString();
     }
 
+    private int GetScoreFromType(ScoreType scoreType, float scaleFactor)
+    {
+        int tmpScore = 0;
+
+        switch(scoreType)
+        {
+            case ScoreType.InAir:
+                tmpScore = inAirScore;
+                break;
+
+            case ScoreType.DriftDash:
+                tmpScore = driftDashScore;
+                break;
+
+            case ScoreType.CloseToObject:
+                tmpScore = closeToObjectScore;
+                break;
+
+            case ScoreType.CloseToEnemy:
+                tmpScore = CloseToEnemyScore;
+                break;
+
+            case ScoreType.MultipleFireflies:
+                tmpScore = multipleFirefliesScore;
+                break;
+        }
+
+        return Mathf.RoundToInt(tmpScore + scaleFactor);
+    }
+
+    public float GetTotalScore()
+    {
+        Debug.Log($"time: {gameTimer.timeElapsed}, additionale Score: {additionalHighScore}");
+        return gameTimer.timeElapsed + additionalHighScore;
+    }
+
+#region Multiple Fireflies Score
     public void StartMultipleFirfliesCounter()
     {
         // joo instantiate shit
@@ -57,41 +98,28 @@ public class HighScoreCounter : MonoBehaviour
 
     public void StopMultipleFirefliesCounter(int collectedFireflies)
     {
-        AddToHighscore(ScoreType.MultipleFireflies, collectedFireflies);
+        AddToScore(ScoreType.MultipleFireflies, collectedFireflies);
     }
+#endregion
 
-    public IEnumerator StartInAirCounter()
+    public IEnumerator StartInAirScoreCounter()
     {
+        playerIsInAir = true;
+        int inAirScore = 0;
+
         yield return new WaitForSeconds(timeInAirToGetScore);
-    }
 
-    private int GetScoreFromType(ScoreType scoreType, float scaleFactor)
-    {
-        switch(scoreType)
+        if(!playerIsInAir)
+            yield break;
+
+        //TODO: spawn In Air UI
+
+        while(playerIsInAir)
         {
-            case ScoreType.InAir:
-                return inAirScore;
-
-            case ScoreType.DriftDash:
-                return Mathf.RoundToInt(driftDashScore * scaleFactor);
-
-            case ScoreType.CloseToObject:
-                return Mathf.RoundToInt(closeToObjectScore * scaleFactor);
-
-            case ScoreType.CloseToEnemy:
-                return Mathf.RoundToInt(CloseToEnemyScore * scaleFactor);
-
-            case ScoreType.MultipleFireflies:
-                return Mathf.RoundToInt(multipleFirefliesScore * scaleFactor);
-
-            default:
-                return 0;
+            inAirScore++;
+            yield return new WaitForSeconds(inAirScoreTimeToWait);
         }
-    }
 
-    public float GetTotalHighscore()
-    {
-        Debug.Log($"time: {gameTimer.timeElapsed}, additionale Score: {additionalHighScore}");
-        return gameTimer.timeElapsed + additionalHighScore;
+        AddToScore(ScoreType.InAir, inAirScore);
     }
 }

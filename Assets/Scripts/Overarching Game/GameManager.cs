@@ -250,7 +250,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         Time.timeScale = 0;
 
         
-        HighScoreEntry newEntry = new HighScoreEntry(playerName, instance.highScoreCounter.GetTotalHighscore());
+        HighScoreEntry newEntry = new HighScoreEntry(playerName, instance.highScoreCounter.GetTotalScore());
         highScoreTable.CreateHighScoreVisuals(newEntry);
         SelectUI(highScoreRestartButton);
         

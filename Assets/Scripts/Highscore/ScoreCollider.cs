@@ -28,19 +28,8 @@ public class ScoreCollider : MonoBehaviour
         {
             closeObjectsCount++;
             scoreAdditionsToGive++;
-            Debug.Log("Started Close Collision Detection");
+            // Debug.Log("Started Close Collision Detection");
         }
-
-        
-        
-        // Vector3 closestPoint =  other.ClosestPoint(transform.position);
-
-        // float playerCollRadius = playerCollider.radius;
-        // float distance = Vector3.Distance(closestPoint, transform.position);
-        // float scoreScaleFactor = 1 - (distance - playerCollRadius) / (ownCollider.radius - playerCollRadius);
-
-        // ScoreType scoreType = otherLayer == 9 ? ScoreType.CloseToObject : ScoreType.CloseToEnemy;
-        // highScoreCounter.AddToHighscore(scoreType, scoreScaleFactor);
     }
 
     private void OnTriggerExit(Collider other) {
@@ -53,13 +42,11 @@ public class ScoreCollider : MonoBehaviour
 
         if(scoreAdditionsToGive != closeObjectsCount){
             closeObjectsCount--;
-            Debug.Log("No Points");
             return;
         }
 
         ScoreType scoreType = otherLayer == 9 ? ScoreType.CloseToObject : ScoreType.CloseToEnemy;
-        highScoreCounter.AddToHighscore(scoreType);
-        Debug.Log("Yes Points");
+        highScoreCounter.AddToScore(scoreType);
 
         closeObjectsCount--;
         scoreAdditionsToGive--;

@@ -273,6 +273,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             waterVFX.SetActive(true);
             mainAudioSource.PlayRandomOneShot(landingAudioData);
             isInAir = false;
+
+            highScoreCounter.playerIsInAir = false;
         }
 
         justStartedJumping = false;
@@ -382,8 +384,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         float currentBoostAmount = boostForce * driftBoostPercentage;
         StartBoost(currentBoostAmount);
 
-        //float scoreScaleFactor =  1 - (1 - driftBoostPercentage) * (1 - driftBoostPercentage); //Make the factor Ease In Quad
-        highScoreCounter.AddToHighscore(HighScoreCounter.ScoreType.DriftDash, driftBoostPercentage);
+        highScoreCounter.AddToScore(HighScoreCounter.ScoreType.DriftDash, driftBoostPercentage);
 
         ChangeParticleColor(defaultParticleColor);
 
@@ -883,6 +884,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             AnimationClip tmpJumpCLip = isDrifting ? jumpingOpenMouthClip : jumpingClip;
             animator.CrossFade(tmpJumpCLip.name, .2f);
             walkingAudioSource.Stop();
+            highScoreCounter.StartCoroutine(highScoreCounter.StartInAirScoreCounter());
+            
             
             if(Random.Range(0f, 1f) < .2f)
                 playerAudioSource.PlayRandomOneShot(playerJumpAudioData);
