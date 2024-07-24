@@ -103,6 +103,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [SerializeField] protected DriftPointContainer leftDriftPointContainer;
     [SerializeField] private Transform playerLookAt;
     [SerializeField] private GameObject waterTrail;
+     
 
     [Header("Animations")] 
     [SerializeField] private AnimationClip runningClip;
@@ -151,6 +152,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private Quaternion rotationAtDriftStart;
     private GameVariables gameVariables => GameVariables.instance;
     private HighScoreCounter highScoreCounter => gameVariables.highScoreCounter;
+    private ScoreCollider scoreCollider;
 
     private List<IEnumerator> boostCoroutines = new();
 
@@ -158,6 +160,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        scoreCollider = GetComponentInChildren<ScoreCollider>();
         sphereCollider = GetComponent<SphereCollider>();
         animator = playerVisuals.GetComponentInChildren<Animator>();
         tongueAnimator = tonguePoint.GetComponent<Animator>();
@@ -379,11 +382,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         float currentBoostAmount = boostForce * driftBoostPercentage;
         StartBoost(currentBoostAmount);
 
-        if(driftBoostPercentage >= 1)
-        {
-            Debug.Log("Added DriftBoost Highscore");
-            highScoreCounter.AddToHighscore(HighScoreCounter.ScoreType.DriftDash);
-        }
+        //float scoreScaleFactor =  1 - (1 - driftBoostPercentage) * (1 - driftBoostPercentage); //Make the factor Ease In Quad
+        highScoreCounter.AddToHighscore(HighScoreCounter.ScoreType.DriftDash, driftBoostPercentage);
 
         ChangeParticleColor(defaultParticleColor);
 
@@ -692,6 +692,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private void OnCollisionEnter(Collision other)
     {
         var collidedWithLayer = other.gameObject.layer;
+        scoreCollider?.PlayerCollidedWithCollider(collidedWithLayer);
         
         if (collidedWithLayer.IsInsideMask(obstacleLayer))
             BounceOfObstacle(other);

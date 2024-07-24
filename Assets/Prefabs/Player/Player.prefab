@@ -5673,7 +5673,6 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   boostForce: 18
-  boostSubtractPerSecond: 18
   boostDuration: 2.5
   boostLerpPerSecond: 0.25
   timeToGetBoost: 0.5
@@ -6048,8 +6047,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2986745570544489724}
-  - component: {fileID: 7752756041081288803}
   - component: {fileID: 7263580989883142355}
+  - component: {fileID: 7752756041081288803}
   m_Layer: 6
   m_Name: Firefly Collector
   m_TagString: FireflyCollector
@@ -6072,27 +6071,6 @@ Transform:
   m_Father: {fileID: 2440283806234537626}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &7752756041081288803
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2084837728789634541}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7263580989883142355
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6120,6 +6098,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!135 &7752756041081288803
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084837728789634541}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2134966453181998100
 GameObject:
   m_ObjectHideFlags: 0
@@ -12102,7 +12101,7 @@ Transform:
   - {fileID: 2440283806234537626}
   - {fileID: 1609444752658654278}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5107119683635567647
 MonoBehaviour:

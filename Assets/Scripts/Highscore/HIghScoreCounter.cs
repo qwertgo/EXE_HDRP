@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,13 +8,18 @@ public class HighScoreCounter : MonoBehaviour
 {
     public static HighScoreCounter instance;
     private GameTimer gameTimer;
-    private int additonalHighScore;
+    private int additionalHighScore;
 
-    [SerializeField] private int InAirScore;
-    [SerializeField] private int DriftDashScore;
-    [SerializeField] private int CloseToObjectScore;
+    [Header("Variables")]
+
+    [SerializeField] private int inAirScore;
+    [SerializeField] private int driftDashScore;
+    [SerializeField] private int closeToObjectScore;
     [SerializeField] private int CloseToEnemyScore;
-    [SerializeField] private int MultipleFirefliesScore;
+    [SerializeField] private int multipleFirefliesScore;
+
+    [Header("References")]
+    [SerializeField] private TextMeshProUGUI additionalScoreGUI;
 
     public enum ScoreType {InAir, DriftDash, CloseToObject, CloseToEnemy, MultipleFireflies}
 
@@ -34,31 +40,33 @@ public class HighScoreCounter : MonoBehaviour
         instance = null;
     }
 
-    public void AddToHighscore(ScoreType scoreType)
+    public void AddToHighscore(ScoreType scoreType, float scaleFactor = 1)
     {
-        int value = GetSCoreFromType(scoreType);
+        int addedScore = GetScoreFromType(scoreType, scaleFactor);
+        Debug.Log($"Highscoretype: {scoreType}, Amount: {addedScore}");
 
-        additonalHighScore += value;
+        additionalHighScore += addedScore;
+        additionalScoreGUI.text = additionalHighScore.ToString();
     }
 
-    private int GetSCoreFromType(ScoreType scoreType)
+    private int GetScoreFromType(ScoreType scoreType, float scaleFactor)
     {
         switch(scoreType)
         {
             case ScoreType.InAir:
-                return InAirScore;
+                return inAirScore;
 
             case ScoreType.DriftDash:
-                return DriftDashScore;
+                return Mathf.RoundToInt(driftDashScore * scaleFactor);
 
             case ScoreType.CloseToObject:
-                return CloseToObjectScore;
+                return Mathf.RoundToInt(closeToObjectScore * scaleFactor);
 
             case ScoreType.CloseToEnemy:
-                return CloseToEnemyScore;
+                return Mathf.RoundToInt(CloseToEnemyScore * scaleFactor);
 
             case ScoreType.MultipleFireflies:
-                return MultipleFirefliesScore;
+                return Mathf.RoundToInt(multipleFirefliesScore * scaleFactor);
 
             default:
                 return 0;
@@ -67,7 +75,7 @@ public class HighScoreCounter : MonoBehaviour
 
     public float GetTotalHighscore()
     {
-        Debug.Log($"time: {gameTimer.timeElapsed}, additionale Score: {additonalHighScore}");
-        return gameTimer.timeElapsed + additonalHighScore;
+        Debug.Log($"time: {gameTimer.timeElapsed}, additionale Score: {additionalHighScore}");
+        return gameTimer.timeElapsed + additionalHighScore;
     }
 }

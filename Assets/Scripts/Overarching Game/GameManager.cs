@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private AudioSource playerWalkingAudioSource;
     [SerializeField] private SpeedOMeter speedOMeter;
     [SerializeField] private GameObject timeSlider;
+    [SerializeField] private GameObject currentScore;
     [SerializeField] private DayNightCycleController dayNightCycleController;
     [SerializeField] private GameObject playerWaterVFX;
     [SerializeField] private GameTimer gameTimer;
@@ -147,9 +148,8 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         yield return new WaitForSeconds(.5f);
         ActivateObjectsToStartGame();
         eventSystem.SetSelectedGameObject(null);
+        startEnemy.gameObject.SetActive(spawnStartEnemy);
         
-        if(spawnStartEnemy)
-            startEnemy.gameObject.SetActive(true);
     }
 
     private void ActivateObjectsToStartGame()
@@ -160,6 +160,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         gameTimer.enabled = true;
         
         timeSlider.SetActive(true);
+        currentScore.SetActive(true);
         playerWaterVFX.SetActive(false);
         
         playerWalkingAudioSource.Play();

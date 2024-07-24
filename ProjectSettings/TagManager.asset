@@ -8,6 +8,7 @@ TagManager:
   - SlowBox
   - PlayerGlowArea
   - Schilf
+  - ScoreCollider
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - DriftPoint
   - 
   - Obstacle
-  - 
+  - Enemy
   - 
   - 
   - 
