@@ -11,19 +11,19 @@ public class FireflyStatic : MonoBehaviour
     [SerializeField] protected float timeValue;
     [SerializeField] protected float timeToRespawn;
     [SerializeField] private float timeToCollect;
-    private float collectSpeed;
     [SerializeField] private float visualsYOffset;
+
+    private float collectSpeed;
     
     [Header("References")]
     [SerializeField] protected Transform visuals;
     [SerializeField] private AudioClipDataSingle collectedClipData;
     [SerializeField] private GameObject collectedParticleSystem;
-    private Collider sphereCol;
-
-
-    private MeshRenderer meshRenderer;
-    private LODGroup lodGroup;
     [SerializeField] private CopyPosition particleCopyPosition;
+
+    private Collider sphereCol;
+    private GameVariables gameVariables => GameVariables.instance;
+    private HighScoreCounter highScoreCounter => gameVariables.highScoreCounter;
 
     protected void Start()
     {
@@ -67,8 +67,9 @@ public class FireflyStatic : MonoBehaviour
             yield return null;
         }
     
-        GameVariables.instance.gameTimer.AddToTimer(timeValue);
-        GameVariables.instance.fireflyCount++;
+        gameVariables.gameTimer.AddToTimer(timeValue);
+        highScoreCounter.StartCoroutine(highScoreCounter.StartFireflyCounter());
+        gameVariables.fireflyCount++;
         
         FireflyManager fireflyManager = FireflyManager.instance;
 

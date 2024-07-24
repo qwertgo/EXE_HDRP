@@ -6,20 +6,22 @@ using UnityEngine;
 
 public class HighScoreCounter : MonoBehaviour
 {
-    public static HighScoreCounter instance;
-    private GameTimer gameTimer;
-    private int additionalHighScore;
-
     [Header("Variables")]
-
     [SerializeField] private int inAirScore;
     [SerializeField] private int driftDashScore;
     [SerializeField] private int closeToObjectScore;
     [SerializeField] private int CloseToEnemyScore;
     [SerializeField] private int multipleFirefliesScore;
 
+    [SerializeField] private float timeInAirToGetScore;
+    private int additionalHighScore;
+    private int recentlyCollectedFireflies;
+
+
     [Header("References")]
     [SerializeField] private TextMeshProUGUI additionalScoreGUI;
+    [HideInInspector] public static HighScoreCounter instance;
+    private GameTimer gameTimer;
 
     public enum ScoreType {InAir, DriftDash, CloseToObject, CloseToEnemy, MultipleFireflies}
 
@@ -47,6 +49,29 @@ public class HighScoreCounter : MonoBehaviour
 
         additionalHighScore += addedScore;
         additionalScoreGUI.text = additionalHighScore.ToString();
+    }
+
+    public IEnumerator StartFireflyCounter() 
+    {
+        // if(recentlyCollectedFireflies == 1)
+        //     Debug.Log("Spawn Visuals for multiple Fireflies");
+        
+        recentlyCollectedFireflies++;
+        int tmpFireFliesCollected = recentlyCollectedFireflies;
+
+        yield return new WaitForSeconds(1f);
+
+        if(recentlyCollectedFireflies > 1 && recentlyCollectedFireflies == tmpFireFliesCollected)
+        {
+            AddToHighscore(ScoreType.MultipleFireflies, recentlyCollectedFireflies);
+            recentlyCollectedFireflies = 0;
+
+        }
+    }
+
+    public IEnumerator StartInAirCounter()
+    {
+        yield return new WaitForSeconds(1f);
     }
 
     private int GetScoreFromType(ScoreType scoreType, float scaleFactor)
