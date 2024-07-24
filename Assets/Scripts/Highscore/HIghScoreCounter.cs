@@ -15,7 +15,6 @@ public class HighScoreCounter : MonoBehaviour
 
     [SerializeField] private float timeInAirToGetScore;
     private int additionalHighScore;
-    private int recentlyCollectedFireflies;
 
 
     [Header("References")]
@@ -51,27 +50,19 @@ public class HighScoreCounter : MonoBehaviour
         additionalScoreGUI.text = additionalHighScore.ToString();
     }
 
-    public IEnumerator StartFireflyCounter() 
+    public void StartMultipleFirfliesCounter()
     {
-        // if(recentlyCollectedFireflies == 1)
-        //     Debug.Log("Spawn Visuals for multiple Fireflies");
-        
-        recentlyCollectedFireflies++;
-        int tmpFireFliesCollected = recentlyCollectedFireflies;
+        // joo instantiate shit
+    }
 
-        yield return new WaitForSeconds(1f);
-
-        if(recentlyCollectedFireflies > 1 && recentlyCollectedFireflies == tmpFireFliesCollected)
-        {
-            AddToHighscore(ScoreType.MultipleFireflies, recentlyCollectedFireflies);
-            recentlyCollectedFireflies = 0;
-
-        }
+    public void StopMultipleFirefliesCounter(int collectedFireflies)
+    {
+        AddToHighscore(ScoreType.MultipleFireflies, collectedFireflies);
     }
 
     public IEnumerator StartInAirCounter()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(timeInAirToGetScore);
     }
 
     private int GetScoreFromType(ScoreType scoreType, float scaleFactor)

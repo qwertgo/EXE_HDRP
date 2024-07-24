@@ -31,7 +31,8 @@ public class FireflyManager : MonoBehaviour
 
     private IEnumerator fireFlyCollectSound;
     private NavMeshQueryFilter  navMeshFilter;
-    private static int firefliesCollectedInLastSecond;
+    private HighScoreCounter highScoreCounter => GameVariables.instance.highScoreCounter;
+    private static int recentlyCollectedFireflies;
     private static float pitchOffset;
 
     private void OnDrawGizmosSelected()
@@ -131,20 +132,36 @@ public class FireflyManager : MonoBehaviour
         updatePosition?.Invoke(new Vector2(xPos, yPos));
     }
 
-    public IEnumerator PlayStaticFireflySound(AudioClipDataSingle data)
+    public IEnumerator CollectFireFly(AudioClipDataSingle audioData, FireflyStatic firefly)
     {
-        if (firefliesCollectedInLastSecond == 0)
+        if (recentlyCollectedFireflies == 0)
             pitchOffset = Random.Range(-.2f, .2f);
+        else if(recentlyCollectedFireflies == 1)
+            highScoreCounter.StartMultipleFirfliesCounter();
 
-        float pitch = .6f + pitchOffset + firefliesCollectedInLastSecond / 10f;
-        firefliesCollectedInLastSecond++;
-        int tmpCollectedFireflies = firefliesCollectedInLastSecond;
-        
-        audioSource.PlayOneShotPitched(data, pitch);
-        
+        if(firefly is FireflyDynamic)
+            audioSource.PlayOneShotVariation(audioData);
+        else
+            PlayStaticFireflySound(audioData);
+
+        recentlyCollectedFireflies++;
+        int tmpCollectedFireflies = recentlyCollectedFireflies;
+
         yield return new WaitForSeconds(1f);
 
-        if (tmpCollectedFireflies == firefliesCollectedInLastSecond)
-            firefliesCollectedInLastSecond = 0;
+        //continue if recently collected Fireflies didn't change
+        if(tmpCollectedFireflies != recentlyCollectedFireflies)
+            yield break;
+
+        if(recentlyCollectedFireflies > 1)
+            highScoreCounter.StopMultipleFirefliesCounter(recentlyCollectedFireflies);
+
+        recentlyCollectedFireflies = 0;
+    }
+
+    private void PlayStaticFireflySound(AudioClipDataSingle audioData)
+    {
+        float pitch = .6f + pitchOffset + recentlyCollectedFireflies / 10f;
+        audioSource.PlayOneShotPitched(audioData, pitch);
     }
 }

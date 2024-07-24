@@ -24,6 +24,7 @@ public class FireflyStatic : MonoBehaviour
     private Collider sphereCol;
     private GameVariables gameVariables => GameVariables.instance;
     private HighScoreCounter highScoreCounter => gameVariables.highScoreCounter;
+    private FireflyManager fireflyManager => FireflyManager.instance;
 
     protected void Start()
     {
@@ -68,18 +69,20 @@ public class FireflyStatic : MonoBehaviour
         }
     
         gameVariables.gameTimer.AddToTimer(timeValue);
-        highScoreCounter.StartCoroutine(highScoreCounter.StartFireflyCounter());
+        // highScoreCounter.StartCoroutine(highScoreCounter.StartFireflyCounter());
         gameVariables.fireflyCount++;
         
-        FireflyManager fireflyManager = FireflyManager.instance;
+        // FireflyManager fireflyManager = FireflyManager.instance;
 
-        if (this is FireflyDynamic)
-        {
-            // fireflyManager.audioSource.PlayOneShotVariation(collectedClip, new Vector2(.8f, 1.2f), new Vector2(.85f, 1.15f));
-            fireflyManager.audioSource.PlayOneShotVariation(collectedClipData);
-        }
-        else
-            StartCoroutine(fireflyManager.PlayStaticFireflySound(collectedClipData));
+        // if (this is FireflyDynamic)
+        // {
+        //     // fireflyManager.audioSource.PlayOneShotVariation(collectedClip, new Vector2(.8f, 1.2f), new Vector2(.85f, 1.15f));
+        //     fireflyManager.audioSource.PlayOneShotVariation(collectedClipData);
+        // }
+        // else
+        //     StartCoroutine(fireflyManager.PlayStaticFireflySound(collectedClipData));
+
+        fireflyManager.StartCoroutine(fireflyManager.CollectFireFly(collectedClipData, this));
 
         collectedParticleSystem.SetActive(true);
         Transform playerTransform = GameVariables.instance.player.transform;
