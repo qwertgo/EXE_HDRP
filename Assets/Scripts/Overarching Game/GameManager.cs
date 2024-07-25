@@ -244,7 +244,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 
         stoppedGame = true;
         
-        GameVariables.instance.player.Die();
+        gameVariables.player.Die();
         canPauseGame = false;
         Cursor.visible = true;
         Time.timeScale = 0;
@@ -253,9 +253,6 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         HighScoreEntry newEntry = new HighScoreEntry(playerName, instance.highScoreCounter.GetTotalScore());
         highScoreTable.CreateHighScoreVisuals(newEntry);
         SelectUI(highScoreRestartButton);
-        
-        eventSystem.SetSelectedGameObject(null);
-        eventSystem.SetSelectedGameObject(highScoreRestartButton);
     }
 
     public void OnPauseGame(InputAction.CallbackContext context)

@@ -69,7 +69,7 @@ public class GameTimer : MonoBehaviour
         
         while (playTickingSound)
         {
-            float volume = -(remainingTime / gameTime * 10) + 1;
+            float volume = 1 - remainingTime / gameTime * 10;
             audioSource.volume = volume;
             yield return null;
         }

@@ -25,11 +25,13 @@ public class HighScoreTable : MonoBehaviour
     {
         //load existing HighScore, Add Entry and sort the Highscorelist
         highScoreEntries = SaveSystem.LoadHighScore();
+        bool createdNewEntry = false;
 
         if (newEntry is not null)
         {
             highScoreEntries.Add(newEntry);
             highScoreEntries = BubbleSort();
+            createdNewEntry = true;
         }
         else
             place = 1;
@@ -40,35 +42,33 @@ public class HighScoreTable : MonoBehaviour
 
         for(int i = 0; i < highScoreEntries.Count; i++)
         {
-            AddHighScoreEntryVisuals(highScoreEntries[i], i);
+            AddHighScoreEntryVisuals(highScoreEntries[i], i, createdNewEntry);
         }
 
-        if (newEntry != null)
-        {
+        if (createdNewEntry)
             highScorePanel.anchoredPosition = new Vector2(0, (place - 3) * 100);
-        }
         
         highScoreTable.gameObject.SetActive(true);
         SaveSystem.SaveHighscore(highScoreEntries);
     }
 
     //Creates Visuals for given HighscoreEntry
-    private void AddHighScoreEntryVisuals(HighScoreEntry entry, int i)
+    private void AddHighScoreEntryVisuals(HighScoreEntry entry, int i, bool createdNewEntry)
     {
         GameObject entryGameObject = Instantiate(highScoreEntryVisualsPrefab, Vector3.zero, Quaternion.identity, highScorePanel);
 
         TextMeshProUGUI[] entryTexts = entryGameObject.GetComponentsInChildren<TextMeshProUGUI>();
-        entryTexts[0].text = (i + 1).ToString();
-        entryTexts[1].text = entry.name;
+        entryTexts[0].text = $"{i + 1}. {entry.name}" ;
         
         float survivedMinutes = Mathf.FloorToInt(entry.timeSurvived / 60);
         float survivedSeconds = Mathf.RoundToInt(entry.timeSurvived % 60);
         
-        entryTexts[2].text = string.Format("{0:00}:{1:00}", survivedMinutes, survivedSeconds);
+        // entryTexts[2].text = string.Format("{0:00}:{1:00}", survivedMinutes, survivedSeconds);
+        entryTexts[1].text = entry.timeSurvived.ToString();
 
         Image image = entryGameObject.GetComponent<Image>();
 
-        if (i + 1 == place)
+        if (i + 1 == place && createdNewEntry)
             image.color = selectedColor;
         else
             image.color = i % 2 == 0 ? notSelectedColor1 : notSelectedColor2;
