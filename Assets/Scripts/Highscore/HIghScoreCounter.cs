@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -7,11 +8,11 @@ using UnityEngine;
 public class HighScoreCounter : MonoBehaviour
 {
     [Header("Variables")]
-    [SerializeField] private int inAirScore;
-    [SerializeField] private int driftDashScore;
-    [SerializeField] private int closeToObjectScore;
-    [SerializeField] private int CloseToEnemyScore;
-    [SerializeField] private int multipleFirefliesScore;
+    [SerializeField] private int inAirRewardValue;
+    [SerializeField] private int driftDashRewardValue;
+    [SerializeField] private int closeToObjectRewardValue;
+    [SerializeField] private int CloseToEnemyRewardValue;
+    [SerializeField] private int multipleFirefliesRewardValue;
 
     [SerializeField] private float timeInAirToGetScore;
     [SerializeField] private float inAirScorePerSecond;
@@ -19,13 +20,21 @@ public class HighScoreCounter : MonoBehaviour
     private int additionalHighScore;
     private float inAirScoreTimeToWait;
 
+    private int inAirScore;
+    private int driftDashScore;
+    private int closeToObjectScore;
+    private int closeToEnemyScore;
+    private int multipleFirefliesScore;
+
+    public enum ScoreType { InAir, DriftDash, CloseToObject, CloseToEnemy, MultipleFireflies }
+
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI additionalScoreGUI;
     [HideInInspector] public static HighScoreCounter instance;
+    
     private GameTimer gameTimer;
-
-    public enum ScoreType {InAir, DriftDash, CloseToObject, CloseToEnemy, MultipleFireflies}
+    
 
     private IEnumerator Start()
     {
@@ -47,41 +56,40 @@ public class HighScoreCounter : MonoBehaviour
 
     public void AddToScore(ScoreType scoreType, float scaleFactor = 1)
     {
-        int addedScore = GetScoreFromType(scoreType, scaleFactor);
-        Debug.Log($"Highscoretype: {scoreType}, Amount: {addedScore}");
+        int addedScore = 0;  
 
-        additionalHighScore += addedScore;
-        additionalScoreGUI.text = additionalHighScore.ToString();
-    }
-
-    private int GetScoreFromType(ScoreType scoreType, float scaleFactor)
-    {
-        int tmpScore = 0;
-
-        switch(scoreType)
+        switch (scoreType)
         {
             case ScoreType.InAir:
-                tmpScore = inAirScore;
+                addedScore = Mathf.RoundToInt(inAirRewardValue * scaleFactor);
+                inAirScore += addedScore;
                 break;
 
             case ScoreType.DriftDash:
-                tmpScore = driftDashScore;
+                addedScore = Mathf.RoundToInt(driftDashRewardValue * scaleFactor);
+                driftDashScore = addedScore;
                 break;
 
             case ScoreType.CloseToObject:
-                tmpScore = closeToObjectScore;
+                addedScore = Mathf.RoundToInt(closeToObjectRewardValue * scaleFactor);
+                closeToObjectScore = addedScore;
                 break;
 
             case ScoreType.CloseToEnemy:
-                tmpScore = CloseToEnemyScore;
+                addedScore = Mathf.RoundToInt(CloseToEnemyRewardValue * scaleFactor);
+                closeToEnemyScore = addedScore;
                 break;
 
             case ScoreType.MultipleFireflies:
-                tmpScore = multipleFirefliesScore;
+                addedScore = Mathf.RoundToInt(multipleFirefliesRewardValue * scaleFactor);
+                multipleFirefliesScore = addedScore;
                 break;
         }
 
-        return Mathf.RoundToInt(tmpScore + scaleFactor);
+        //Debug.Log($"Highscoretype: {scoreType}, Amount: {addedScore}");
+
+        additionalHighScore += addedScore;
+        additionalScoreGUI.text = additionalHighScore.ToString();
     }
 
     public float GetTotalScore()
@@ -89,6 +97,9 @@ public class HighScoreCounter : MonoBehaviour
         Debug.Log($"time: {gameTimer.timeElapsed}, additionale Score: {additionalHighScore}");
         return gameTimer.timeElapsed + additionalHighScore;
     }
+
+    public HighScoreEntry CreateHighscoreEntry(string name) 
+        => new HighScoreEntry(name, gameTimer.timeElapsed, inAirScore, driftDashScore, closeToObjectScore, closeToEnemyScore, multipleFirefliesScore);
 
 #region Multiple Fireflies Score
     public void StartMultipleFirfliesCounter()

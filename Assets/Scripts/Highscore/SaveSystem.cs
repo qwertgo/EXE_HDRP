@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using static HighScoreCounter;
 
 public static class SaveSystem
 {
@@ -38,19 +39,36 @@ public static class SaveSystem
 [System.Serializable]
 public class HighScoreEntry
 {
-   public string name { get; private set; }
-   public float timeSurvived { get; private set; }
+    public string name { get; private set; }
+    public float timeSurvived { get; private set; }
+    public int timeScore { get; private set; }
+    public int totalScore { get; private set; }
+    public Dictionary<ScoreType, int> allScores { get; private set; } = new();
 
-   public HighScoreEntry(string name, float timeSurvived)
-   {
-      this.name = name;
-      this.timeSurvived = timeSurvived;
-   }
 
-   public new string ToString()
-   {
-      return $"name: {name}, timeSurvived: {timeSurvived}";
-   }
+
+    public HighScoreEntry(string name, float timeSurvived, int inAirScore, int driftDashScore, int closeToObjectScore, int closeToEnemyScore, int multipleFirefliesScore)
+    {
+        this.name = name;
+        this.timeSurvived = timeSurvived;     
+
+        allScores.Add(ScoreType.InAir, inAirScore);
+        allScores.Add(ScoreType.DriftDash, driftDashScore);
+        allScores.Add(ScoreType.CloseToObject, closeToObjectScore);
+        allScores.Add(ScoreType.CloseToEnemy, closeToEnemyScore);
+        allScores.Add(ScoreType.MultipleFireflies, multipleFirefliesScore);
+
+       
+        timeScore = Mathf.FloorToInt(timeSurvived) * 2;
+        totalScore = timeScore + inAirScore + driftDashScore + closeToObjectScore + closeToEnemyScore + multipleFirefliesScore;
+    }
+
+
+
+    public new string ToString()
+    {
+        return $"name: {name}, timeSurvived: {timeSurvived}";
+    }
    
    
 }

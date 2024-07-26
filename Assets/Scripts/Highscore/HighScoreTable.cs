@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 
 public class HighScoreTable : MonoBehaviour
 {
+    [Header("Highscore")]
     [SerializeField] private Color selectedColor;
     [SerializeField] private Color notSelectedColor1;
     [SerializeField] private Color notSelectedColor2;
@@ -15,9 +17,61 @@ public class HighScoreTable : MonoBehaviour
     [SerializeField] private RectTransform highScorePanel;
     [SerializeField] private GameObject highScoreEntryVisualsPrefab;
 
+    [Header("Time and Extra Score")]
+    [SerializeField] private TextMeshProUGUI timeSurvivedDisplayGUI;
+    [SerializeField] private TextMeshProUGUI timeScoreGUI;
+    [SerializeField] private TextMeshProUGUI extraScoresDisplayGUI;
+    [SerializeField] private TextMeshProUGUI totalExtraScoreGUI;
+    [SerializeField] private TextMeshProUGUI totalScoreGUI;
+
     private int place;
 
     private List<HighScoreEntry> highScoreEntries = new();
+
+
+    public IEnumerator CreateScoreVisualsAnimated(HighScoreEntry highScoreEntry)
+    {
+        float waitingTime = 1f;
+        int totalScore = 0;
+
+
+        //Show time survived
+        GameVariables.instance.gameTimer.GetTimeElapsed(out int minutes, out int seconds);
+        timeSurvivedDisplayGUI.text = string.Format("{0:00}:{1:00}", minutes, seconds) + " minutes";
+
+        yield return new WaitForSecondsRealtime(waitingTime);
+
+        //Show score for time
+        int timeScore = (minutes * 60 + seconds) * 2;
+        timeScoreGUI.text = timeScore.ToString();
+
+        totalScore += timeScore;
+        totalScoreGUI.text = $"Score: {totalScore}";
+
+        yield return new WaitForSecondsRealtime(waitingTime);
+
+        //show extra score 
+        int tmpExtraScore = 0;
+
+        foreach(var pair in highScoreEntry.allScores)
+        {
+            if (pair.Value <= 0)
+                continue;
+
+
+            tmpExtraScore += pair.Value;
+            
+            extraScoresDisplayGUI.text = pair.Key + "\n+" + pair.Value;
+            totalExtraScoreGUI.text = tmpExtraScore.ToString();
+
+            totalScore += pair.Value;
+            totalScoreGUI.text = $"Score: {totalScore}";
+
+            yield return new WaitForSecondsRealtime(waitingTime);
+        }
+
+        totalExtraScoreGUI.text = tmpExtraScore.ToString();
+    }
 
 
     //makes HighScoreTable visible, Adds New Entry, and creates visuals for all HighScoreEntries
@@ -59,12 +113,7 @@ public class HighScoreTable : MonoBehaviour
 
         TextMeshProUGUI[] entryTexts = entryGameObject.GetComponentsInChildren<TextMeshProUGUI>();
         entryTexts[0].text = $"{i + 1}. {entry.name}" ;
-        
-        float survivedMinutes = Mathf.FloorToInt(entry.timeSurvived / 60);
-        float survivedSeconds = Mathf.RoundToInt(entry.timeSurvived % 60);
-        
-        // entryTexts[2].text = string.Format("{0:00}:{1:00}", survivedMinutes, survivedSeconds);
-        entryTexts[1].text = entry.timeSurvived.ToString();
+        entryTexts[1].text = entry.totalScore.ToString();
 
         Image image = entryGameObject.GetComponent<Image>();
 

@@ -249,9 +249,10 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         Cursor.visible = true;
         Time.timeScale = 0;
 
-        
-        HighScoreEntry newEntry = new HighScoreEntry(playerName, instance.highScoreCounter.GetTotalScore());
+
+        HighScoreEntry newEntry = highScoreCounter.CreateHighscoreEntry(playerName);
         highScoreTable.CreateHighScoreVisuals(newEntry);
+        highScoreTable.StartCoroutine(highScoreTable.CreateScoreVisualsAnimated(newEntry));
         SelectUI(highScoreRestartButton);
     }
 

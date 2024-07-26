@@ -48,7 +48,7 @@ public class GameTimer : MonoBehaviour
 
             if (remainingTime / gameTime < .1f && !playTickingSound)
                 StartCoroutine(PlayTickingSound());
-            else if (remainingTime < 0)
+            else if (remainingTime <= 0)
                 EndGame();
 
             yield return null;
@@ -111,8 +111,7 @@ public class GameTimer : MonoBehaviour
 
     void DisplayTimer()
     {
-        float minutes = Mathf.FloorToInt(timeElapsed / 60);
-        float seconds = Mathf.FloorToInt(timeElapsed % 60);
+        GetTimeElapsed(out int minutes, out int seconds);
         remainingTimeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
         float remainingTimeInPercentage = remainingTime / gameTime;
@@ -120,6 +119,12 @@ public class GameTimer : MonoBehaviour
         sliderRight.value = remainingTimeInPercentage;
         
         echsenMaterial.SetFloat("_Percentage", remainingTimeInPercentage);
+    }
+
+    public void GetTimeElapsed(out int minutes, out int seconds)
+    {
+        minutes = Mathf.FloorToInt(timeElapsed / 60);
+        seconds = Mathf.FloorToInt(timeElapsed % 60);
     }
 
     private void OnDestroy()
