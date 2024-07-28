@@ -823,7 +823,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         musicAudioSource.Play();
         StopAllCoroutines();
         enabled = false;
+        rb.velocity = Vector3.zero;
         rb.isKinematic = true;
+
+        animator.StopPlayback();
     }
 
     private void PlayDeathSound()

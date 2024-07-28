@@ -247,12 +247,13 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         gameVariables.player.Die();
         canPauseGame = false;
         Cursor.visible = true;
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
 
 
         HighScoreEntry newEntry = highScoreCounter.CreateHighscoreEntry(playerName);
         highScoreTable.CreateHighScoreVisuals(newEntry);
-        highScoreTable.StartCoroutine(highScoreTable.CreateScoreVisualsAnimated(newEntry));
+        //highScoreTable.StartCoroutine(highScoreTable.CreateScoreVisualsAnimated(newEntry));
+        highScoreTable.AsyncTest(newEntry);
         SelectUI(highScoreRestartButton);
     }
 

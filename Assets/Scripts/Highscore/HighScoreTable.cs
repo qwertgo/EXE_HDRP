@@ -1,10 +1,14 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 public class HighScoreTable : MonoBehaviour
 {
@@ -18,15 +22,105 @@ public class HighScoreTable : MonoBehaviour
     [SerializeField] private GameObject highScoreEntryVisualsPrefab;
 
     [Header("Time and Extra Score")]
-    [SerializeField] private TextMeshProUGUI timeSurvivedDisplayGUI;
+    [SerializeField] private TextMeshProUGUI timeSurvivedGUI;
     [SerializeField] private TextMeshProUGUI timeScoreGUI;
-    [SerializeField] private TextMeshProUGUI extraScoresDisplayGUI;
+    [SerializeField] private TextMeshProUGUI tmpExtraScoreGUI;
     [SerializeField] private TextMeshProUGUI totalExtraScoreGUI;
     [SerializeField] private TextMeshProUGUI totalScoreGUI;
 
     private int place;
 
     private List<HighScoreEntry> highScoreEntries = new();
+
+    public async void AsyncTest(HighScoreEntry newEntry)
+    {
+        int waitBetweenAnimations = 800;
+        float animationDuration = 1f;
+        int totalScore = 0;
+
+        List<Func<Task>> animationTasks = new List<Func<Task>>();
+
+        animationTasks.Add(() => Task.Delay(waitBetweenAnimations));
+
+        //Show time survived
+        GameVariables.instance.gameTimer.GetTimeElapsed(out int minutes, out int seconds);
+        string timeSurvivedString = string.Format("{0:00}:{1:00}", minutes, seconds) + " minutes";
+
+        animationTasks.Add(() => RevealTextBoxAnimated(timeSurvivedGUI, timeSurvivedString, animationDuration));
+        
+
+        int timeScore = (minutes * 60 + seconds) * 2;
+        animationTasks.Add(() => CountToNumberAnimated(timeScoreGUI, 0, timeScore, animationDuration));
+
+        totalScore += timeScore;
+
+        animationTasks.Add(() => Task.Delay(waitBetweenAnimations));
+
+        //show extra score 
+        int tmpExtraScore = 0;
+
+        foreach (var pair in newEntry.allScores)
+        {
+            if (pair.Value <= 0)
+                continue;
+
+            string categoryText = pair.Key + "\n+" + pair.Value;
+            animationTasks.Add(() => RevealExtraScoreCategory(tmpExtraScore, pair.Value, categoryText, animationDuration));
+            animationTasks.Add(() => Task.Delay(waitBetweenAnimations));
+
+            tmpExtraScore += pair.Value;
+            totalScore += pair.Value;
+
+
+            //await Task.Delay(1000);
+        }
+
+        if (tmpExtraScore <= 0)
+            animationTasks.Add(() => RevealTextBoxAnimated(totalExtraScoreGUI, "0", animationDuration));
+
+        animationTasks.Add(() => CountToNumberAnimated(totalScoreGUI, 0, totalScore, animationDuration, "Score: "));
+
+        //play saved animations sequentualy
+        foreach(var animation in animationTasks)
+        {
+            await animation();
+        }
+    }
+
+    private async Task RevealTextBoxAnimated(TextMeshProUGUI textBox, string newText, float duration)
+    {
+        textBox.text = newText;
+        RectTransform textTransform = textBox.rectTransform;
+
+        textTransform.localScale *= 3;
+        textTransform.rotation = Quaternion.Euler(0, 0, 25);
+
+        textTransform.DORotateQuaternion(Quaternion.identity, duration).SetEase(Ease.OutCubic);
+        await textTransform.DOScale(1, duration).SetEase(Ease.InCubic).AsyncWaitForCompletion();
+
+
+    }
+
+    private async Task CountToNumberAnimated(TextMeshProUGUI textBox,int countFrom, int countTo, float duration, string textAddition = "")
+    {
+        int currentNumber = countFrom;
+        var task = DOTween.To(() => currentNumber, x => currentNumber = x, countTo, duration);
+        textBox.rectTransform.DOShakeScale(duration, 1, 10, 0, true);
+
+        while (task.active)
+        {
+            textBox.text = textAddition + currentNumber;
+            await Task.Yield();
+        }
+    }
+
+    private async Task RevealExtraScoreCategory(int currentExtraScore, int addedExtraScore, string categoryString, float duration)
+    {
+        RevealTextBoxAnimated(tmpExtraScoreGUI, categoryString, duration);
+
+        int totalExtraScore = currentExtraScore + addedExtraScore;
+        await CountToNumberAnimated(totalExtraScoreGUI, currentExtraScore, totalExtraScore, duration);
+    }
 
 
     public IEnumerator CreateScoreVisualsAnimated(HighScoreEntry highScoreEntry)
@@ -37,16 +131,26 @@ public class HighScoreTable : MonoBehaviour
 
         //Show time survived
         GameVariables.instance.gameTimer.GetTimeElapsed(out int minutes, out int seconds);
-        timeSurvivedDisplayGUI.text = string.Format("{0:00}:{1:00}", minutes, seconds) + " minutes";
+        timeSurvivedGUI.text = string.Format("{0:00}:{1:00}", minutes, seconds) + " minutes";
+
+        timeSurvivedGUI.rectTransform.DOShakeRotation(waitingTime, 10, 10);
 
         yield return new WaitForSecondsRealtime(waitingTime);
 
         //Show score for time
-        int timeScore = (minutes * 60 + seconds) * 2;
-        timeScoreGUI.text = timeScore.ToString();
+        int timeScore = (minutes * 60 + seconds) * 2 + 20;
+        //timeScoreGUI.text = timeScore.ToString();
+
+        int test = 0;
+        var tween = DOTween.To(()=> test, x => test = x, timeScore, 1f);
+
+        while (tween.active)
+        {
+            timeScoreGUI.text = test.ToString();
+            yield return null;
+        }
 
         totalScore += timeScore;
-        totalScoreGUI.text = $"Score: {totalScore}";
 
         yield return new WaitForSecondsRealtime(waitingTime);
 
@@ -61,14 +165,18 @@ public class HighScoreTable : MonoBehaviour
 
             tmpExtraScore += pair.Value;
             
-            extraScoresDisplayGUI.text = pair.Key + "\n+" + pair.Value;
+            tmpExtraScoreGUI.text = pair.Key + "\n+" + pair.Value;
             totalExtraScoreGUI.text = tmpExtraScore.ToString();
 
             totalScore += pair.Value;
-            totalScoreGUI.text = $"Score: {totalScore}";
+            
 
             yield return new WaitForSecondsRealtime(waitingTime);
         }
+
+        //show final score
+        totalScoreGUI.text = $"Score: {totalScore}";
+
 
         totalExtraScoreGUI.text = tmpExtraScore.ToString();
     }

@@ -513,7 +513,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 315109728631005418}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -523,9 +523,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 175, y: -280.27777}
+  m_AnchoredPosition: {x: 175, y: -300.27777}
   m_SizeDelta: {x: 350, y: 80}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.25}
 --- !u!222 &8155167566283194894
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5891,9 +5891,9 @@ MonoBehaviour:
   highScorePanel: {fileID: 5461993070376995077}
   highScoreEntryVisualsPrefab: {fileID: 8726643492810188866, guid: 59c64ee9185e9aa419d7d5f5f0e2f55d,
     type: 3}
-  timeSurvivedDisplayGUI: {fileID: 5122974835345297278}
+  timeSurvivedGUI: {fileID: 5122974835345297278}
   timeScoreGUI: {fileID: 1000194326388201152}
-  extraScoresDisplayGUI: {fileID: 1229279633121722252}
+  tmpExtraScoreGUI: {fileID: 1229279633121722252}
   totalExtraScoreGUI: {fileID: 235703697692853496}
   totalScoreGUI: {fileID: 3842070842128323554}
 --- !u!1 &4454812033958697475
@@ -8522,7 +8522,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Score: 0'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c990045b135c8674ea91eeb2b6c6824b, type: 2}
   m_sharedMaterial: {fileID: 5368132134362397884, guid: c990045b135c8674ea91eeb2b6c6824b,
@@ -10516,7 +10516,7 @@ GameObject:
   - component: {fileID: 2349485446612262885}
   - component: {fileID: 1229279633121722252}
   m_Layer: 5
-  m_Name: Display
+  m_Name: Tmp Extra Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13195,7 +13195,7 @@ GameObject:
   - component: {fileID: 5355654537917401078}
   - component: {fileID: 5122974835345297278}
   m_Layer: 5
-  m_Name: Display
+  m_Name: Time Survive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
