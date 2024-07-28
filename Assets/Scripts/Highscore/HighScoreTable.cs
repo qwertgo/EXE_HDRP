@@ -34,30 +34,24 @@ public class HighScoreTable : MonoBehaviour
 
     public async void AsyncTest(HighScoreEntry newEntry)
     {
-        int waitBetweenAnimations = 800;
-        float animationDuration = 1f;
-        int totalScore = 0;
+        int waitBetweenAnimations = 500;
+        float animationDuration = .7f;
 
-        List<Func<Task>> animationTasks = new List<Func<Task>>();
-
-        animationTasks.Add(() => Task.Delay(waitBetweenAnimations));
+        List<Func<Task>> uiAnimations = new List<Func<Task>> { () => Task.Delay(waitBetweenAnimations) };
 
         //Show time survived
         GameVariables.instance.gameTimer.GetTimeElapsed(out int minutes, out int seconds);
         string timeSurvivedString = string.Format("{0:00}:{1:00}", minutes, seconds) + " minutes";
-
-        animationTasks.Add(() => RevealTextBoxAnimated(timeSurvivedGUI, timeSurvivedString, animationDuration));
+        uiAnimations.Add(() => RevealTextBoxAnimated(timeSurvivedGUI, timeSurvivedString, animationDuration));
         
-
+        //Show score for time survived
         int timeScore = (minutes * 60 + seconds) * 2;
-        animationTasks.Add(() => CountToNumberAnimated(timeScoreGUI, 0, timeScore, animationDuration));
+        uiAnimations.Add(() => CountToNumberAnimated(timeScoreGUI, 0, timeScore, animationDuration));
+        uiAnimations.Add(() => Task.Delay(waitBetweenAnimations));
 
-        totalScore += timeScore;
-
-        animationTasks.Add(() => Task.Delay(waitBetweenAnimations));
-
-        //show extra score 
+        //show extra scores
         int tmpExtraScore = 0;
+        int totalScore = timeScore;
 
         foreach (var pair in newEntry.allScores)
         {
@@ -65,26 +59,21 @@ public class HighScoreTable : MonoBehaviour
                 continue;
 
             string categoryText = pair.Key + "\n+" + pair.Value;
-            animationTasks.Add(() => RevealExtraScoreCategory(tmpExtraScore, pair.Value, categoryText, animationDuration));
-            animationTasks.Add(() => Task.Delay(waitBetweenAnimations));
+            uiAnimations.Add(() => RevealExtraScoreCategory(tmpExtraScore, pair.Value, categoryText, animationDuration));
+            uiAnimations.Add(() => Task.Delay(waitBetweenAnimations));
 
             tmpExtraScore += pair.Value;
-            totalScore += pair.Value;
-
-
-            //await Task.Delay(1000);
+            totalScore = timeScore + tmpExtraScore;
         }
 
         if (tmpExtraScore <= 0)
-            animationTasks.Add(() => RevealTextBoxAnimated(totalExtraScoreGUI, "0", animationDuration));
+            uiAnimations.Add(() => RevealTextBoxAnimated(totalExtraScoreGUI, "0", animationDuration));
 
-        animationTasks.Add(() => CountToNumberAnimated(totalScoreGUI, 0, totalScore, animationDuration, "Score: "));
+        uiAnimations.Add(() => CountToNumberAnimated(totalScoreGUI, 0, totalScore, animationDuration * 3, "Score: "));
 
         //play saved animations sequentualy
-        foreach(var animation in animationTasks)
-        {
+        foreach(var animation in uiAnimations)
             await animation();
-        }
     }
 
     private async Task RevealTextBoxAnimated(TextMeshProUGUI textBox, string newText, float duration)
