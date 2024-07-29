@@ -254,9 +254,9 @@ MonoBehaviour:
   m_ApplyRangeAttenuation: 1
   m_DisplayAreaLightEmissiveMesh: 0
   m_AreaLightCookie: {fileID: 0}
-  m_IESPoint: {fileID: 8462914550093448962, guid: 30b1b8f057c03594bbe6b610775e5e66,
+  m_IESPoint: {fileID: 385090197505180594, guid: 3eaf294d2ffd49140a0978bdf18e7284,
     type: 3}
-  m_IESSpot: {fileID: 8156907096719753404, guid: 30b1b8f057c03594bbe6b610775e5e66,
+  m_IESSpot: {fileID: 7085373622920385917, guid: 3eaf294d2ffd49140a0978bdf18e7284,
     type: 3}
   m_IncludeForRayTracing: 1
   m_AreaLightShadowCone: 120
@@ -509,7 +509,7 @@ MonoBehaviour:
   idleSpeed: 14
   followPlayerSpeed: 18
   directionLerpFactor: 0.1
-  lightIntensityCloseToPlayer: 50000
+  lightIntensityCloseToPlayer: 600000
   lightIntensityFarFromPlayer: 9000000
   groundObstacleLayer:
     serializedVersion: 2
@@ -531,6 +531,7 @@ MonoBehaviour:
   diveIntoWaterClip: {fileID: 7400000, guid: 24cb9f4d7b6b08447923a5f0be7afe21, type: 2}
   surfaceFromWaterClip: {fileID: 7400000, guid: 4d42d710b76f6d748866a4bf3f8c505b,
     type: 2}
+  closeMouthClip: {fileID: 7400000, guid: b4da45e228f43be4db7880e40dd140de, type: 2}
   growlAudioData: {fileID: 11400000, guid: 67a04f28eefd0a14c8f5aa5bc7788199, type: 2}
   waterSplashClipData: {fileID: 11400000, guid: 1cb8dff8c2e6b4849adb9c4b2918b04a,
     type: 2}

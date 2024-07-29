@@ -570,7 +570,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         StartCoroutine(boostCoroutines.Last());
     }
 
-    IEnumerator NewBoost(float boostAmount)
+    private IEnumerator NewBoost(float boostAmount)
     {
         float elapsedTime = 0;
         float addedBoost = 0;
@@ -817,16 +817,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     #region Various Methods ------------------------------------------------------------------------------------------------------------------------------------
     public void Die()
     {
-        // mainAudioSource.PlayOneShot(winClip, 1);
         PlayDeathSound();
+        StopBoosting();
+        StopAllCoroutines();
         walkingAudioSource.Stop();
         musicAudioSource.Play();
-        StopAllCoroutines();
-        enabled = false;
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
 
-        animator.StopPlayback();
+        animator.speed = 0;
+        enabled = false;
     }
 
     private void PlayDeathSound()

@@ -40,6 +40,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private AnimationClip followPlayerClip;
     [SerializeField] private AnimationClip diveIntoWaterClip;
     [SerializeField] private AnimationClip surfaceFromWaterClip;
+    [SerializeField] private AnimationClip closeMouthClip;
 
     [Header("Audio")]
     [SerializeField] private AudioClipDataMultiple growlAudioData;
@@ -72,13 +73,18 @@ public class EnemyMovement : MonoBehaviour
         
         growlAudioData.LoadClips();
 
+        GameManager.gameOverEvent += Disable;
+
         StartCoroutine(Idle());
     }
+
+    
 
     private void OnDisable()
     {
         EnemyManager.foundPlayer.RemoveListener(DiveUnderWater);
         EnemyManager.lostPlayer.RemoveListener(SurfaceFromWater);
+        GameManager.gameOverEvent -= Disable;
     }
 
     #region idle
@@ -295,9 +301,7 @@ public class EnemyMovement : MonoBehaviour
             StartCoroutine(Attack());
         else if (currentState > 0)
         {
-            musicAudioSource.Stop();
-            enabled = false;
-            StopAllCoroutines();
+            animator.CrossFade(closeMouthClip.name, .1f);
             GameManager.instance.StopGame();
         }
     }
@@ -313,6 +317,14 @@ public class EnemyMovement : MonoBehaviour
     {
         if(gameObject.activeInHierarchy)
             StartCoroutine(WhilePaused());
+    }
+
+    private void Disable()
+    {
+        navMeshAgent.enabled = false;
+        enabled = false;
+        musicAudioSource.Stop();
+        StopAllCoroutines();
     }
 
     IEnumerator WhilePaused()

@@ -43,7 +43,8 @@ public class HighScoreTable : MonoBehaviour
         restartButton.transform.localScale = Vector3.zero;
         mainMenuButton.transform.localScale = Vector3.zero;
 
-        await Task.Delay(animationsDelay);
+        await Task.Delay(animationsDelay * 2);
+        highScoreTable.gameObject.SetActive(true);
 
         //Show time survived
         GameVariables.instance.gameTimer.GetTimeElapsed(out int minutes, out int seconds);
@@ -125,65 +126,6 @@ public class HighScoreTable : MonoBehaviour
     }
 
 
-    public IEnumerator CreateScoreVisualsAnimated(HighScoreEntry highScoreEntry)
-    {
-        float waitingTime = 1f;
-        int totalScore = 0;
-
-
-        //Show time survived
-        GameVariables.instance.gameTimer.GetTimeElapsed(out int minutes, out int seconds);
-        timeSurvivedGUI.text = string.Format("{0:00}:{1:00}", minutes, seconds) + " minutes";
-
-        timeSurvivedGUI.rectTransform.DOShakeRotation(waitingTime, 10, 10);
-
-        yield return new WaitForSecondsRealtime(waitingTime);
-
-        //Show score for time
-        int timeScore = (minutes * 60 + seconds) * 2 + 20;
-        //timeScoreGUI.text = timeScore.ToString();
-
-        int test = 0;
-        var tween = DOTween.To(()=> test, x => test = x, timeScore, 1f);
-
-        while (tween.active)
-        {
-            timeScoreGUI.text = test.ToString();
-            yield return null;
-        }
-
-        totalScore += timeScore;
-
-        yield return new WaitForSecondsRealtime(waitingTime);
-
-        //show extra score 
-        int tmpExtraScore = 0;
-
-        foreach(var pair in highScoreEntry.allScores)
-        {
-            if (pair.Value <= 0)
-                continue;
-
-
-            tmpExtraScore += pair.Value;
-            
-            tmpExtraScoreGUI.text = pair.Key + "\n+" + pair.Value;
-            totalExtraScoreGUI.text = tmpExtraScore.ToString();
-
-            totalScore += pair.Value;
-            
-
-            yield return new WaitForSecondsRealtime(waitingTime);
-        }
-
-        //show final score
-        totalScoreGUI.text = $"Score: {totalScore}";
-
-
-        totalExtraScoreGUI.text = tmpExtraScore.ToString();
-    }
-
-
     //makes HighScoreTable visible, Adds New Entry, and creates visuals for all HighScoreEntries
     public void CreateHighScoreVisuals(HighScoreEntry newEntry = null)
     {
@@ -211,8 +153,7 @@ public class HighScoreTable : MonoBehaviour
 
         if (createdNewEntry)
             highScorePanel.anchoredPosition = new Vector2(0, (place - 3) * 100);
-        
-        highScoreTable.gameObject.SetActive(true);
+
         SaveSystem.SaveHighscore(highScoreEntries);
     }
 

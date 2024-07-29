@@ -100,7 +100,7 @@ public class FireflyDynamic : FireflyStatic
         {
             speed /= speedMultiplier;
 
-            StartCoroutine(MoveToPlayer(WaitTillRespawnDynamic()));
+            StartCoroutine(MoveToPlayer(true));
         }
         else
         {
@@ -129,18 +129,22 @@ public class FireflyDynamic : FireflyStatic
     private IEnumerator WaitTillRespawnDynamic()
     {
         visuals.gameObject.SetActive(false);
+        CollidersSetActive(false);
         FireflyManager.updatePosition -= UpdateVisualsPosition;
-        
-        foreach (var col in colliders)
-            col.enabled = false;
+
         
         yield return new WaitForSeconds(timeToRespawn);
 
         visuals.gameObject.SetActive(true);
+        CollidersSetActive(true);
         FireflyManager.updatePosition += UpdateVisualsPosition;
-        
+
+    }
+
+    new protected void CollidersSetActive(bool active)
+    {
         foreach (var col in colliders)
-            col.enabled = true;
-        
+            col.enabled = active;
+
     }
 }

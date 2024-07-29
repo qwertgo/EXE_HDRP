@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -29,6 +30,7 @@ public class FireflyStatic : MonoBehaviour
     protected void Start()
     {
         FireflyManager.updatePosition += UpdateVisualsPosition;
+        GameManager.gameOverEvent += Disable;
 
         collectSpeed = 1 / timeToCollect;
         sphereCol = GetComponent<SphereCollider>();
@@ -41,6 +43,7 @@ public class FireflyStatic : MonoBehaviour
     private void OnDestroy()
     {
         FireflyManager.updatePosition -= UpdateVisualsPosition;
+        GameManager.gameOverEvent -= Disable;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -48,11 +51,14 @@ public class FireflyStatic : MonoBehaviour
         if (!other.tag.Equals("FireflyCollector"))
             return;
 
-        StartCoroutine(MoveToPlayer(WaitTillRespawnStatic()));
+        StartCoroutine(MoveToPlayer(false));
     }
     
-    protected IEnumerator MoveToPlayer(IEnumerator waitTillRespawn)
+    protected IEnumerator MoveToPlayer(bool isDynamic)
     {
+        if (isDynamic)
+            Debug.Log("dynamic firefly move to player " + name);
+
         RectTransform timeSliderTransform = GameVariables.instance.timeSlider;
         Camera cam = GameVariables.instance.cam;
         Vector3 startPos = visuals.position;
@@ -69,18 +75,7 @@ public class FireflyStatic : MonoBehaviour
         }
     
         gameVariables.gameTimer.AddToTimer(timeValue);
-        // highScoreCounter.StartCoroutine(highScoreCounter.StartFireflyCounter());
         gameVariables.fireflyCount++;
-        
-        // FireflyManager fireflyManager = FireflyManager.instance;
-
-        // if (this is FireflyDynamic)
-        // {
-        //     // fireflyManager.audioSource.PlayOneShotVariation(collectedClip, new Vector2(.8f, 1.2f), new Vector2(.85f, 1.15f));
-        //     fireflyManager.audioSource.PlayOneShotVariation(collectedClipData);
-        // }
-        // else
-        //     StartCoroutine(fireflyManager.PlayStaticFireflySound(collectedClipData));
 
         fireflyManager.StartCoroutine(fireflyManager.CollectFireFly(collectedClipData, this));
 
@@ -89,27 +84,44 @@ public class FireflyStatic : MonoBehaviour
         collectedParticleSystem.transform.position = playerTransform.position;
         particleCopyPosition.transformToCopyPositionFrom = GameVariables.instance.player.transform;
 
-        StartCoroutine(waitTillRespawn);
+        StartCoroutine(WaitTillRespawn(isDynamic));
 
         yield return new WaitForSeconds(10f);
         collectedParticleSystem.SetActive(false);
     }
     
-    private IEnumerator WaitTillRespawnStatic()
+    private IEnumerator WaitTillRespawn(bool isDynamic)
     {
         visuals.gameObject.SetActive(false);
-        sphereCol.enabled = false;
+        CollidersSetActive(false);
         FireflyManager.updatePosition -= UpdateVisualsPosition;
+
+        if (isDynamic)
+            Debug.Log("Visuals have been disabled");
         
         yield return new WaitForSeconds(timeToRespawn);
         
         visuals.gameObject.SetActive(true);
-        sphereCol.enabled = true;
+        CollidersSetActive(true);
         FireflyManager.updatePosition += UpdateVisualsPosition;
+    }
+
+    protected void CollidersSetActive(bool active)
+    {
+        sphereCol.enabled = active;
     }
 
     protected void UpdateVisualsPosition(Vector2 localPos)
     {
         visuals.position = transform.position + new Vector3(0, visualsYOffset, 0)  + transform.rotation * localPos;
+    }
+
+    private void Disable()
+    {
+        StopAllCoroutines();
+        enabled = false;
+        sphereCol.enabled = false;
+        FireflyManager.updatePosition -= UpdateVisualsPosition;
+        CollidersSetActive(false);
     }
 }

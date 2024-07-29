@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using TMPro;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
@@ -14,9 +15,11 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private bool startWithStartScreen;
     [SerializeField] private bool spawnStartEnemy;
     [HideInInspector] public static string playerName = "";
+
     [HideInInspector] public bool gameIsPaused;
     [HideInInspector] public bool stoppedGame;
-    public static GameManager instance;
+    [HideInInspector] public static GameManager instance;
+    [HideInInspector] public static event Action gameOverEvent;
 
     private int restartButtonsPressed;
     private bool isInNameSelection;
@@ -27,6 +30,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private HighScoreTable highScoreTable;
     [SerializeField] private GameObject highScoreRestartButton; 
     [SerializeField] private EnemyMovement startEnemy;
+    [SerializeField] private EnemyManager enemyManagaer;
     
     [Header("Start Menu")]
     [SerializeField] private GameObject startMenu;
@@ -243,6 +247,8 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
             return;
 
         stoppedGame = true;
+
+        gameOverEvent.Invoke();
         
         gameVariables.player.Die();
         canPauseGame = false;
