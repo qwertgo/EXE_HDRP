@@ -241,7 +241,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         
     }
 
-    public void StopGame()
+    public void GameOver()
     {
         if(stoppedGame)
             return;
@@ -253,6 +253,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         gameVariables.player.Die();
         canPauseGame = false;
         Cursor.visible = true;
+        timeSlider.SetActive(false);
+        currentScore.SetActive(false);
+
         //Time.timeScale = 0;
 
 

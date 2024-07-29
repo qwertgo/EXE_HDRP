@@ -302,7 +302,7 @@ public class EnemyMovement : MonoBehaviour
         else if (currentState > 0)
         {
             animator.CrossFade(closeMouthClip.name, .1f);
-            GameManager.instance.StopGame();
+            GameManager.instance.GameOver();
         }
     }
     #endregion

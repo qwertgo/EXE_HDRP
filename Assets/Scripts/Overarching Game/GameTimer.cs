@@ -81,7 +81,7 @@ public class GameTimer : MonoBehaviour
     {
         StopCoroutine(update);
         playTickingSound = false;
-        GameManager.instance.StopGame();
+        GameManager.instance.GameOver();
     }
 
     public void AddToTimer(float addedTime)
