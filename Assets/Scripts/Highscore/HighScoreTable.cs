@@ -9,6 +9,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using UnityEngine.Events;
 
 public class HighScoreTable : MonoBehaviour
 {
@@ -27,53 +28,40 @@ public class HighScoreTable : MonoBehaviour
     [SerializeField] private TextMeshProUGUI tmpExtraScoreGUI;
     [SerializeField] private TextMeshProUGUI totalExtraScoreGUI;
     [SerializeField] private TextMeshProUGUI totalScoreGUI;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button mainMenuButton;
 
     private int place;
 
     private List<HighScoreEntry> highScoreEntries = new();
 
-    public async void AsyncTest(HighScoreEntry newEntry)
+    public async void GameOverUIAnimation(HighScoreEntry newEntry)
     {
-        int waitBetweenAnimations = 500;
-        float animationDuration = .7f;
+        int animationsDelay = 500;
+        float animationDuration = .6f;
 
-        List<Func<Task>> uiAnimations = new List<Func<Task>> { () => Task.Delay(waitBetweenAnimations) };
+        restartButton.transform.localScale = Vector3.zero;
+        mainMenuButton.transform.localScale = Vector3.zero;
+
+        await Task.Delay(animationsDelay);
 
         //Show time survived
         GameVariables.instance.gameTimer.GetTimeElapsed(out int minutes, out int seconds);
         string timeSurvivedString = string.Format("{0:00}:{1:00}", minutes, seconds) + " minutes";
-        uiAnimations.Add(() => RevealTextBoxAnimated(timeSurvivedGUI, timeSurvivedString, animationDuration));
+        await RevealTextBoxAnimated(timeSurvivedGUI, timeSurvivedString, animationDuration);
         
         //Show score for time survived
         int timeScore = (minutes * 60 + seconds) * 2;
-        uiAnimations.Add(() => CountToNumberAnimated(timeScoreGUI, 0, timeScore, animationDuration));
-        uiAnimations.Add(() => Task.Delay(waitBetweenAnimations));
+        await CountToNumberAnimated(timeScoreGUI, 0, timeScore, animationDuration);
+        await Task.Delay(animationsDelay);
 
-        //show extra scores
-        int tmpExtraScore = 0;
-        int totalScore = timeScore;
+        await RevealExtraAndFinalScore(timeScore, newEntry, animationDuration, animationsDelay);
 
-        foreach (var pair in newEntry.allScores)
-        {
-            if (pair.Value <= 0)
-                continue;
+        await restartButton.transform.DOScale(1, animationDuration).AsyncWaitForCompletion();
+        await mainMenuButton.transform.DOScale(1, animationDuration).AsyncWaitForCompletion();
 
-            string categoryText = pair.Key + "\n+" + pair.Value;
-            uiAnimations.Add(() => RevealExtraScoreCategory(tmpExtraScore, pair.Value, categoryText, animationDuration));
-            uiAnimations.Add(() => Task.Delay(waitBetweenAnimations));
-
-            tmpExtraScore += pair.Value;
-            totalScore = timeScore + tmpExtraScore;
-        }
-
-        if (tmpExtraScore <= 0)
-            uiAnimations.Add(() => RevealTextBoxAnimated(totalExtraScoreGUI, "0", animationDuration));
-
-        uiAnimations.Add(() => CountToNumberAnimated(totalScoreGUI, 0, totalScore, animationDuration * 3, "Score: "));
-
-        //play saved animations sequentualy
-        foreach(var animation in uiAnimations)
-            await animation();
+        restartButton.onClick.AddListener(() => GameManager.instance.RestartLevel(false));
+        mainMenuButton.onClick.AddListener(() => GameManager.instance.RestartLevel(true));
     }
 
     private async Task RevealTextBoxAnimated(TextMeshProUGUI textBox, string newText, float duration)
@@ -109,6 +97,31 @@ public class HighScoreTable : MonoBehaviour
 
         int totalExtraScore = currentExtraScore + addedExtraScore;
         await CountToNumberAnimated(totalExtraScoreGUI, currentExtraScore, totalExtraScore, duration);
+    }
+
+    private async Task RevealExtraAndFinalScore(int timeScore, HighScoreEntry newEntry, float animationDuration, int animationsDelay)
+    {
+        //show extra scores
+        int tmpExtraScore = 0;
+        int totalScore = timeScore;
+
+        foreach (var pair in newEntry.allScores)
+        {
+            if (pair.Value <= 0)
+                continue;
+
+            string categoryText = pair.Key + "\n+" + pair.Value;
+            await RevealExtraScoreCategory(tmpExtraScore, pair.Value, categoryText, animationDuration);
+            await Task.Delay(animationsDelay);
+
+            tmpExtraScore += pair.Value;
+            totalScore = timeScore + tmpExtraScore;
+        }
+
+        if (tmpExtraScore <= 0)
+            await RevealTextBoxAnimated(totalExtraScoreGUI, "0", animationDuration);
+
+        await CountToNumberAnimated(totalScoreGUI, 0, totalScore, animationDuration * 3, "Score: ");
     }
 
 
