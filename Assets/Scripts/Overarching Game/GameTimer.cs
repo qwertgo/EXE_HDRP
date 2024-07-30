@@ -5,11 +5,18 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 public class GameTimer : MonoBehaviour
 {
     [SerializeField] private float gameTime;
+    [SerializeField] private float startTickingTime = 15f;
+
+
     private float remainingTime;
+
+
     [HideInInspector]public float timeElapsed;
     [SerializeField] private TextMeshProUGUI remainingTimeText;
     [SerializeField] private Slider sliderRight;
@@ -17,9 +24,11 @@ public class GameTimer : MonoBehaviour
     [SerializeField] private Color sliderColorBase;
     [SerializeField] private Color sliderColorSpecial;
     [SerializeField] private Material echsenMaterial;
+    [SerializeField] private VolumeProfile volumeProfile;
 
     private IEnumerator update;
     private AudioSource audioSource;
+    private Vignette vignette;
 
     private bool playTickingSound;
 
@@ -34,6 +43,15 @@ public class GameTimer : MonoBehaviour
         update = UpdateCoroutine();
         StartCoroutine(update);
         StartCoroutine(WaitForTimeToPass(120f));
+
+        foreach(var profile in volumeProfile.components)
+        {
+            if(profile is Vignette)
+            {
+                vignette = (Vignette)profile;
+                vignette.intensity.Override(0f);
+            }
+        }
     }
 
 
@@ -46,7 +64,7 @@ public class GameTimer : MonoBehaviour
             timeElapsed += scaledDeltaTime;
             DisplayTimer();
 
-            if (remainingTime / gameTime < .1f && !playTickingSound)
+            if (remainingTime <=  startTickingTime && !playTickingSound)
                 StartCoroutine(PlayTickingSound());
             else if (remainingTime <= 0)
                 EndGame();
@@ -65,16 +83,33 @@ public class GameTimer : MonoBehaviour
     IEnumerator PlayTickingSound()
     {
         playTickingSound = true;
+        float vignetteIntesnity = .7f;
         audioSource.Play();
-        
+
+        float t = 0;
         while (playTickingSound)
         {
-            float volume = 1 - remainingTime / gameTime * 10;
+            t = 1 - remainingTime / startTickingTime;
+            float volume = t;
             audioSource.volume = volume;
+
+            vignette.intensity.Override(t * vignetteIntesnity);
+            yield return null;
+        }
+
+        t = 1;
+
+        while(t > 0)
+        {
+            audioSource.volume = t;
+            vignette.intensity.Override(t * vignetteIntesnity);
+
+            t -= Time.deltaTime * .5f;
             yield return null;
         }
         
         audioSource.Stop();
+        vignette.intensity.Override(0f);
     }
 
     void EndGame()
@@ -131,5 +166,7 @@ public class GameTimer : MonoBehaviour
     {
         echsenMaterial.SetFloat("_Percentage", 1);
         remainingTime = 0;
+        vignette.intensity.Override(0f);
+        
     }
 }

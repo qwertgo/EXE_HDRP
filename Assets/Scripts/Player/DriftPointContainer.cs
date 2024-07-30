@@ -98,7 +98,7 @@ public class DriftPointContainer : MonoBehaviour
 
     public bool HasDriftPoint(out Transform driftPoint)
     {
-        bool hasPoint = driftPoints.Count > 0 || coyoteDriftPoint;
+        bool hasPoint = visibleDriftPoint || coyoteDriftPoint;
 
         driftPoint = hasPoint ? GetDriftPoint().transform : null;
 
@@ -107,7 +107,7 @@ public class DriftPointContainer : MonoBehaviour
 
     public DriftPoint GetDriftPoint()
     {
-        return coyoteDriftPoint is not null ? coyoteDriftPoint : visibleDriftPoint;
+        return coyoteDriftPoint ? coyoteDriftPoint : visibleDriftPoint;
     }
 
     private void OnDestroy()
