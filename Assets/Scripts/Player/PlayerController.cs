@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
+using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
@@ -36,6 +39,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [Header("Jumping/ In Air")]
     [SerializeField] protected float jumpForce;
     [SerializeField] protected float gravitationMultiplier;
+    [SerializeField] private float jumpBuffer = .2f;
+    [SerializeField] private float coyoteTime = .2f;
+    private float coyoteTimeCounter = 0;
 
     [Header("Drifting")] 
     [SerializeField] private float driftTurnSpeed;
@@ -249,8 +255,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         // bool stateEqualsFalling = currentState == PlayerState.Falling || (currentState == PlayerState.DriftFalling && !justStartedJumping);
 
         //started falling
-        if (!isGrounded && isFalling && !wasFallingLastFrame)
+        if (!isGrounded && isFalling && !isInAir)
         {
+            StartCoroutine(CoyoteTime());
             currentState = isDrifting? PlayerState.DriftFalling : PlayerState.Falling;
             animator.CrossFade(jumpingClip.name, .4f);
             walkingAudioSource.Stop();
@@ -278,6 +285,15 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         }
 
         justStartedJumping = false;
+    }
+
+    private IEnumerator CoyoteTime()
+    {
+        coyoteTimeCounter = 1f;
+
+        yield return DOTween.To(() => coyoteTimeCounter, x => coyoteTimeCounter = x, 0, coyoteTime).WaitForCompletion();
+
+        coyoteTimeCounter = -1;
     }
 
     #region Steering and Drifting ------------------------------------------------------------------------------------------------------------------------------------
@@ -880,21 +896,48 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && isGrounded && !GameManager.instance.gameIsPaused)
+        if (!context.started || GameManager.instance.gameIsPaused)
+            return;
+
+        if (isGrounded || coyoteTimeCounter > 0)
+            StartJumping();
+        else
+            StartCoroutine(JumpBuffer());
+    }
+
+    private void StartJumping()
+    {
+        currentState = currentState == PlayerState.Drifting ? PlayerState.DriftJumping : PlayerState.Jumping;
+        rb.velocity += playerVisuals.up * jumpForce;
+        justStartedJumping = true;
+        isInAir = true;
+        waterVFX.SetActive(false);
+        AnimationClip tmpJumpCLip = isDrifting ? jumpingOpenMouthClip : jumpingClip;
+        animator.CrossFade(tmpJumpCLip.name, .2f);
+        walkingAudioSource.Stop();
+        highScoreCounter.StartCoroutine(highScoreCounter.StartInAirScoreCounter());
+
+
+        if (Random.Range(0f, 1f) < .2f)
+            playerAudioSource.PlayRandomOneShot(playerJumpAudioData);
+    }
+
+    private IEnumerator JumpBuffer()
+    {
+        yield return null;
+
+        float t = 0;
+
+        while(t <= jumpBuffer)
         {
-            currentState = currentState == PlayerState.Drifting ? PlayerState.DriftJumping : PlayerState.Jumping;
-            rb.velocity += playerVisuals.up * jumpForce;
-            justStartedJumping = true;
-            isInAir = true;
-            waterVFX.SetActive(false);
-            AnimationClip tmpJumpCLip = isDrifting ? jumpingOpenMouthClip : jumpingClip;
-            animator.CrossFade(tmpJumpCLip.name, .2f);
-            walkingAudioSource.Stop();
-            highScoreCounter.StartCoroutine(highScoreCounter.StartInAirScoreCounter());
-            
-            
-            if(Random.Range(0f, 1f) < .2f)
-                playerAudioSource.PlayRandomOneShot(playerJumpAudioData);
+            if (isGrounded)
+            {
+                StartJumping();
+                yield break;
+            }
+
+            t += Time.deltaTime;
+            yield return null;
         }
     }
 
