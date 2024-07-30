@@ -325,6 +325,29 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rb.velocity = Vector3.Lerp(velocity.normalized, playerVisuals.forward, t) * velocity.magnitude;
         rb.velocity += new Vector3(0, gravity, 0);
     }
+
+    private Vector3 wantedForward;
+    private bool useWantedForward;
+
+    public void StartRedirection(Vector3 newForward, float cutOffPoint, bool giveBoost = false)
+    {
+        if(Vector3.Dot(transform.forward, newForward) > cutOffPoint)
+        {
+            useWantedForward = true;
+            wantedForward = newForward;
+            if (giveBoost)
+                StartBoost(boostForce * .25f);
+            
+        }
+
+
+    }
+
+    public void StopRedirection()
+    {
+        useWantedForward = false;
+        wantedForward = playerVisuals.forward;
+    }
     
     private void StartDrifting()
     {
@@ -518,6 +541,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     void AdjustToGroundSlope()
     {
         Quaternion wantedRotation;
+        Vector3 forward = useWantedForward ? wantedForward : playerVisuals.forward;
 
         if (!isInAir)
         {
@@ -527,14 +551,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
                 Physics.Raycast(transform.position, Vector3.down, out groundHit, sphereCollider.radius + 2, groundLayer);
             }
 
-            Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, groundHit.normal);
+            forward = Vector3.ProjectOnPlane(forward, groundHit.normal);
             wantedRotation = Quaternion.LookRotation(forward, groundHit.normal);
             
             rb.velocity = Vector3.ProjectOnPlane(rb.velocity, groundHit.normal);
         }
         else
         {
-            Vector3 forward = Vector3.ProjectOnPlane(playerVisuals.forward, Vector3.up);
+            forward = Vector3.ProjectOnPlane(forward, Vector3.up);
             wantedRotation = Quaternion.LookRotation(forward, Vector3.up);
         }
 
