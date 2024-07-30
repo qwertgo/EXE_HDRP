@@ -23,7 +23,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float lightIntensityFarFromPlayer = 1.520883e+07f;
     [SerializeField] private LayerMask groundObstacleLayer;
     [HideInInspector] public bool finishedAttack;
-    [SerializeField] bool isStartEnemy;
+    public bool isStartEnemy;
     private int currentIdlePointIndex;
 
     [Header("References")]

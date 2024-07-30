@@ -615,9 +615,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     }
     IEnumerator SlowMoBoost(EnemyMovement enemy)
     {
-        // mainAudioSource.PlayOneShot(slowMowClip, 1);
-        Time.timeScale = .05f;
-        maxTurnSpeed *= 30;
+        bool isStartEnemy = enemy.isStartEnemy;
+        float turnSpeedScale = isStartEnemy ? 60 : 30;
+        Time.timeScale = isStartEnemy ? .025f : .05f;
+        maxTurnSpeed *= turnSpeedScale;
         rb.velocity = Vector3.zero;
         cinemachineTransposer.m_YawDamping = 0;
 
@@ -627,10 +628,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         yield return TurnPlayerInNewDirection(vecToEnemy, turnToEnemyTime * Time.timeScale);
 
-        yield return new WaitForSecondsRealtime(timeToWaitTillBoost);
+
+        float boostDelay = isStartEnemy ? timeToWaitTillBoost * 2 : timeToWaitTillBoost;
+        yield return new WaitForSecondsRealtime(boostDelay);
         
         Time.timeScale = 1;
-        maxTurnSpeed /= 30;
+        maxTurnSpeed /= turnSpeedScale;
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
         lockDriftingSlowMoBoost = false;
         

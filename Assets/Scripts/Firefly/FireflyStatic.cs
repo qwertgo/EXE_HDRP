@@ -56,9 +56,6 @@ public class FireflyStatic : MonoBehaviour
     
     protected IEnumerator MoveToPlayer(bool isDynamic)
     {
-        if (isDynamic)
-            Debug.Log("dynamic firefly move to player " + name);
-
         RectTransform timeSliderTransform = GameVariables.instance.timeSlider;
         Camera cam = GameVariables.instance.cam;
         Vector3 startPos = visuals.position;
@@ -95,9 +92,6 @@ public class FireflyStatic : MonoBehaviour
         visuals.gameObject.SetActive(false);
         CollidersSetActive(false);
         FireflyManager.updatePosition -= UpdateVisualsPosition;
-
-        if (isDynamic)
-            Debug.Log("Visuals have been disabled");
         
         yield return new WaitForSeconds(timeToRespawn);
         
