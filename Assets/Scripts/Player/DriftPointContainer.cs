@@ -37,8 +37,7 @@ public class DriftPointContainer : MonoBehaviour
     {
         if (p == visibleDriftPoint)
         {
-            coyoteDriftPoint = p;
-            StartCoroutine(CoyoteTimer());
+            StartCoyoteTimer(p);
             p.HideMe();
             visibleDriftPoint = null;
         }
@@ -48,33 +47,43 @@ public class DriftPointContainer : MonoBehaviour
 
     public void UpdateMe()
     {
+        if (driftPoints.Count == 0)
+            return;
+
         BubbleSortSingleIteration();
         
-        if (driftPoints.Count == 0 || driftPoints.First().isShown)
+        if (driftPoints.First().isShown)
             return;
 
         if (visibleDriftPoint)
+        {
+            StartCoyoteTimer(visibleDriftPoint);
             visibleDriftPoint.HideMe();
+        }
 
         visibleDriftPoint = driftPoints.First();
         visibleDriftPoint.ShowMe(isRight);
     }
 
-    IEnumerator CoyoteTimer()
+    private void StartCoyoteTimer(DriftPoint point)
     {
+        StopAllCoroutines();
+        StartCoroutine(CoyoteTimer(point));
+    }
+
+    IEnumerator CoyoteTimer(DriftPoint point)
+    {
+        coyoteDriftPoint = point;
         yield return new WaitForSeconds(coyoteTimer);
         coyoteDriftPoint = null;
     }
 
     void BubbleSortSingleIteration()
     {
+        float indexDistance = Vector3.Distance(driftPoints[driftPoints.Count - 1].transform.position, playerTransform.position);
+
         for (int i = driftPoints.Count - 1; i > 0; i--)
-        {
-            // Debug.Log(driftPoints);
-            // Debug.Log(driftPoints[i]);
-            // Debug.Log(playerTransform);
-            
-            float indexDistance = Vector3.Distance(driftPoints[i].transform.position,playerTransform.position);
+        {            
             float nextIndexDistance = Vector3.Distance(driftPoints[i - 1].transform.position, playerTransform.position);
             if (indexDistance < nextIndexDistance)
             {
@@ -82,6 +91,8 @@ public class DriftPointContainer : MonoBehaviour
                 driftPoints[i] = driftPoints[i - 1];
                 driftPoints[i - 1] = tmp;
             }
+
+            indexDistance = nextIndexDistance;
         }
     }
 
@@ -96,7 +107,7 @@ public class DriftPointContainer : MonoBehaviour
 
     public DriftPoint GetDriftPoint()
     {
-        return driftPoints.Count > 0 ? driftPoints.First() : coyoteDriftPoint;
+        return coyoteDriftPoint is not null ? coyoteDriftPoint : visibleDriftPoint;
     }
 
     private void OnDestroy()
