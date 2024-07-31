@@ -27,6 +27,7 @@ public class HighScoreCounter : MonoBehaviour
     private int closeToObjectScore;
     private int closeToEnemyScore;
     private int multipleFirefliesScore;
+    int tmpInAirScore = 0;
 
     private int currentScoreVisualIndex;
     private int currentNumberOfScoreVisuals;
@@ -43,7 +44,8 @@ public class HighScoreCounter : MonoBehaviour
     
     private GameTimer gameTimer;
     private TextMeshProUGUI[] scoreVisuals;
-    
+    private IEnumerator inAirScoreCounterCoroutine;
+
 
     private IEnumerator Start()
     {
@@ -112,6 +114,9 @@ public class HighScoreCounter : MonoBehaviour
 
         //Debug.Log($"Highscoretype: {scoreType}, Amount: {addedScore}");
 
+        if (addedScore <= 0)
+            return;
+
         additionalHighScore += addedScore;
         //additionalScoreGUI.text = additionalHighScore.ToString();
         SpawnScoreVisualAnimated(addedScore, scoreType);
@@ -174,24 +179,37 @@ public class HighScoreCounter : MonoBehaviour
     }
 #endregion
 
-    public IEnumerator StartInAirScoreCounter()
+    public void StartInAirScore()
+    {
+        if (inAirScoreCounterCoroutine is not null)
+        {
+            StopCoroutine(inAirScoreCounterCoroutine);
+            AddToScore(ScoreType.InAir, tmpInAirScore);
+        }
+
+        inAirScoreCounterCoroutine = InAirScoreCounter();
+        StartCoroutine(inAirScoreCounterCoroutine);
+    }
+
+    
+
+    private IEnumerator InAirScoreCounter()
     {
         playerIsInAir = true;
-        int inAirScore = 0;
+        tmpInAirScore = 0;
 
         yield return new WaitForSeconds(timeInAirToGetScore);
 
         if(!playerIsInAir)
             yield break;
 
-        //TODO: spawn In Air UI
-
-        while(playerIsInAir)
+        while (playerIsInAir)
         {
-            inAirScore++;
+            tmpInAirScore++;
             yield return new WaitForSeconds(inAirScoreDelay);
         }
 
-        AddToScore(ScoreType.InAir, inAirScore);
+        AddToScore(ScoreType.InAir, tmpInAirScore);
+        inAirScoreCounterCoroutine = null;
     }
 }

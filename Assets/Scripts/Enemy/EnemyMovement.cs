@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
+using System.Threading.Tasks;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -275,15 +276,25 @@ public class EnemyMovement : MonoBehaviour
         attackPlayerCollider.enabled = false;
     }
 
-    private void SurfaceFromWater()
+    private async void SurfaceFromWater()
     {
         if(currentState == enemyState.FollowPlayer)
             return;
+
+        await CheckIfPlayerIsInAttackRange();
         
-        // Debug.Log(name + " got enabled");
         animator.CrossFade(surfaceFromWaterClip.name, 0);
         attackPlayerCollider.enabled = true;
     }
+
+    private async Task CheckIfPlayerIsInAttackRange()
+    {
+        while(Vector3.Distance(playerTransform.position, transform.position) < mouthCollider.radius * 3)
+        {
+            await Task.Delay(5000);
+        }
+    }
+
 
     private void TwoMinutesPassed()
     {

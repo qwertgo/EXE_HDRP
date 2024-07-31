@@ -339,8 +339,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
                 StartBoost(boostForce * .25f);
             
         }
-
-
     }
 
     public void StopRedirection()
@@ -939,7 +937,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         AnimationClip tmpJumpCLip = isDrifting ? jumpingOpenMouthClip : jumpingClip;
         animator.CrossFade(tmpJumpCLip.name, .2f);
         walkingAudioSource.Stop();
-        highScoreCounter.StartCoroutine(highScoreCounter.StartInAirScoreCounter());
+        highScoreCounter.StartInAirScore();
 
 
         if (Random.Range(0f, 1f) < .2f)
