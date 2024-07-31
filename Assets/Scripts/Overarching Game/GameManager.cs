@@ -278,6 +278,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         Cursor.visible = true;
         timeSlider.SetActive(false);
         currentScore.SetActive(false);
+        gameTimer.playTickingSound = false;
 
         //Time.timeScale = 0;
 

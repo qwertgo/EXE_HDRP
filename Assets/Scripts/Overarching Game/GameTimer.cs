@@ -30,7 +30,7 @@ public class GameTimer : MonoBehaviour
     private AudioSource audioSource;
     private Vignette vignette;
 
-    private bool playTickingSound;
+    public bool playTickingSound;
 
     private void Start()
     {
@@ -96,8 +96,6 @@ public class GameTimer : MonoBehaviour
             vignette.intensity.Override(t * vignetteIntesnity);
             yield return null;
         }
-
-        t = 1;
 
         while(t > 0)
         {
