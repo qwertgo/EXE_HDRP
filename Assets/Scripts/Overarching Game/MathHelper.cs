@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static HighScoreCounter;
 
 public static class MathHelper
 {
@@ -25,6 +27,25 @@ public static class MathHelper
     public static bool IsInsideMask(this int layer, LayerMask mask)
     {
         return (mask & (1 << layer)) != 0;
+    }
+
+    public static string ToReadableString(this ScoreType scoreType)
+    {
+        switch (scoreType)
+        {
+            case ScoreType.CloseToEnemy:
+                return "Close To Enemy";
+            case ScoreType.CloseToObject:
+                return "Close To Object";
+            case ScoreType.DriftDash:
+                return "Dash";
+            case ScoreType.InAir:
+                return "In Air";
+            case ScoreType.MultipleFireflies:
+                return "Multiple Firflies";
+            default:
+                return "???";
+        }
     }
     
     #region Gradient Lerping

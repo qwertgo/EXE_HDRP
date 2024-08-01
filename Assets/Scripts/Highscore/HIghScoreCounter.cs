@@ -19,7 +19,7 @@ public class HighScoreCounter : MonoBehaviour
     [SerializeField] private float timeInAirToGetScore;
     [SerializeField] private float inAirScorePerSecond;
     [HideInInspector] public bool playerIsInAir;
-    private int additionalHighScore;
+    private int extraScore;
     private float inAirScoreDelay;
 
     private int inAirScore;
@@ -61,7 +61,7 @@ public class HighScoreCounter : MonoBehaviour
         gameTimer = GameVariables.instance.gameTimer;
         inAirScoreDelay = 1 / inAirScorePerSecond;
 
-
+        Debug.Log(ScoreType.CloseToEnemy.ToString());
     }
 
     private void SpawnScoreVisuals()
@@ -95,31 +95,29 @@ public class HighScoreCounter : MonoBehaviour
 
             case ScoreType.DriftDash:
                 addedScore = Mathf.RoundToInt(driftDashRewardValue * scaleFactor);
-                driftDashScore = addedScore;
+                driftDashScore += addedScore;
                 break;
 
             case ScoreType.CloseToObject:
                 addedScore = Mathf.RoundToInt(closeToObjectRewardValue * scaleFactor);
-                closeToObjectScore = addedScore;
+                closeToObjectScore += addedScore;
                 break;
 
             case ScoreType.CloseToEnemy:
                 addedScore = Mathf.RoundToInt(CloseToEnemyRewardValue * scaleFactor);
-                closeToEnemyScore = addedScore;
+                closeToEnemyScore += addedScore;
                 break;
 
             case ScoreType.MultipleFireflies:
                 addedScore = Mathf.RoundToInt(multipleFirefliesRewardValue * scaleFactor);
-                multipleFirefliesScore = addedScore;
+                multipleFirefliesScore += addedScore;
                 break;
         }
-
-        //Debug.Log($"Highscoretype: {scoreType}, Amount: {addedScore}");
 
         if (addedScore <= 0)
             return;
 
-        additionalHighScore += addedScore;
+        extraScore += addedScore;
         //additionalScoreGUI.text = additionalHighScore.ToString();
         SpawnScoreVisualAnimated(addedScore, scoreType);
     }
@@ -129,7 +127,8 @@ public class HighScoreCounter : MonoBehaviour
         currentNumberOfScoreVisuals++;
 
         var visual = scoreVisuals[currentScoreVisualIndex];
-        visual.text = $"{scoreType}\n+{addedScore}";
+        visual.text = $"{scoreType.ToReadableString()}\n+{addedScore}";
+
         currentScoreVisualIndex++;
         currentScoreVisualIndex %= scoreVisuals.Length;
 
@@ -141,7 +140,7 @@ public class HighScoreCounter : MonoBehaviour
         visual.text = "";
         currentNumberOfScoreVisuals--;
 
-        extraScoreGUI.text = additionalHighScore.ToString();
+        extraScoreGUI.text = extraScore.ToString();
         var extraScoreTransform = extraScoreGUI.rectTransform;
         await extraScoreTransform.DOPunchScale(Vector3.one * 2, 1f, 4).AsyncWaitForCompletion();
 
@@ -163,7 +162,7 @@ public class HighScoreCounter : MonoBehaviour
     public float GetTotalScore()
     {
         //Debug.Log($"time: {gameTimer.timeElapsed}, additionale Score: {additionalHighScore}");
-        return gameTimer.timeElapsed + additionalHighScore;
+        return gameTimer.timeElapsed + extraScore;
     }
 
     public HighScoreEntry CreateHighscoreEntry(string name) 

@@ -70,7 +70,7 @@ public class HighScoreTable : MonoBehaviour
         textBox.text = newText;
         RectTransform textTransform = textBox.rectTransform;
 
-        textTransform.localScale *= 3;
+        textTransform.localScale = Vector3.one * 3;
         textTransform.rotation = Quaternion.Euler(0, 0, 25);
 
         textTransform.DORotateQuaternion(Quaternion.identity, duration).SetEase(Ease.OutCubic);
@@ -111,7 +111,7 @@ public class HighScoreTable : MonoBehaviour
             if (pair.Value <= 0)
                 continue;
 
-            string categoryText = pair.Key + "\n+" + pair.Value;
+            string categoryText = pair.Key.ToReadableString() + "\n+" + pair.Value;
             await RevealExtraScoreCategory(tmpExtraScore, pair.Value, categoryText, animationDuration);
             await Task.Delay(animationsDelay);
 
