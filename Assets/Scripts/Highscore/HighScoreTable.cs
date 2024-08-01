@@ -27,7 +27,8 @@ public class HighScoreTable : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeScoreGUI;
     [SerializeField] private TextMeshProUGUI tmpExtraScoreGUI;
     [SerializeField] private TextMeshProUGUI totalExtraScoreGUI;
-    [SerializeField] private TextMeshProUGUI totalScoreGUI;
+    [SerializeField] private TextMeshProUGUI totalScoreTextGUI;
+    [SerializeField] private TextMeshProUGUI totalScoreNumberGUI;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button mainMenuButton;
 
@@ -35,6 +36,7 @@ public class HighScoreTable : MonoBehaviour
 
     private List<HighScoreEntry> highScoreEntries = new();
 
+    #region Score Animation
     public async void GameOverUIAnimation(HighScoreEntry newEntry)
     {
         int animationsDelay = 500;
@@ -79,15 +81,15 @@ public class HighScoreTable : MonoBehaviour
 
     }
 
-    private async Task CountToNumberAnimated(TextMeshProUGUI textBox,int countFrom, int countTo, float duration, string textAddition = "")
+    private async Task CountToNumberAnimated(TextMeshProUGUI textBox,int countFrom, int countTo, float duration)
     {
         int currentNumber = countFrom;
         var task = DOTween.To(() => currentNumber, x => currentNumber = x, countTo, duration);
-        textBox.rectTransform.DOShakeScale(duration, 1, 10, 0, true);
+        textBox.rectTransform.DOShakeScale(duration, .75f, 5, 0, true);
 
         while (task.active)
         {
-            textBox.text = textAddition + currentNumber;
+            textBox.text = currentNumber.ToString();
             await Task.Yield();
         }
     }
@@ -122,10 +124,13 @@ public class HighScoreTable : MonoBehaviour
         if (tmpExtraScore <= 0)
             await RevealTextBoxAnimated(totalExtraScoreGUI, "0", animationDuration);
 
-        await CountToNumberAnimated(totalScoreGUI, 0, totalScore, animationDuration * 3, "Score: ");
+        totalScoreTextGUI.text = "Score:";
+        await CountToNumberAnimated(totalScoreNumberGUI, 0, totalScore, animationDuration * 3);
     }
 
+    #endregion
 
+    #region Highscore Visuals
     //makes HighScoreTable visible, Adds New Entry, and creates visuals for all HighScoreEntries
     public void CreateHighScoreVisuals(HighScoreEntry newEntry = null)
     {
@@ -173,7 +178,9 @@ public class HighScoreTable : MonoBehaviour
         else
             image.color = i % 2 == 0 ? notSelectedColor1 : notSelectedColor2;
     }
-    
+    #endregion
+
+    #region Highscorelist sorting
     private List<HighScoreEntry> BubbleSort()
     {
         place = highScoreEntries.Count;
@@ -199,4 +206,5 @@ public class HighScoreTable : MonoBehaviour
         highScoreEntries[o] = entry1;
         return highScoreEntries;
     }
+    #endregion
 }

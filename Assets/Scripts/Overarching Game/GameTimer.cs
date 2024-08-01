@@ -164,7 +164,7 @@ public class GameTimer : MonoBehaviour
     {
         echsenMaterial.SetFloat("_Percentage", 1);
         remainingTime = 0;
-        vignette.intensity.Override(0f);
+        vignette?.intensity.Override(0f);
         
     }
 }

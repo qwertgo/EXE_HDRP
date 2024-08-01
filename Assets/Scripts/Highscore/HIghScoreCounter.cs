@@ -60,8 +60,6 @@ public class HighScoreCounter : MonoBehaviour
 
         gameTimer = GameVariables.instance.gameTimer;
         inAirScoreDelay = 1 / inAirScorePerSecond;
-
-        Debug.Log(ScoreType.CloseToEnemy.ToString());
     }
 
     private void SpawnScoreVisuals()
