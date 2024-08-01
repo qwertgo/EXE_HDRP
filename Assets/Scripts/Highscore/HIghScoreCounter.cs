@@ -140,7 +140,7 @@ public class HighScoreCounter : MonoBehaviour
 
         extraScoreGUI.text = extraScore.ToString();
         var extraScoreTransform = extraScoreGUI.rectTransform;
-        await extraScoreTransform.DOPunchScale(Vector3.one * 2, 1f, 4).AsyncWaitForCompletion();
+        await extraScoreTransform.DOPunchScale(Vector3.one * 1.3f, .7f, 2).AsyncWaitForCompletion();
 
         if (currentNumberOfScoreVisuals <= 0 && extraScoreTransform.localScale != Vector3.one)
             extraScoreTransform.DOScale(1, .2f).SetEase(Ease.InOutSine);
