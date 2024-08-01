@@ -180,7 +180,7 @@ public class HighScoreTable : MonoBehaviour
         for(int i = highScoreEntries.Count -1; i > 0; i--)
         {
             int o = i - 1;
-            if(highScoreEntries[i].timeSurvived >= highScoreEntries[o].timeSurvived)
+            if(highScoreEntries[i].totalScore >= highScoreEntries[o].totalScore)
             {
                 highScoreEntries = Swap(i, o);
                 place--;
