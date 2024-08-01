@@ -289,7 +289,7 @@ public class EnemyMovement : MonoBehaviour
 
     private async Task CheckIfPlayerIsInAttackRange()
     {
-        while(Vector3.Distance(playerTransform.position, transform.position) < mouthCollider.radius * 3)
+        while(Vector3.Distance(playerTransform.position, transform.position) < attackPlayerCollider.radius + 3)
         {
             await Task.Delay(5000);
         }
