@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private GameObject startMenu;
     [SerializeField] private GameObject startMenuPlayButton;
     [SerializeField] private GameObject startMenuMain;
+    [SerializeField] private RectTransform startMenuHighscorePanel;
+    [SerializeField] private GameObject startMenuHighscoreTable;
+    [SerializeField] private GameObject startMenuHighscoreBackButton;
     [FormerlySerializedAs("startMenuName")] [SerializeField] private GameObject nameSelection;
     
 
@@ -52,6 +55,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [Header("Name Selection Menu")] 
     [SerializeField] private GameObject nameSelectionStartButton;
     [SerializeField] private TMP_InputField nameSelectionInputField;
+
+    [Header("Game Over")]
+    [SerializeField] private RectTransform regularHighscorePanel;
 
     [Header("Activate At Game Start")] 
     [SerializeField] private Transform cameraLookAt;
@@ -221,6 +227,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         creditsMenu.SetActive(false);
         controlsMenu.SetActive(false);
         nameSelection.SetActive(false);
+        startMenuHighscoreTable.SetActive(false);
         isInNameSelection = false;
         
         SelectUI(startMenuPlayButton);
@@ -229,8 +236,10 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     public void EnterHighScore()
     {
         startMenuMain.SetActive(false);
-        highScoreTable.CreateHighScoreVisuals();
-        SelectUI(highScoreRestartButton);
+        startMenuHighscoreTable.SetActive(true);
+
+        highScoreTable.CreateHighScoreVisuals(startMenuHighscorePanel);
+        SelectUI(startMenuHighscoreBackButton);
     }
 
     private void SelectUI(GameObject o)
@@ -288,7 +297,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         fireflyManager.enabled = false;
 
         HighScoreEntry newEntry = highScoreCounter.CreateHighscoreEntry(playerName);
-        highScoreTable.CreateHighScoreVisuals(newEntry);
+        highScoreTable.CreateHighScoreVisuals(regularHighscorePanel , newEntry);
         //highScoreTable.StartCoroutine(highScoreTable.CreateScoreVisualsAnimated(newEntry));
         highScoreTable.GameOverUIAnimation(newEntry);
         SelectUI(highScoreRestartButton);

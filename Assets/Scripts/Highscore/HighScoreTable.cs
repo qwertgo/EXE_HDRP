@@ -19,7 +19,7 @@ public class HighScoreTable : MonoBehaviour
     [SerializeField] private Color notSelectedColor2;
     
     [SerializeField] private GameObject highScoreTable;
-    [SerializeField] private RectTransform highScorePanel;
+    //[SerializeField] private RectTransform highScorePanel;
     [SerializeField] private GameObject highScoreEntryVisualsPrefab;
 
     [Header("Time and Extra Score")]
@@ -132,7 +132,7 @@ public class HighScoreTable : MonoBehaviour
 
     #region Highscore Visuals
     //makes HighScoreTable visible, Adds New Entry, and creates visuals for all HighScoreEntries
-    public void CreateHighScoreVisuals(HighScoreEntry newEntry = null)
+    public void CreateHighScoreVisuals(RectTransform highScorePanel, HighScoreEntry newEntry = null)
     {
         //load existing HighScore, Add Entry and sort the Highscorelist
         highScoreEntries = SaveSystem.LoadHighScore();
@@ -153,7 +153,7 @@ public class HighScoreTable : MonoBehaviour
 
         for(int i = 0; i < highScoreEntries.Count; i++)
         {
-            AddHighScoreEntryVisuals(highScoreEntries[i], i, createdNewEntry);
+            AddHighScoreEntryVisuals(highScoreEntries[i], i, createdNewEntry, highScorePanel);
         }
 
         if (createdNewEntry)
@@ -163,7 +163,7 @@ public class HighScoreTable : MonoBehaviour
     }
 
     //Creates Visuals for given HighscoreEntry
-    private void AddHighScoreEntryVisuals(HighScoreEntry entry, int i, bool createdNewEntry)
+    private void AddHighScoreEntryVisuals(HighScoreEntry entry, int i, bool createdNewEntry, RectTransform highScorePanel)
     {
         GameObject entryGameObject = Instantiate(highScoreEntryVisualsPrefab, Vector3.zero, Quaternion.identity, highScorePanel);
 

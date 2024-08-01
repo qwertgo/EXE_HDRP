@@ -103,6 +103,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     [FormerlySerializedAs("lookAt")] [SerializeField] private Transform cameraLookAt;
     [FormerlySerializedAs("groundSlopeRef")] [SerializeField] private Transform rotationReference;
     [SerializeField] private ParticleSystem groundParticles;
+    [SerializeField] private Material waterTrailMaterial;
     [SerializeField] private GameObject waterVFX;
     [SerializeField] private Material material;
     [SerializeField] protected DriftPointContainer rightDriftPointContainer;
@@ -336,8 +337,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             useWantedForward = true;
             wantedForward = newForward;
             if (giveBoost)
-                StartBoost(boostForce * .25f);
-            
+                StartBoost(boostForce * .25f); 
         }
     }
 
@@ -423,7 +423,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
 
         highScoreCounter.AddToScore(HighScoreCounter.ScoreType.DriftDash, driftBoostPercentage);
 
-        ChangeParticleColor(defaultParticleColor);
+        ChangeParticleColor(defaultParticleColor, true);
 
         //change how fast the camera copies the rotation of the player
         cinemachineTransposer.m_YawDamping = cameraYawDamping;
@@ -563,8 +563,18 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         playerVisuals.rotation = Quaternion.Lerp(playerVisuals.rotation, wantedRotation, Time.deltaTime * adjustToGroundSlopeSpeed);
     }
     
-    void ChangeParticleColor(Gradient color)
+    void ChangeParticleColor(Gradient color, bool invertGradient = false)
     {
+        if (invertGradient)
+        {
+            waterTrailMaterial.SetColor("_Color1", color.colorKeys[1].color);
+            waterTrailMaterial.SetColor("_Color2", color.colorKeys[0].color);
+        }
+        else
+        {
+            waterTrailMaterial.SetColor("_Color1", color.colorKeys[0].color);
+            waterTrailMaterial.SetColor("_Color2", color.colorKeys[1].color);
+        }
         ParticleSystem.ColorOverLifetimeModule colOverLifeTime = groundParticles.colorOverLifetime;
         colOverLifeTime.color = color;
     }
