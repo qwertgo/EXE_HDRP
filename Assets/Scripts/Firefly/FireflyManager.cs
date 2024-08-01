@@ -136,8 +136,6 @@ public class FireflyManager : MonoBehaviour
     {
         if (recentlyCollectedFireflies == 0)
             pitchOffset = Random.Range(-.2f, .2f);
-        else if(recentlyCollectedFireflies == 1)
-            highScoreCounter.StartMultipleFirfliesCounter();
 
         if(firefly is FireflyDynamic)
             audioSource.PlayOneShotVariation(audioData);
@@ -154,7 +152,7 @@ public class FireflyManager : MonoBehaviour
             yield break;
 
         if(recentlyCollectedFireflies > 1)
-            highScoreCounter.StopMultipleFirefliesCounter(recentlyCollectedFireflies);
+            highScoreCounter.AddToScore(HighScoreCounter.ScoreType.MultipleFireflies, recentlyCollectedFireflies);
 
         recentlyCollectedFireflies = 0;
     }

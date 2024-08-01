@@ -60,6 +60,8 @@ public class HighScoreCounter : MonoBehaviour
 
         gameTimer = GameVariables.instance.gameTimer;
         inAirScoreDelay = 1 / inAirScorePerSecond;
+
+
     }
 
     private void SpawnScoreVisuals()
@@ -167,17 +169,6 @@ public class HighScoreCounter : MonoBehaviour
     public HighScoreEntry CreateHighscoreEntry(string name) 
         => new HighScoreEntry(name, gameTimer.timeElapsed, inAirScore, driftDashScore, closeToObjectScore, closeToEnemyScore, multipleFirefliesScore);
 
-#region Multiple Fireflies Score
-    public void StartMultipleFirfliesCounter()
-    {
-        // joo instantiate shit
-    }
-
-    public void StopMultipleFirefliesCounter(int collectedFireflies)
-    {
-        AddToScore(ScoreType.MultipleFireflies, collectedFireflies);
-    }
-#endregion
 
     public void StartInAirScore()
     {

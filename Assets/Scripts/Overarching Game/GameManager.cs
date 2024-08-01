@@ -63,6 +63,10 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private GameObject playerWaterVFX;
     [SerializeField] private GameTimer gameTimer;
     [SerializeField] private RectTransform turnTutorial;
+
+    [Header("Deactivate on Game Over")]
+    [SerializeField] private SphereCollider scoreCollider;
+    [SerializeField] private FireflyManager fireflyManager;
     
 
     private PlayerInput controls;
@@ -279,9 +283,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         timeSlider.SetActive(false);
         currentScore.SetActive(false);
         gameTimer.playTickingSound = false;
-
-        //Time.timeScale = 0;
-
+        highScoreCounter.enabled = false;
+        scoreCollider.enabled = false;
+        fireflyManager.enabled = false;
 
         HighScoreEntry newEntry = highScoreCounter.CreateHighscoreEntry(playerName);
         highScoreTable.CreateHighScoreVisuals(newEntry);
