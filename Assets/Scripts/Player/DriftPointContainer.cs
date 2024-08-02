@@ -96,11 +96,11 @@ public class DriftPointContainer : MonoBehaviour
         }
     }
 
-    public bool HasDriftPoint(out Transform driftPoint)
+    public bool HasDriftPoint(out DriftPoint driftPoint)
     {
         bool hasPoint = visibleDriftPoint || coyoteDriftPoint;
 
-        driftPoint = hasPoint ? GetDriftPoint().transform : null;
+        driftPoint = hasPoint ? GetDriftPoint() : null;
 
         return hasPoint;
     }

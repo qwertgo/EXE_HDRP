@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private DayNightCycleController dayNightCycleController;
     [SerializeField] private GameObject playerWaterVFX;
     [SerializeField] private GameTimer gameTimer;
-    [SerializeField] private RectTransform turnTutorial;
+    [SerializeField] private TutorialHandler tutorialHandler;
 
     [Header("Deactivate on Game Over")]
     [SerializeField] private SphereCollider scoreCollider;
@@ -184,25 +184,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         cameraLookAt.position = new Vector3(0, .4f, 0);
         canPauseGame = true;
 
-        StartCoroutine(ActivateTurnTutorial());
-    }
-
-    private IEnumerator ActivateTurnTutorial()
-    {
-        turnTutorial.gameObject.SetActive(true);
-
-        float xSize = 350;
-        float ySize = turnTutorial.sizeDelta.y;
-
-        var tween = DOTween.To(() => xSize, x => xSize = x, 500, .6f).SetEase(Ease.InOutQuad).SetLoops(12, LoopType.Yoyo).SetUpdate(true);
-
-        while (tween.active)
-        {
-            turnTutorial.sizeDelta = new Vector2(xSize, ySize);
-            yield return null;
-        }
-
-        turnTutorial.gameObject.SetActive(false);
+        tutorialHandler.StartTutorials();
     }
 
     public void EnterControlsMenu()

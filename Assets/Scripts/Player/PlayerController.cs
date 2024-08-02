@@ -981,14 +981,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             return;
         }
 
-        Transform tmpDriftPoint = null;
+        DriftPoint tmpDriftPoint = null;
         bool driftingIsLocked = lockDriftingSlowMoBoost || lockDriftingCooldown;
         bool canStartDrift = context.started && !isDrifting && leftDriftPointContainer.HasDriftPoint(out tmpDriftPoint);
         
         if (!driftingIsLocked && canStartDrift)
         {
             isDriftingRight = false;
-            currentDriftPoint = tmpDriftPoint;
+            currentDriftPoint = tmpDriftPoint.transform;
 
             StartDrifting();
         }
@@ -1002,14 +1002,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             return;
         }
 
-        Transform tmpDriftPoint = null;
+        DriftPoint tmpDriftPoint = null;
         bool driftingIsLocked = lockDriftingSlowMoBoost || lockDriftingCooldown;
         bool canStartDrift = context.started && !isDrifting && rightDriftPointContainer.HasDriftPoint(out tmpDriftPoint);
 
         if (!driftingIsLocked && canStartDrift)
         {
             isDriftingRight = true;
-            currentDriftPoint = tmpDriftPoint;
+            currentDriftPoint = tmpDriftPoint.transform;
 
             StartDrifting();
         }
