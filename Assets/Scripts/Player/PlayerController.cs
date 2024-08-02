@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions

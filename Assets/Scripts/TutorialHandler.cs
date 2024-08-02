@@ -11,12 +11,13 @@ public class TutorialHandler : MonoBehaviour
     [SerializeField] private RectTransform turnTutorial;
     [SerializeField] private DriftPointContainer rightDriftPointContainer;
     [SerializeField] private DriftPointContainer leftDriftPointContainer;
-    [SerializeField] private RectTransform driftTutorialUI;
+    [SerializeField] private DriftTutorialUI driftTutorialUI;
     [SerializeField] private Transform UICanvas;
     [SerializeField] private Sprite leftDriftTutorialSprite;
     [SerializeField] private Sprite rightDriftTutorialSprite;
     public PlayerInput controls;
 
+    private bool isHoldingTrigger;
 
     private DriftPoint rightDriftPoint;
     private DriftPoint leftDriftPoint;
@@ -24,8 +25,12 @@ public class TutorialHandler : MonoBehaviour
     private IEnumerator leftDriftCoroutine;
     private IEnumerator rightDriftCoroutine;
 
+    private DriftTutorialUI leftPointUI;
+    private DriftTutorialUI rightPointUI;
     private RectTransform leftPointTransform;
     private RectTransform rightPointTransform;
+    private Slider leftPointSlider;
+    private Slider rightPointSlider;
 
     public void StartTutorials()
     {
@@ -91,16 +96,21 @@ public class TutorialHandler : MonoBehaviour
         Vector2 leftPointUIPosition = cam.WorldToScreenPoint(leftDriftPoint.transform.position);
         Vector2 rightPointUIPosition = cam.WorldToScreenPoint(rightDriftPoint.transform.position);
 
-        leftPointTransform = Instantiate(driftTutorialUI, UICanvas);
-        rightPointTransform = Instantiate(driftTutorialUI, UICanvas);
+        leftPointUI = Instantiate(driftTutorialUI, UICanvas);
+        rightPointUI = Instantiate(driftTutorialUI, UICanvas);
+
+        leftPointTransform = leftPointUI.rectTransform;
+        rightPointTransform = rightPointUI.rectTransform;
 
         Vector2 yOffset = new Vector2(0, 100);
         leftPointTransform.position = leftPointUIPosition + yOffset;
         rightPointTransform.position = rightPointUIPosition + yOffset;
 
-        leftPointTransform.GetComponentInChildren<Image>().sprite = leftDriftTutorialSprite;
-        rightPointTransform.GetComponentInChildren<Image>().sprite = rightDriftTutorialSprite ;
+        leftPointUI.image.sprite = leftDriftTutorialSprite;
+        rightPointUI.image.sprite = rightDriftTutorialSprite ;
 
+        leftPointSlider = leftPointUI.slider;
+        rightPointSlider = rightPointUI.slider;
 
         controls.P_Controls.LeftDrift.started += OnLeftDrift;
         controls.P_Controls.LeftDrift.canceled += OnLeftDrift;
@@ -109,19 +119,34 @@ public class TutorialHandler : MonoBehaviour
         controls.P_Controls.RightDrift.canceled += OnRightDrift;
     }
 
-    
-
     private IEnumerator IsHoldingDriftButtonChck(bool rightButton)
     {
-        yield return new WaitForSecondsRealtime(1f);
+        float t = 0;
+        var tween = DOTween.To(() => t, x => t = x, 1, 1).SetUpdate(true).SetEase(Ease.Linear).OnComplete(() => isHoldingTrigger = false) ;
 
-        Debug.Log("Return To Game " + (rightButton ? "right" : "left") + " Drift");
+        Slider slider = rightButton ? rightPointSlider : leftPointSlider;
+        slider.gameObject.SetActive(true);
+
+        while(tween.active && isHoldingTrigger)
+        {
+            slider.value = t;
+            yield return null;
+        }
+
+        if (t < 1)
+        {
+            slider.value = 0;
+            slider.gameObject.SetActive(false);
+            tween.Kill();
+            yield break;
+        }
+
         CancelDriftSubscriptions();
 
         leftPointTransform.gameObject.SetActive(false);
         rightPointTransform.gameObject.SetActive(false);
 
-        yield return ChangeTimeScaleOverTime(1, 1, Ease.InSine);
+        yield return ChangeTimeScaleOverTime(1, 1, Ease.Linear);
         
         Time.timeScale = 1f;
     }
@@ -130,11 +155,13 @@ public class TutorialHandler : MonoBehaviour
     {
         if (context.started)
         {
+            isHoldingTrigger = true;
             leftDriftCoroutine = IsHoldingDriftButtonChck(false);
             StartCoroutine(leftDriftCoroutine);
         }
         else if (context.canceled)
         {
+            isHoldingTrigger = false;
             StopCoroutine(leftDriftCoroutine);
         }
     }
@@ -143,11 +170,13 @@ public class TutorialHandler : MonoBehaviour
     {
         if (context.started)
         {
+            isHoldingTrigger = true;
             rightDriftCoroutine = IsHoldingDriftButtonChck(true);
             StartCoroutine(rightDriftCoroutine);
         }
         else if (context.canceled)
         {
+            isHoldingTrigger = false;
             StopCoroutine(rightDriftCoroutine);
         }
     }

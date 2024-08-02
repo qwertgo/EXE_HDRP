@@ -7,9 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using TMPro;
-using UnityEngine.Events;
-using DG.Tweening;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
@@ -69,6 +67,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private GameObject playerWaterVFX;
     [SerializeField] private GameTimer gameTimer;
     [SerializeField] private TutorialHandler tutorialHandler;
+    [SerializeField] private Toggle startWithTutorialToggle;
 
     [Header("Deactivate on Game Over")]
     [SerializeField] private SphereCollider scoreCollider;
@@ -184,7 +183,8 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         cameraLookAt.position = new Vector3(0, .4f, 0);
         canPauseGame = true;
 
-        tutorialHandler.StartTutorials();
+        if(startWithTutorialToggle.isOn)
+            tutorialHandler.StartTutorials();
     }
 
     public void EnterControlsMenu()
