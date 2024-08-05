@@ -17,7 +17,8 @@ public class TutorialHandler : MonoBehaviour
     [SerializeField] private Sprite rightDriftTutorialSprite;
     public PlayerInput controls;
 
-    private bool isHoldingTrigger;
+    private bool isHoldingTriggerLeft;
+    private bool isHoldingTriggerRight;
 
     private DriftPoint rightDriftPoint;
     private DriftPoint leftDriftPoint;
@@ -122,14 +123,16 @@ public class TutorialHandler : MonoBehaviour
     private IEnumerator IsHoldingDriftButtonChck(bool rightButton)
     {
         float t = 0;
-        var tween = DOTween.To(() => t, x => t = x, 1, 1).SetUpdate(true).SetEase(Ease.Linear).OnComplete(() => isHoldingTrigger = false) ;
+        var tween = DOTween.To(() => t, x => t = x, 1, 1).SetUpdate(true).SetEase(Ease.Linear);
 
         Slider slider = rightButton ? rightPointSlider : leftPointSlider;
         slider.gameObject.SetActive(true);
 
-        while(tween.active && isHoldingTrigger)
+        while(tween.active && isHoldingTrigger(rightButton))
         {
             slider.value = t;
+            if (t == 1)
+                break;
             yield return null;
         }
 
@@ -151,18 +154,23 @@ public class TutorialHandler : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    private bool isHoldingTrigger(bool rightButton)
+    {
+        return rightButton ? isHoldingTriggerRight : isHoldingTriggerLeft;
+
+    }
+
     private void OnLeftDrift(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            isHoldingTrigger = true;
-            leftDriftCoroutine = IsHoldingDriftButtonChck(false);
-            StartCoroutine(leftDriftCoroutine);
+            
+            isHoldingTriggerLeft = true;
+            StartCoroutine(IsHoldingDriftButtonChck(false));
         }
         else if (context.canceled)
         {
-            isHoldingTrigger = false;
-            StopCoroutine(leftDriftCoroutine);
+            isHoldingTriggerLeft = false;
         }
     }
 
@@ -170,14 +178,12 @@ public class TutorialHandler : MonoBehaviour
     {
         if (context.started)
         {
-            isHoldingTrigger = true;
-            rightDriftCoroutine = IsHoldingDriftButtonChck(true);
-            StartCoroutine(rightDriftCoroutine);
+            isHoldingTriggerRight = true;
+            StartCoroutine(IsHoldingDriftButtonChck(true));
         }
         else if (context.canceled)
         {
-            isHoldingTrigger = false;
-            StopCoroutine(rightDriftCoroutine);
+            isHoldingTriggerRight = false;
         }
     }
 
