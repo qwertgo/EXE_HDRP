@@ -32,9 +32,119 @@ Transform:
   - {fileID: 4115994118978166536}
   - {fileID: 1323134988081257295}
   - {fileID: 567489473894805466}
+  - {fileID: 548683927874399504}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &6729412344417019
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2488698422884489215}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2700908980688620116, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_Name
+      value: Weed
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4456597441138992935, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f539d59df15401e4999ca8605a6c8ba7, type: 2}
+    - target: {fileID: 4742473837712756890, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_LODs.Array.data[1].screenRelativeHeight
+      value: 0.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 6833149334924651384, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f539d59df15401e4999ca8605a6c8ba7, type: 2}
+    - target: {fileID: 7857345087993316547, guid: 26466bab25640bf4e95720b1442def0c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 20
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 26466bab25640bf4e95720b1442def0c, type: 3}
+--- !u!4 &548683927874399504 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 26466bab25640bf4e95720b1442def0c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6729412344417019}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1533889856664969511
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -142,6 +252,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Stein_Mittel (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7646716038653242346, guid: acea2e5df7fb34948b5fccce8563f288,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9174370288572905312, guid: acea2e5df7fb34948b5fccce8563f288,
         type: 3}
@@ -267,6 +382,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stein_Mittel (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7646716038653242346, guid: acea2e5df7fb34948b5fccce8563f288,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9174370288572905312, guid: acea2e5df7fb34948b5fccce8563f288,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -390,6 +510,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Stein_Mittel (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7646716038653242346, guid: acea2e5df7fb34948b5fccce8563f288,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9174370288572905312, guid: acea2e5df7fb34948b5fccce8563f288,
         type: 3}
@@ -519,6 +644,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Stein_Mittel (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7646716038653242346, guid: acea2e5df7fb34948b5fccce8563f288,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9174370288572905312, guid: acea2e5df7fb34948b5fccce8563f288,
         type: 3}
