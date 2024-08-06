@@ -81,13 +81,12 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     private HighScoreCounter highScoreCounter;
     private EventSystem eventSystem;
     private IEnumerator restartCoroutine;
-    private GraphicRaycaster graphicsRaycaster;
 
     private void Start()
-    {
+    {  
         if (playerName.Equals(""))
-            playerName = "Wow Echstrem";
-            
+            playerName = "EXE";
+
         instance = this;
 
         if (controls == null)
@@ -100,7 +99,6 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         gameVariables = GameVariables.instance;
         highScoreCounter = gameVariables.highScoreCounter;
         eventSystem = EventSystem.current;
-        graphicsRaycaster = mainCanvas.GetComponent<GraphicRaycaster>();
 
         if (!(startWithStartScreen && restartWithStartScreen))
         {
@@ -135,6 +133,9 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     
     public void StartGame(string playerName)
     {
+        if (playerName.Equals(""))
+            playerName = "EXE";
+
         GameManager.playerName = playerName;
         isInNameSelection = false;
 
@@ -153,6 +154,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     {
         Cursor.visible = false;
         
+
         float t = 0;
         float speed = 1f / 2;
         Vector3 startPosition = cameraLookAt.position;
@@ -168,6 +170,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         yield return new WaitForSeconds(.5f);
         ActivateObjectsToStartGame();
         eventSystem.SetSelectedGameObject(null);
+
         startEnemy.gameObject.SetActive(spawnStartEnemy);
         
     }
@@ -300,27 +303,6 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         if (isInNameSelection && context.started)
         {
             StartGameViaButton();
-        }
-    }
-
-    public void OnLeftClick(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            
-            PointerEventData pointerEventData;
-
-            pointerEventData = new PointerEventData(eventSystem);
-            pointerEventData.position = Input.mousePosition;
-
-            List<RaycastResult> results = new List<RaycastResult>();
-            graphicsRaycaster.Raycast(pointerEventData, results);
-
-            foreach(var result in results)
-            {
-                if(result.gameObject.TryGetComponent(out Button button))
-                    Debug.Log(button.gameObject.name);
-            }
         }
     }
 

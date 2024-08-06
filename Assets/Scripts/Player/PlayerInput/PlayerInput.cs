@@ -264,15 +264,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""LeftClick"",
-                    ""type"": ""Button"",
-                    ""id"": ""ccc27f38-e69a-4be3-9f44-e1822a0cb1fd"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -308,17 +299,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Enter"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""22b5f430-b8d1-4e6d-9aed-26e73762b112"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LeftClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -335,7 +315,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_GameManager = asset.FindActionMap("GameManager", throwIfNotFound: true);
         m_GameManager_PauseGame = m_GameManager.FindAction("Pause Game", throwIfNotFound: true);
         m_GameManager_Enter = m_GameManager.FindAction("Enter", throwIfNotFound: true);
-        m_GameManager_LeftClick = m_GameManager.FindAction("LeftClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -469,14 +448,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IGameManagerActions> m_GameManagerActionsCallbackInterfaces = new List<IGameManagerActions>();
     private readonly InputAction m_GameManager_PauseGame;
     private readonly InputAction m_GameManager_Enter;
-    private readonly InputAction m_GameManager_LeftClick;
     public struct GameManagerActions
     {
         private @PlayerInput m_Wrapper;
         public GameManagerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @PauseGame => m_Wrapper.m_GameManager_PauseGame;
         public InputAction @Enter => m_Wrapper.m_GameManager_Enter;
-        public InputAction @LeftClick => m_Wrapper.m_GameManager_LeftClick;
         public InputActionMap Get() { return m_Wrapper.m_GameManager; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -492,9 +469,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Enter.started += instance.OnEnter;
             @Enter.performed += instance.OnEnter;
             @Enter.canceled += instance.OnEnter;
-            @LeftClick.started += instance.OnLeftClick;
-            @LeftClick.performed += instance.OnLeftClick;
-            @LeftClick.canceled += instance.OnLeftClick;
         }
 
         private void UnregisterCallbacks(IGameManagerActions instance)
@@ -505,9 +479,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Enter.started -= instance.OnEnter;
             @Enter.performed -= instance.OnEnter;
             @Enter.canceled -= instance.OnEnter;
-            @LeftClick.started -= instance.OnLeftClick;
-            @LeftClick.performed -= instance.OnLeftClick;
-            @LeftClick.canceled -= instance.OnLeftClick;
         }
 
         public void RemoveCallbacks(IGameManagerActions instance)
@@ -536,6 +507,5 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnPauseGame(InputAction.CallbackContext context);
         void OnEnter(InputAction.CallbackContext context);
-        void OnLeftClick(InputAction.CallbackContext context);
     }
 }

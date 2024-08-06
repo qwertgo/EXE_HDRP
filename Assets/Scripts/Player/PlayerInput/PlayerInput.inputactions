@@ -242,15 +242,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "LeftClick",
-                    "type": "Button",
-                    "id": "ccc27f38-e69a-4be3-9f44-e1822a0cb1fd",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -284,17 +275,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Enter",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "22b5f430-b8d1-4e6d-9aed-26e73762b112",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "LeftClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
