@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.InputSystem.UI;
 
 public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
 {
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     [SerializeField] private GameObject highScoreRestartButton; 
     [SerializeField] private EnemyMovement startEnemy;
     [SerializeField] private EnemyManager enemyManagaer;
+    [SerializeField] private Canvas mainCanvas;
     
     [Header("Start Menu")]
     [SerializeField] private GameObject startMenu;
@@ -79,6 +81,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
     private HighScoreCounter highScoreCounter;
     private EventSystem eventSystem;
     private IEnumerator restartCoroutine;
+    private GraphicRaycaster graphicsRaycaster;
 
     private void Start()
     {
@@ -97,6 +100,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         gameVariables = GameVariables.instance;
         highScoreCounter = gameVariables.highScoreCounter;
         eventSystem = EventSystem.current;
+        graphicsRaycaster = mainCanvas.GetComponent<GraphicRaycaster>();
 
         if (!(startWithStartScreen && restartWithStartScreen))
         {
@@ -296,6 +300,27 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         if (isInNameSelection && context.started)
         {
             StartGameViaButton();
+        }
+    }
+
+    public void OnLeftClick(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            
+            PointerEventData pointerEventData;
+
+            pointerEventData = new PointerEventData(eventSystem);
+            pointerEventData.position = Input.mousePosition;
+
+            List<RaycastResult> results = new List<RaycastResult>();
+            graphicsRaycaster.Raycast(pointerEventData, results);
+
+            foreach(var result in results)
+            {
+                if(result.gameObject.TryGetComponent(out Button button))
+                    Debug.Log(button.gameObject.name);
+            }
         }
     }
 
