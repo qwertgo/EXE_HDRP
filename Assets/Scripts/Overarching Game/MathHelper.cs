@@ -42,7 +42,7 @@ public static class MathHelper
             case ScoreType.InAir:
                 return "In Air";
             case ScoreType.MultipleFireflies:
-                return "Multiple Firflies";
+                return "Multiple Fireflies";
             default:
                 return "???";
         }
