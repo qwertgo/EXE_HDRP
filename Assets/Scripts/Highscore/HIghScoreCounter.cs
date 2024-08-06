@@ -138,6 +138,9 @@ public class HighScoreCounter : MonoBehaviour
         visual.text = "";
         currentNumberOfScoreVisuals--;
 
+        if (!extraScoreGUI)
+            return;
+
         extraScoreGUI.text = extraScore.ToString();
         var extraScoreTransform = extraScoreGUI.rectTransform;
         await extraScoreTransform.DOPunchScale(Vector3.one * 1.3f, .7f, 2).AsyncWaitForCompletion();

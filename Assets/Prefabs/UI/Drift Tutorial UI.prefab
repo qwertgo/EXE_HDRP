@@ -195,14 +195,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.57000595, b: 0.3537736, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 125cd3b6858b2b34b902fcd8919ddc91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a97c9e31998da4540a95121b7fa4b581, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -546,3 +546,4 @@ MonoBehaviour:
   image: {fileID: 5742596687066693883}
   slider: {fileID: 4094960748982382566}
   rectTransform: {fileID: 8133267857326945135}
+  textBox: {fileID: 1286655732942624797}

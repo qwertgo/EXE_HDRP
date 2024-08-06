@@ -16,6 +16,9 @@ public class ScoreCollider : MonoBehaviour
     private int closeObjectsCount;
     private int scoreAdditionsToGive;
 
+    private bool lockObjectScore;
+    private bool lockEnemyScore;
+
     private void Start() {
         ownCollider = GetComponent<SphereCollider>();
         playerCollider = transform.parent.GetComponent<SphereCollider>();
@@ -37,8 +40,6 @@ public class ScoreCollider : MonoBehaviour
 
         if( ! IsObstacleOrEnemy(otherLayer))
             return;
-        
-
 
         if(scoreAdditionsToGive != closeObjectsCount){
             closeObjectsCount--;
@@ -46,17 +47,41 @@ public class ScoreCollider : MonoBehaviour
         }
 
         ScoreType scoreType = otherLayer == 9 ? ScoreType.CloseToObject : ScoreType.CloseToEnemy;
-        highScoreCounter.AddToScore(scoreType);
+        AddToScore(scoreType);
 
         closeObjectsCount--;
         scoreAdditionsToGive--;
+    }
+
+    private void AddToScore(ScoreType scoreType)
+    {
+        if (scoreType == ScoreType.CloseToObject && lockObjectScore || lockEnemyScore)
+            return;
+
+        highScoreCounter.AddToScore(scoreType);
+        StartCoroutine(ScoreCooldown(scoreType));
+    }
+
+    private IEnumerator ScoreCooldown(ScoreType scoreType)
+    {
+        if (scoreType == ScoreType.CloseToObject)
+            lockObjectScore = true;
+        else
+            lockEnemyScore = true;
+
+        yield return new WaitForSeconds(1f);
+
+        if (scoreType == ScoreType.CloseToObject)
+            lockObjectScore = false;
+        else
+            lockEnemyScore = false;
     }
 
     private bool IsObstacleOrEnemy(int otherLayer) =>  otherLayer.IsInsideMask(obstacleEnemyLayerMask);
 
     public void PlayerCollidedWithCollider(int otherLayer)
     {
-        if( ! IsObstacleOrEnemy(otherLayer) || closeObjectsCount < 1)
+        if(!IsObstacleOrEnemy(otherLayer) || closeObjectsCount < 1)
             return;
 
         scoreAdditionsToGive--;      

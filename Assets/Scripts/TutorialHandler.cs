@@ -15,7 +15,10 @@ public class TutorialHandler : MonoBehaviour
     [SerializeField] private Transform UICanvas;
     [SerializeField] private Sprite leftDriftTutorialSprite;
     [SerializeField] private Sprite rightDriftTutorialSprite;
+    [SerializeField] private Color leftColor;
+    [SerializeField] private Color rightColor;
     public PlayerInput controls;
+    private PlayerController player => GameVariables.instance.player;
 
     private bool isHoldingTriggerLeft;
     private bool isHoldingTriggerRight;
@@ -23,8 +26,6 @@ public class TutorialHandler : MonoBehaviour
     private DriftPoint rightDriftPoint;
     private DriftPoint leftDriftPoint;
     private Camera cam;
-    private IEnumerator leftDriftCoroutine;
-    private IEnumerator rightDriftCoroutine;
 
     private DriftTutorialUI leftPointUI;
     private DriftTutorialUI rightPointUI;
@@ -32,6 +33,7 @@ public class TutorialHandler : MonoBehaviour
     private RectTransform rightPointTransform;
     private Slider leftPointSlider;
     private Slider rightPointSlider;
+
 
     public void StartTutorials()
     {
@@ -87,11 +89,13 @@ public class TutorialHandler : MonoBehaviour
     {
         bool hasDriftPointLeft = leftDriftPointContainer.HasDriftPoint(out leftDriftPoint);
         bool hasDriftPointRight = rightDriftPointContainer.HasDriftPoint(out rightDriftPoint);
-        return hasDriftPointLeft && hasDriftPointRight && leftDriftPoint.isShown && rightDriftPoint.isShown;
+        bool isSamePoint = leftDriftPoint == rightDriftPoint;
+        return hasDriftPointLeft && hasDriftPointRight && leftDriftPoint.isShown && rightDriftPoint.isShown && !isSamePoint;
     }
 
     private void StartDriftTutorial()
     {
+        player.tutorialDriftLock = true;
         Time.timeScale = 0;
 
         Vector2 leftPointUIPosition = cam.WorldToScreenPoint(leftDriftPoint.transform.position);
@@ -108,7 +112,13 @@ public class TutorialHandler : MonoBehaviour
         rightPointTransform.position = rightPointUIPosition + yOffset;
 
         leftPointUI.image.sprite = leftDriftTutorialSprite;
-        rightPointUI.image.sprite = rightDriftTutorialSprite ;
+        rightPointUI.image.sprite = rightDriftTutorialSprite;
+
+        leftPointUI.image.color = leftColor;
+        rightPointUI.image.color = rightColor;
+
+        leftPointUI.textBox.color = leftColor;
+        rightPointUI.textBox.color = rightColor;
 
         leftPointSlider = leftPointUI.slider;
         rightPointSlider = rightPointUI.slider;
@@ -123,7 +133,7 @@ public class TutorialHandler : MonoBehaviour
     private IEnumerator IsHoldingDriftButtonChck(bool rightButton)
     {
         float t = 0;
-        var tween = DOTween.To(() => t, x => t = x, 1, 1).SetUpdate(true).SetEase(Ease.Linear);
+        var tween = DOTween.To(() => t, x => t = x, 1, .25f).SetUpdate(true).SetEase(Ease.Linear);
 
         Slider slider = rightButton ? rightPointSlider : leftPointSlider;
         slider.gameObject.SetActive(true);
@@ -131,7 +141,7 @@ public class TutorialHandler : MonoBehaviour
         while(tween.active && isHoldingTrigger(rightButton))
         {
             slider.value = t;
-            if (t == 1)
+            if (t >= 1)
                 break;
             yield return null;
         }
@@ -149,9 +159,11 @@ public class TutorialHandler : MonoBehaviour
         leftPointTransform.gameObject.SetActive(false);
         rightPointTransform.gameObject.SetActive(false);
 
-        yield return ChangeTimeScaleOverTime(1, 1, Ease.Linear);
+        yield return ChangeTimeScaleOverTime(1, .25f, Ease.OutSine);
         
         Time.timeScale = 1f;
+        player.tutorialDriftLock = false;
+        player.CheckIfCanStartDrifting(rightButton);
     }
 
     private bool isHoldingTrigger(bool rightButton)

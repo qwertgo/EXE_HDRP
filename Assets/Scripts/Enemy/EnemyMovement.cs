@@ -31,6 +31,7 @@ public class EnemyMovement : MonoBehaviour
     public List<Vector3> idleDestinationPoints = new ();
     [SerializeField] private Animator animator;
     [SerializeField] private Light spotLight;
+    [SerializeField] private Light mouthLight;
     [SerializeField] private SphereCollider attackPlayerCollider;
     [SerializeField] private SphereCollider mouthCollider;
 
@@ -57,6 +58,7 @@ public class EnemyMovement : MonoBehaviour
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        mouthLight.enabled = false;
     }
 
     private void Start()
@@ -160,6 +162,7 @@ public class EnemyMovement : MonoBehaviour
         StopCoroutine(reachIdlePointCoroutine);
 
         mouthCollider.enabled = true;
+        mouthLight.enabled = true;
         attackPlayerCollider.enabled = false;
 
         mainAudioSource.PlayRandomOneShot(growlAudioData);
@@ -242,6 +245,7 @@ public class EnemyMovement : MonoBehaviour
         }
 
         mouthCollider.enabled = false;
+        mouthLight.enabled = false;
         spotLight.enabled = false;
         musicAudioSource.Stop();
         GameVariables.instance.player.musicAudioSource.volume = .5f;

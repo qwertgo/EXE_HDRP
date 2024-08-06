@@ -89,12 +89,13 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
     private bool isBreaking;
     private bool isInAir = true;
     private bool justStartedJumping;
-    private bool isDriftingRight;
+    private bool _isDriftingRight;
     private bool arrivedAtDriftPeak;
     private bool stayAtCurrentVelocity;
     private bool getSchilfBoost;
 
     private bool lockSteering;
+    public bool tutorialDriftLock;
 
     [Header("References")]
     [SerializeField] protected Transform playerVisuals;
@@ -353,7 +354,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         rotationAtDriftStart = playerVisuals.rotation;
         currentTraction = tractionWhileDrifting;
         driftBoostPercentage = 0;
-        driftHorizontal = isDriftingRight ? .5f : -.5f;
+        driftHorizontal = _isDriftingRight ? .5f : -.5f;
         
         
         switch (currentState)
@@ -478,7 +479,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
         else
             currentDriftRotation = Mathf.Max(currentDriftRotation, -driftMaxTurnAbility);
 
-        Vector3 wantedForward = isDriftingRight ? dirToDriftPoint.RotateLeft90Deg() : dirToDriftPoint.RotateRight90Deg();
+        Vector3 wantedForward = _isDriftingRight ? dirToDriftPoint.RotateLeft90Deg() : dirToDriftPoint.RotateRight90Deg();
         wantedForward = Quaternion.AngleAxis(currentDriftRotation, Vector3.up) * wantedForward;
         return Quaternion.LookRotation(wantedForward, playerVisuals.up);
     }
@@ -980,17 +981,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             return;
         }
 
-        DriftPoint tmpDriftPoint = null;
-        bool driftingIsLocked = lockDriftingSlowMoBoost || lockDriftingCooldown;
-        bool canStartDrift = context.started && !isDrifting && leftDriftPointContainer.HasDriftPoint(out tmpDriftPoint);
-        
-        if (!driftingIsLocked && canStartDrift)
-        {
-            isDriftingRight = false;
-            currentDriftPoint = tmpDriftPoint.transform;
+        if (context.started)
+            CheckIfCanStartDrifting(false);
 
-            StartDrifting();
-        }
+        //DriftPoint tmpDriftPoint = null;
+        //bool driftingIsLocked = lockDriftingSlowMoBoost || lockDriftingCooldown;
+        //bool canStartDrift = context.started && !isDrifting && leftDriftPointContainer.HasDriftPoint(out tmpDriftPoint);
+        
+        //if (!driftingIsLocked && canStartDrift)
+        //{
+        //    _isDriftingRight = false;
+        //    currentDriftPoint = tmpDriftPoint.transform;
+
+        //    StartDrifting();
+        //}
     }
 
     public void OnRightDrift(InputAction.CallbackContext context)
@@ -1001,13 +1005,31 @@ public class PlayerController : MonoBehaviour, PlayerInput.IP_ControlsActions
             return;
         }
 
-        DriftPoint tmpDriftPoint = null;
-        bool driftingIsLocked = lockDriftingSlowMoBoost || lockDriftingCooldown;
-        bool canStartDrift = context.started && !isDrifting && rightDriftPointContainer.HasDriftPoint(out tmpDriftPoint);
+        if (context.started)
+            CheckIfCanStartDrifting(true);
 
-        if (!driftingIsLocked && canStartDrift)
+        //DriftPoint tmpDriftPoint = null;
+        //bool driftingIsLocked = lockDriftingSlowMoBoost || lockDriftingCooldown || isDrifting;
+        //bool canStartDrift = context.started && rightDriftPointContainer.HasDriftPoint(out tmpDriftPoint);
+
+        //if (!driftingIsLocked && canStartDrift)
+        //{
+        //    _isDriftingRight = true;
+        //    currentDriftPoint = tmpDriftPoint.transform;
+
+        //    StartDrifting();
+        //}
+    }
+
+    public void CheckIfCanStartDrifting(bool driftRight)
+    {
+        DriftPointContainer driftPointContainer = driftRight ? rightDriftPointContainer : leftDriftPointContainer;
+
+        bool driftingIsLocked = lockDriftingSlowMoBoost || lockDriftingCooldown || isDrifting || tutorialDriftLock;
+
+        if (!driftingIsLocked && driftPointContainer.HasDriftPoint(out DriftPoint tmpDriftPoint))
         {
-            isDriftingRight = true;
+            _isDriftingRight = driftRight;
             currentDriftPoint = tmpDriftPoint.transform;
 
             StartDrifting();
