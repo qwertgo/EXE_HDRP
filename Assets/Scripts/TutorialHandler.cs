@@ -9,6 +9,7 @@ using static PlayerInput;
 public class TutorialHandler : MonoBehaviour
 {
     [SerializeField] private RectTransform turnTutorial;
+    [SerializeField] private GameObject jumpTutorial;
     [SerializeField] private DriftPointContainer rightDriftPointContainer;
     [SerializeField] private DriftPointContainer leftDriftPointContainer;
     [SerializeField] private DriftTutorialUI driftTutorialUI;
@@ -164,6 +165,19 @@ public class TutorialHandler : MonoBehaviour
         Time.timeScale = 1f;
         player.tutorialDriftLock = false;
         player.CheckIfCanStartDrifting(rightButton);
+
+        yield return JumpTutorial();
+    }
+
+    private IEnumerator JumpTutorial()
+    {
+        yield return new WaitForSecondsRealtime(10f);
+        
+        jumpTutorial.SetActive(true);
+        yield return new WaitForSecondsRealtime(7f);
+
+        jumpTutorial.SetActive(false);
+
     }
 
     private bool isHoldingTrigger(bool rightButton)
