@@ -25,11 +25,11 @@ public class FireflyStatic : MonoBehaviour
     private Collider sphereCol;
     private GameVariables gameVariables => GameVariables.instance;
     private HighScoreCounter highScoreCounter => gameVariables.highScoreCounter;
-    private FireflyManager fireflyManager => FireflyManager.instance;
+    protected FireflyManager fireflyManager => FireflyManager.instance;
 
     protected void Start()
     {
-        FireflyManager.updatePosition += UpdateVisualsPosition;
+        fireflyManager.updatePosition += UpdateVisualsPosition;
         GameManager.gameOverEvent += Disable;
 
         collectSpeed = 1 / timeToCollect;
@@ -42,7 +42,7 @@ public class FireflyStatic : MonoBehaviour
 
     private void OnDestroy()
     {
-        FireflyManager.updatePosition -= UpdateVisualsPosition;
+        fireflyManager.updatePosition -= UpdateVisualsPosition;
         GameManager.gameOverEvent -= Disable;
     }
 
@@ -91,13 +91,13 @@ public class FireflyStatic : MonoBehaviour
     {
         visuals.gameObject.SetActive(false);
         CollidersSetActive(false);
-        FireflyManager.updatePosition -= UpdateVisualsPosition;
+        fireflyManager.updatePosition -= UpdateVisualsPosition;
         
         yield return new WaitForSeconds(timeToRespawn);
         
         visuals.gameObject.SetActive(true);
         CollidersSetActive(true);
-        FireflyManager.updatePosition += UpdateVisualsPosition;
+        fireflyManager.updatePosition += UpdateVisualsPosition;
     }
 
     protected void CollidersSetActive(bool active)
@@ -115,7 +115,7 @@ public class FireflyStatic : MonoBehaviour
         StopAllCoroutines();
         enabled = false;
         sphereCol.enabled = false;
-        FireflyManager.updatePosition -= UpdateVisualsPosition;
+        fireflyManager.updatePosition -= UpdateVisualsPosition;
         CollidersSetActive(false);
     }
 }

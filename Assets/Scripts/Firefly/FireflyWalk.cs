@@ -130,14 +130,14 @@ public class FireflyDynamic : FireflyStatic
     {
         visuals.gameObject.SetActive(false);
         CollidersSetActive(false);
-        FireflyManager.updatePosition -= UpdateVisualsPosition;
+        fireflyManager.updatePosition -= UpdateVisualsPosition;
 
         
         yield return new WaitForSeconds(timeToRespawn);
 
         visuals.gameObject.SetActive(true);
         CollidersSetActive(true);
-        FireflyManager.updatePosition += UpdateVisualsPosition;
+        fireflyManager.updatePosition += UpdateVisualsPosition;
 
     }
 

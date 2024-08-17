@@ -117,10 +117,10 @@ public class HighScoreCounter : MonoBehaviour
 
         extraScore += addedScore;
         //additionalScoreGUI.text = additionalHighScore.ToString();
-        SpawnScoreVisualAnimated(addedScore, scoreType);
+        StartCoroutine(SpawnScoreVisualAnimated(addedScore, scoreType));
     }
 
-    private async void SpawnScoreVisualAnimated(int addedScore, ScoreType scoreType)
+    private IEnumerator SpawnScoreVisualAnimated(int addedScore, ScoreType scoreType)
     {
         currentNumberOfScoreVisuals++;
 
@@ -133,31 +133,20 @@ public class HighScoreCounter : MonoBehaviour
         visual.rectTransform.position = scoreTextBox.position - new Vector3(0, currentNumberOfScoreVisuals * 100);
 
         Vector3 endPosition = scoreTextBox.position;
-        await visual.rectTransform.DOMove(endPosition, 1f).SetEase(Ease.InExpo).AsyncWaitForCompletion();
+        yield return visual.rectTransform.DOMove(endPosition, 1f).SetEase(Ease.InExpo).WaitForCompletion();
 
         visual.text = "";
         currentNumberOfScoreVisuals--;
 
         if (!extraScoreGUI)
-            return;
+            yield break;
 
         extraScoreGUI.text = extraScore.ToString();
         var extraScoreTransform = extraScoreGUI.rectTransform;
-        await extraScoreTransform.DOPunchScale(Vector3.one * 1.3f, .7f, 2).AsyncWaitForCompletion();
+        yield return extraScoreTransform.DOPunchScale(Vector3.one * 1.3f, .7f, 2).WaitForCompletion();
 
         if (currentNumberOfScoreVisuals <= 0 && extraScoreTransform.localScale != Vector3.one)
             extraScoreTransform.DOScale(1, .2f).SetEase(Ease.InOutSine);
-    }
-
-    private Vector2 GetRandomScreenPosition()
-    {
-        int x = Random.Range(-640, 640);
-        x = Mathf.Max(Mathf.Abs(x), 160) * (int)Mathf.Sign(x);
-
-        int y = Random.Range(-360, 360);
-        y = Mathf.Max(Mathf.Abs(y), 90) * (int)Mathf.Sign(y);
-
-        return new Vector2(x, y);
     }
 
     public float GetTotalScore()
@@ -202,5 +191,10 @@ public class HighScoreCounter : MonoBehaviour
 
         AddToScore(ScoreType.InAir, tmpInAirScore);
         inAirScoreCounterCoroutine = null;
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
 }

@@ -112,6 +112,8 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         
         startMenu.SetActive(true);
         eventSystem.SetSelectedGameObject(startMenuPlayButton);
+        Debug.Log(PlayerPrefs.GetInt("PlayedTutorial"));
+        startWithTutorialToggle.isOn = PlayerPrefs.GetInt("PlayedTutorial") < 1;
     }
     
     private void OnDestroy()
@@ -190,7 +192,7 @@ public class GameManager : MonoBehaviour, PlayerInput.IGameManagerActions
         cameraLookAt.position = new Vector3(0, .4f, 0);
         canPauseGame = true;
 
-        if(startWithTutorialToggle.isOn)
+        if (startWithTutorialToggle.isOn )
             tutorialHandler.StartTutorials();
     }
 

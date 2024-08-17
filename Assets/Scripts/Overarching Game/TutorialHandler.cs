@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -35,9 +36,16 @@ public class TutorialHandler : MonoBehaviour
     private Slider leftPointSlider;
     private Slider rightPointSlider;
 
+    private void Awake()
+    {
+        GameManager.gameOverEvent += Disable;
+    }
+
 
     public void StartTutorials()
     {
+        PlayerPrefs.SetInt("PlayedTutorial", 1);
+        Debug.Log(PlayerPrefs.GetInt("PlayedTutorial"));
         cam = Camera.main;
         controls = new PlayerInput();
         controls.Enable();
@@ -224,11 +232,31 @@ public class TutorialHandler : MonoBehaviour
 
     private void OnDisable()
     {
+        StopAllCoroutines();
+        DisableAllUI();
+        GameManager.gameOverEvent -= Disable;
+
         if (controls is null)
             return;
 
         CancelDriftSubscriptions();
         controls.Disable();
+    }
+
+    private void Disable()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void DisableAllUI()
+    {
+        if(leftPointUI is not null)
+            leftPointUI?.gameObject.SetActive(false);
+        if(rightPointUI is not null)
+            rightPointUI?.gameObject.SetActive(false);
+
+        turnTutorial.gameObject.SetActive(false);
+        jumpTutorial.gameObject.SetActive(false);
     }
 
 

@@ -10,7 +10,7 @@ public class FireflyManager : MonoBehaviour
 {
 
     public static FireflyManager instance;
-    public static event Action<Vector2> updatePosition;
+    public event Action<Vector2> updatePosition;
     
     [SerializeField] private float outerRadius;
     [SerializeField] private float innerRadius;
@@ -44,7 +44,7 @@ public class FireflyManager : MonoBehaviour
         Gizmos.DrawWireSphere(Vector3.zero, outerRadius);
     }
 
-    void Start()
+    void Awake()
     {
         if(instance)
             Destroy(gameObject);
